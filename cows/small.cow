@@ -1,7 +1,6 @@
 ##
 ## A small cow, artist unknown
 ##
-$eyes = ".." unless ($eyes);
 $the_cow = <<EOC;
        $thoughts   ,__,
         $thoughts  ($eyes)____

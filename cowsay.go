@@ -1,21 +1,31 @@
-package cow
+package main
 
 import (
-	"bytes"
+	"fmt"
 	"math/rand"
 	"strings"
-	"unicode/utf8"
-
-	wordwrap "github.com/mitchellh/go-wordwrap"
 )
 
 type Cow struct {
 	Phrase   string
-	Eyes     [2]rune
-	Tongue   [2]rune
+	Eyes     string
+	Tongue   string
 	Random   bool
 	Type     string
 	Thinking bool
+}
+
+func main() {
+	say, err := Say(&Cow{
+		Phrase: "Hello, World\nWWWWWWWWWWWWWWWWWWWmkcnrin",
+		Eyes:   "oo",
+		Tongue: "  ",
+		Random: true,
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(say)
 }
 
 func Say(cow *Cow) (string, error) {
@@ -36,14 +46,57 @@ func Say(cow *Cow) (string, error) {
 		cow.Type = "cows/" + cow.Type
 	}
 
+	mow, err := cow.getCow()
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("%s%s", cow.balloon(40), mow), nil
+}
+
+func (cow *Cow) getCow() (string, error) {
+	src, err := Asset(cow.Type)
+	if err != nil {
+		return "", err
+	}
+
+	var thoughts string
+	if cow.Thinking {
+		thoughts = "o"
+	} else {
+		thoughts = "\\"
+	}
+
+	r := strings.NewReplacer(
+		"\\\\", "\\",
+		"\\@", "@",
+		"\\$", "$",
+		"$eyes", cow.Eyes,
+		"${eyes}", cow.Eyes,
+		"$tongue", cow.Tongue,
+		"${tongue}", cow.Tongue,
+		"$thoughts", thoughts,
+		"${thoughts}", thoughts,
+	)
+	newsrc := r.Replace(string(src))
+
+	var mow []string
+	for _, line := range strings.Split(newsrc, "\n") {
+		if strings.Contains(line, "$the_cow = <<EOC") || strings.HasPrefix(line, "##") {
+			continue
+		}
+
+		if strings.HasPrefix(line, "EOC") {
+			break
+		}
+
+		mow = append(mow, line)
+	}
+	return strings.Join(mow, "\n"), nil
 }
 
 func PickCow() string {
-	var cows []string
-	for _, path := range _bindata {
-		cows = append(cows, path)
-	}
-
+	cows := AssetNames()
 	return pickup(cows)
 }
 
@@ -54,83 +107,4 @@ func pickup(cows []string) string {
 		cows[i], cows[j] = cows[j], cows[i]
 	}
 	return cows[rand.Intn(n)]
-}
-
-type border struct {
-	first  [2]rune
-	middle [2]rune
-	last   [2]rune
-	only   [2]rune
-}
-
-func (cow *Cow) constructBalloon(width int) {
-	text = wordwrap.WrapString(cow.Phrase, uint(width))
-	lines := strings.Split(text, "\n")
-
-	// find max length from text lines
-	maxWidth := max(lines)
-	if maxWidth > width {
-		maxWidth = width
-	}
-
-	var (
-		top    bytes.Buffer
-		bottom bytes.Buffer
-	)
-
-	borderType := cow.borderType()
-
-	top.WriteRune(' ')
-	bottom.WriteRune(' ')
-
-	for i := 0; i < maxWidth; i++ {
-		top.WriteRune('_')
-		bottom.WriteRune('-')
-	}
-
-	l := len(line)
-	border := make([]rune, 2)
-	for i := 0; i < l; i++ {
-		switch i {
-		case 0:
-			border = borderType.first
-		case l - 1:
-			border = borderType.last
-		default:
-			border = borderType.middle
-		}
-	}
-
-}
-
-func padding(line string, maxWidth int) string {
-	return line + strings.Repeat(" ", maxWidth-len(line))
-}
-
-func max(lines []string) int {
-	maxWidth := 0
-	for _, line := range lines {
-		len := utf8.RuneCountInString(line)
-		if len > maxWidth {
-			maxWidth = len
-		}
-	}
-}
-
-func (cow *Cow) borderType() border {
-	if cow.Thinking {
-		return border{
-			first:  {'(', ')'},
-			middle: {'(', ')'},
-			last:   {'(', ')'},
-			only:   {'(', ')'},
-		}
-	}
-
-	return border{
-		first: {'/', '\\'},
-		midle: {'|', '|'},
-		last:  {'\\', '/'},
-		only:  {'<', '>'},
-	}
 }
