@@ -1,4 +1,4 @@
-package main
+package cowsay
 
 import (
 	"bytes"
@@ -34,10 +34,21 @@ func (cow *Cow) borderType() border {
 	}
 }
 
+func (cow *Cow) getLines(width int) []string {
+	// Replace tab to 8 spaces
+	cow.Phrase = strings.Replace(cow.Phrase, "\t", "        ", -1)
+	text := wordwrap.WrapString(cow.Phrase, uint(width))
+	return strings.Split(text, "\n")
+}
+
 func (cow *Cow) balloon() string {
 	width := cow.BallonWidth
-	text := wordwrap.WrapString(cow.Phrase, uint(width))
-	lines := strings.Split(text, "\n")
+	if width <= 0 {
+		width = 1
+		cow.Phrase = "0"
+	}
+
+	lines := cow.getLines(width)
 	// find max length from text lines
 	maxWidth := max(lines)
 	if maxWidth > width {
@@ -90,7 +101,11 @@ func flush(text string, top, bottom *bytes.Buffer) string {
 }
 
 func padding(line string, maxWidth int) string {
-	return line + strings.Repeat(" ", maxWidth-runewidth.StringWidth(line))
+	w := runewidth.StringWidth(line)
+	if maxWidth == w {
+		return line
+	}
+	return line + strings.Repeat(" ", maxWidth-w)
 }
 
 func max(lines []string) int {

@@ -1,9 +1,10 @@
-package main
+package cowsay
 
 import (
-	"fmt"
 	"math/rand"
+	"sort"
 	"strings"
+	"time"
 )
 
 type Cow struct {
@@ -12,24 +13,14 @@ type Cow struct {
 	Tongue      string
 	Type        string
 	Random      bool
+	Aurora      bool
 	Thinking    bool
 	Rainbow     bool
 	BallonWidth int
 }
 
-func main() {
-	say, err := Say(&Cow{
-		Phrase:      "オッピハートあああああああああああ",
-		Eyes:        "oo",
-		Tongue:      "  ",
-		Random:      true,
-		Rainbow:     true,
-		BallonWidth: 40,
-	})
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(say)
+func init() {
+	rand.Seed(time.Now().UTC().UnixNano())
 }
 
 func Say(cow *Cow) (string, error) {
@@ -57,9 +48,21 @@ func Say(cow *Cow) (string, error) {
 
 	if cow.Rainbow {
 		mow = makeRainbow(mow)
+	} else if cow.Aurora {
+		mow = makeAurora(mow)
 	}
 
 	return mow, nil
+}
+
+func Cows() []string {
+	cows := make([]string, 0, len(AssetNames()))
+	for _, key := range AssetNames() {
+		cows = append(cows, strings.TrimSuffix(strings.TrimPrefix(key, "cows/"), ".cow"))
+	}
+
+	sort.Strings(cows)
+	return cows
 }
 
 func (cow *Cow) getCow() (string, error) {
@@ -73,6 +76,18 @@ func (cow *Cow) getCow() (string, error) {
 		thoughts = "o"
 	} else {
 		thoughts = "\\"
+	}
+
+	if len(cow.Eyes) > 2 {
+		cow.Eyes = cow.Eyes[0:2]
+	} else if cow.Eyes == "" {
+		cow.Eyes = "oo"
+	}
+
+	if len(cow.Tongue) > 2 {
+		cow.Tongue = cow.Tongue[0:2]
+	} else if cow.Tongue == "" {
+		cow.Tongue = "  "
 	}
 
 	r := strings.NewReplacer(
