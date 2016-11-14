@@ -29,6 +29,7 @@ type Options struct {
 	List     bool   `short:"l"`
 	NewLine  bool   `short:"n"`
 	File     string `short:"f"`
+	Bold     bool   `long:"bold"`
 	Random   bool   `long:"random"`
 	Rainbow  bool   `long:"rainbow"`
 	Aurora   bool   `long:"aurora"`
@@ -73,6 +74,7 @@ func mow() error {
 func mowmow(opts *Options, args []string) error {
 	cow := &cowsay.Cow{
 		Type:     opts.File,
+		Bold:     opts.Bold,
 		Thinking: true,
 		Random:   opts.Random,
 		Rainbow:  opts.Rainbow,
@@ -147,7 +149,7 @@ func parseOptions(opts *Options, argv []string) ([]string, error) {
 
 	if opts.Help {
 		os.Stdout.Write(opts.usage())
-		return nil, nil
+		os.Exit(0)
 	}
 
 	return args, nil

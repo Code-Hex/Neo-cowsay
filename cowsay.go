@@ -15,6 +15,7 @@ type Cow struct {
 	Random      bool
 	Aurora      bool
 	Thinking    bool
+	Bold        bool
 	Rainbow     bool
 	BallonWidth int
 }
@@ -47,9 +48,9 @@ func Say(cow *Cow) (string, error) {
 	}
 
 	if cow.Rainbow {
-		mow = makeRainbow(mow)
+		mow = cow.makeRainbow(mow)
 	} else if cow.Aurora {
-		mow = makeAurora(mow)
+		mow = cow.makeAurora(mow)
 	}
 
 	return mow, nil

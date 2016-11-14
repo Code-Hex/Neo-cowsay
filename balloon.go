@@ -36,7 +36,8 @@ func (cow *Cow) borderType() border {
 
 func (cow *Cow) getLines(width int) []string {
 	// Replace tab to 8 spaces
-	cow.Phrase = strings.Replace(cow.Phrase, "\t", "        ", -1)
+	r := strings.NewReplacer("\t", "       ")
+	cow.Phrase = r.Replace(cow.Phrase)
 	text := wordwrap.WrapString(cow.Phrase, uint(width))
 	return strings.Split(text, "\n")
 }
@@ -105,7 +106,13 @@ func padding(line string, maxWidth int) string {
 	if maxWidth == w {
 		return line
 	}
-	return line + strings.Repeat(" ", maxWidth-w)
+
+	l := maxWidth - w
+	pad := make([]rune, 0, l)
+	for i := 0; i < l; i++ {
+		pad = append(pad, ' ')
+	}
+	return line + string(pad)
 }
 
 func max(lines []string) int {

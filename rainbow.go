@@ -16,7 +16,12 @@ const (
 	cyan
 )
 
-func makeRainbow(mow string) string {
+func (cow *Cow) makeRainbow(mow string) string {
+	attribute := ""
+	if cow.Bold {
+		attribute = ";1"
+	}
+
 	rainbow := []int{magenta, red, yellow, green, cyan, blue}
 	b := bytes.NewBuffer(make([]byte, 0, len(mow)))
 	i := 0
@@ -26,14 +31,19 @@ func makeRainbow(mow string) string {
 			b.WriteRune(char)
 			continue
 		}
-		b.WriteString(fmt.Sprintf("\x1b[%dm%c\x1b[0m", rainbow[i%6], char))
+		b.WriteString(fmt.Sprintf("\x1b[%d%sm%c\x1b[0m", rainbow[i%6], attribute, char))
 		i++
 	}
 
 	return b.String()
 }
 
-func makeAurora(mow string) string {
+func (cow *Cow) makeAurora(mow string) string {
+	attribute := ""
+	if cow.Bold {
+		attribute = ";1"
+	}
+
 	i := rand.Intn(256)
 	freq := 0.01
 	buf := bytes.NewBuffer(make([]byte, 0, len(mow)))
@@ -43,7 +53,7 @@ func makeAurora(mow string) string {
 			continue
 		}
 
-		buf.WriteString(fmt.Sprintf("\033[38;5;%dm%c\033[0m", rgb(freq, float64(i)), char))
+		buf.WriteString(fmt.Sprintf("\033[38;5;%d%sm%c\033[0m", rgb(freq, float64(i)), attribute, char))
 		i++
 	}
 	return buf.String()
