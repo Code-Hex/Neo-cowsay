@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"fmt"
 	"strings"
-	"unicode/utf8"
 
-	wordwrap "github.com/mitchellh/go-wordwrap"
+	wordwrap "github.com/Code-Hex/go-wordwrap"
+	runewidth "github.com/mattn/go-runewidth"
 )
 
 type border struct {
@@ -34,20 +34,18 @@ func (cow *Cow) borderType() border {
 	}
 }
 
-func (cow *Cow) balloon(width int) string {
+func (cow *Cow) balloon() string {
+	width := cow.BallonWidth
 	text := wordwrap.WrapString(cow.Phrase, uint(width))
 	lines := strings.Split(text, "\n")
-
 	// find max length from text lines
 	maxWidth := max(lines)
 	if maxWidth > width {
 		maxWidth = width
 	}
 
-	var (
-		top    bytes.Buffer
-		bottom bytes.Buffer
-	)
+	top := bytes.NewBuffer(make([]byte, 0, maxWidth+2))
+	bottom := bytes.NewBuffer(make([]byte, 0, maxWidth+2))
 
 	borderType := cow.borderType()
 
@@ -82,7 +80,7 @@ func (cow *Cow) balloon(width int) string {
 	return flush(phrase.String(), top, bottom)
 }
 
-func flush(text string, top, bottom bytes.Buffer) string {
+func flush(text string, top, bottom *bytes.Buffer) string {
 	return fmt.Sprintf(
 		"%s\n%s%s\n",
 		top.String(),
@@ -92,13 +90,13 @@ func flush(text string, top, bottom bytes.Buffer) string {
 }
 
 func padding(line string, maxWidth int) string {
-	return line + strings.Repeat(" ", maxWidth-len(line))
+	return line + strings.Repeat(" ", maxWidth-runewidth.StringWidth(line))
 }
 
 func max(lines []string) int {
 	maxWidth := 0
 	for _, line := range lines {
-		len := utf8.RuneCountInString(line)
+		len := runewidth.StringWidth(line)
 		if len > maxWidth {
 			maxWidth = len
 		}

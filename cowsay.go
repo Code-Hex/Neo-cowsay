@@ -7,20 +7,24 @@ import (
 )
 
 type Cow struct {
-	Phrase   string
-	Eyes     string
-	Tongue   string
-	Random   bool
-	Type     string
-	Thinking bool
+	Phrase      string
+	Eyes        string
+	Tongue      string
+	Type        string
+	Random      bool
+	Thinking    bool
+	Rainbow     bool
+	BallonWidth int
 }
 
 func main() {
 	say, err := Say(&Cow{
-		Phrase: "Hello, World\nWWWWWWWWWWWWWWWWWWWmkcnrin",
-		Eyes:   "oo",
-		Tongue: "  ",
-		Random: true,
+		Phrase:      "オッピハートあああああああああああ",
+		Eyes:        "oo",
+		Tongue:      "  ",
+		Random:      true,
+		Rainbow:     true,
+		BallonWidth: 40,
 	})
 	if err != nil {
 		panic(err)
@@ -31,7 +35,7 @@ func main() {
 func Say(cow *Cow) (string, error) {
 
 	if cow.Random {
-		cow.Type = PickCow()
+		cow.Type = pickCow()
 	}
 
 	if cow.Type == "" {
@@ -51,7 +55,11 @@ func Say(cow *Cow) (string, error) {
 		return "", err
 	}
 
-	return fmt.Sprintf("%s%s", cow.balloon(40), mow), nil
+	if cow.Rainbow {
+		mow = makeRainbow(mow)
+	}
+
+	return mow, nil
 }
 
 func (cow *Cow) getCow() (string, error) {
@@ -92,15 +100,11 @@ func (cow *Cow) getCow() (string, error) {
 
 		mow = append(mow, line)
 	}
-	return strings.Join(mow, "\n"), nil
+	return cow.balloon() + strings.Join(mow, "\n"), nil
 }
 
-func PickCow() string {
+func pickCow() string {
 	cows := AssetNames()
-	return pickup(cows)
-}
-
-func pickup(cows []string) string {
 	n := len(cows)
 	for i := n - 1; i >= 0; i-- {
 		j := rand.Intn(i + 1)
