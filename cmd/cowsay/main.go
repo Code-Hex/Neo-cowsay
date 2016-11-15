@@ -166,7 +166,7 @@ func (opts Options) usage() []byte {
 	fmt.Fprintf(buf, `cow{say,think} version `+version+`, (c) 2016 CodeHex
 Usage: cowsay [-bdgpstwy] [-h] [-e eyes] [-f cowfile] [--random]
           [-l] [-n] [-T tongue] [-W wrapcolumn]
-          [--rainbow] [--aurora] [message]
+          [--rainbow] [--aurora] [--super] [message]
 
 Original Author: (c) 1999 Tony Monroe
 `)
