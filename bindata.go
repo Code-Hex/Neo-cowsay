@@ -15,6 +15,7 @@
 // cows/eyes.cow
 // cows/flaming-sheep.cow
 // cows/ghostbusters.cow
+// cows/gopher.cow
 // cows/head-in.cow
 // cows/hellokitty.cow
 // cows/kiss.cow
@@ -408,6 +409,26 @@ func cowsGhostbustersCow() (*asset, error) {
 	}
 
 	info := bindataFileInfo{name: "cows/ghostbusters.cow", size: 1018, mode: os.FileMode(420), modTime: time.Unix(1479170579, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var _cowsGopherCow = []byte("\x1f\x8b\x08\x00\x00\x09\x6e\x88\x00\xff\x84\x8e\xcd\x4a\x03\x31\x14\x85\xf7\x79\x8a\x0f\x29\x48\x43\xd2\xb8\xb7\xc2\x40\xe9\xc2\x55\x1f\xa0\x71\xce\x80\xd8\xce\x62\xa0\x88\x23\x6e\x42\x9e\x5d\x12\xab\xb6\x33\x82\x27\x9b\xfb\xf3\xe5\x9c\xbb\x18\xfb\x17\x3d\x9f\x3e\x78\x60\xbd\xde\xee\x36\xf7\x06\x60\x31\xf6\xa7\xf7\x63\x3f\xbe\x51\xdb\x8b\x1e\x70\xf2\xde\xe7\x22\xef\xbd\x5f\x89\x6f\x19\x90\x73\x72\xb6\x95\x74\x1e\x97\x4a\x5d\x67\x8f\x36\xc6\x1b\xeb\x30\x04\xa4\x40\xb8\xad\xeb\x76\x05\xe1\x8b\x8c\x91\xb6\x79\x05\x0e\x98\x3d\x34\x07\x12\xcd\x72\x59\x56\x89\x9f\x7a\x80\x3b\x14\x4a\x58\xec\xca\xcf\x98\x6b\x58\x71\x25\xd6\xb4\x70\x76\xab\x07\x25\x7e\xa5\x41\x1a\x74\x31\x78\x9c\x31\xfb\xea\xa0\xa7\x6b\x68\xe2\x43\xaa\xef\x6a\x30\x63\xc8\x64\xfe\x63\xa6\x4a\xf3\xa3\xff\x80\xcc\x76\xb7\x31\x9f\x01\x00\x00\xff\xff\xc5\x4e\xc1\xe1\xb9\x01\x00\x00")
+
+func cowsGopherCowBytes() ([]byte, error) {
+	return bindataRead(
+		_cowsGopherCow,
+		"cows/gopher.cow",
+	)
+}
+
+func cowsGopherCow() (*asset, error) {
+	bytes, err := cowsGopherCowBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "cows/gopher.cow", size: 441, mode: os.FileMode(420), modTime: time.Unix(1479252660, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -1079,6 +1100,7 @@ var _bindata = map[string]func() (*asset, error){
 	"cows/eyes.cow": cowsEyesCow,
 	"cows/flaming-sheep.cow": cowsFlamingSheepCow,
 	"cows/ghostbusters.cow": cowsGhostbustersCow,
+	"cows/gopher.cow": cowsGopherCow,
 	"cows/head-in.cow": cowsHeadInCow,
 	"cows/hellokitty.cow": cowsHellokittyCow,
 	"cows/kiss.cow": cowsKissCow,
@@ -1167,6 +1189,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"eyes.cow": &bintree{cowsEyesCow, map[string]*bintree{}},
 		"flaming-sheep.cow": &bintree{cowsFlamingSheepCow, map[string]*bintree{}},
 		"ghostbusters.cow": &bintree{cowsGhostbustersCow, map[string]*bintree{}},
+		"gopher.cow": &bintree{cowsGopherCow, map[string]*bintree{}},
 		"head-in.cow": &bintree{cowsHeadInCow, map[string]*bintree{}},
 		"hellokitty.cow": &bintree{cowsHellokittyCow, map[string]*bintree{}},
 		"kiss.cow": &bintree{cowsKissCow, map[string]*bintree{}},
