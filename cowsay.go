@@ -28,7 +28,25 @@ func init() {
 
 // Say to return cowsay string.
 func Say(cow *Cow) (string, error) {
+	CowsInit(cow)
+	mow, err := cow.GetCow(0)
+	if err != nil {
+		return "", err
+	}
 
+	said := cow.Balloon() + mow
+
+	if cow.IsRainbow {
+		said = cow.Rainbow(said)
+	} else if cow.IsAurora {
+		said = cow.Aurora(rand.Intn(256), said)
+	}
+
+	return said, nil
+}
+
+// CowsInit to shape the Cow struct
+func CowsInit(cow *Cow) {
 	if cow.IsRandom {
 		cow.Type = pickCow()
 	}
@@ -44,19 +62,6 @@ func Say(cow *Cow) (string, error) {
 	if !strings.HasPrefix(cow.Type, "cows/") {
 		cow.Type = "cows/" + cow.Type
 	}
-
-	mow, err := cow.GetCow(0)
-	if err != nil {
-		return "", err
-	}
-
-	if cow.IsRainbow {
-		mow = cow.Rainbow(cow.Balloon() + mow)
-	} else if cow.IsAurora {
-		mow = cow.Aurora(rand.Intn(256), cow.Balloon()+mow)
-	}
-
-	return mow, nil
 }
 
 // Cows to get list of cows
