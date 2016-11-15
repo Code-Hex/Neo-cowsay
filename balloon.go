@@ -42,7 +42,8 @@ func (cow *Cow) getLines(width int) []string {
 	return strings.Split(text, "\n")
 }
 
-func (cow *Cow) balloon() string {
+// Balloon to get the balloon and the string entered in the balloon.
+func (cow *Cow) Balloon() string {
 	width := cow.BallonWidth
 	if width <= 0 {
 		width = 1
@@ -76,7 +77,7 @@ func (cow *Cow) balloon() string {
 	}
 
 	var border [2]rune
-	var phrase bytes.Buffer
+	phrase := make([]byte, 0, l*100)
 	for i := 0; i < l; i++ {
 		switch i {
 		case 0:
@@ -86,10 +87,10 @@ func (cow *Cow) balloon() string {
 		default:
 			border = borderType.middle
 		}
-		phrase.WriteString(fmt.Sprintf("%c %s %c\n", border[0], padding(lines[i], maxWidth), border[1]))
+		phrase = append(phrase, []byte(fmt.Sprintf("%c %s %c\n", border[0], padding(lines[i], maxWidth), border[1]))...)
 	}
 
-	return flush(phrase.String(), top, bottom)
+	return flush(string(phrase), top, bottom)
 }
 
 func flush(text string, top, bottom *bytes.Buffer) string {

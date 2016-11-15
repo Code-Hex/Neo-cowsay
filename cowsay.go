@@ -44,15 +44,15 @@ func Say(cow *Cow) (string, error) {
 		cow.Type = "cows/" + cow.Type
 	}
 
-	mow, err := cow.getCow()
+	mow, err := cow.GetCow(0)
 	if err != nil {
 		return "", err
 	}
 
 	if cow.Rainbow {
-		mow = cow.makeRainbow(cow.balloon() + mow)
+		mow = cow.makeRainbow(cow.Balloon() + mow)
 	} else if cow.Aurora {
-		mow = cow.makeAurora(rand.Intn(256), cow.balloon()+mow)
+		mow = cow.makeAurora(rand.Intn(256), cow.Balloon()+mow)
 	}
 
 	return mow, nil
@@ -69,17 +69,19 @@ func Cows() []string {
 	return cows
 }
 
-func (cow *Cow) getCow() (string, error) {
+// GetCow to get cow's ascii art
+func (cow *Cow) GetCow(thoughts rune) (string, error) {
 	src, err := Asset(cow.Type)
 	if err != nil {
 		return "", err
 	}
 
-	var thoughts string
-	if cow.Thinking {
-		thoughts = "o"
-	} else {
-		thoughts = "\\"
+	if thoughts == 0 {
+		if cow.Thinking {
+			thoughts = 'o'
+		} else {
+			thoughts = '\\'
+		}
 	}
 
 	if len(cow.Eyes) > 2 {
@@ -102,8 +104,8 @@ func (cow *Cow) getCow() (string, error) {
 		"${eyes}", cow.Eyes,
 		"$tongue", cow.Tongue,
 		"${tongue}", cow.Tongue,
-		"$thoughts", thoughts,
-		"${thoughts}", thoughts,
+		"$thoughts", string(thoughts),
+		"${thoughts}", string(thoughts),
 	)
 	newsrc := r.Replace(string(src))
 	separate := strings.Split(newsrc, "\n")
