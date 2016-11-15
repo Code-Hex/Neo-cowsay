@@ -95,8 +95,10 @@ asciinema is heavy...
 ## cowthink
 
     go get -u github.com/Code-Hex/Neo-cowsay/cmd/cowthink
-## Binary
+    
+# Binary
 You can download [here](https://github.com/Code-Hex/Neo-cowsay/releases)
+
 # License
 [cowsay license](https://github.com/Code-Hex/Neo-cowsay/blob/master/LICENSE)  
 (The Artistic License or The GNU General Public License)
