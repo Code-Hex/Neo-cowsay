@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+// Cow struct!!
 type Cow struct {
 	Phrase      string
 	Eyes        string
