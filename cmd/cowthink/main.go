@@ -30,6 +30,7 @@ type Options struct {
 	NewLine  bool   `short:"n"`
 	File     string `short:"f"`
 	Bold     bool   `long:"bold"`
+	Super    bool   `long:"super"`
 	Random   bool   `long:"random"`
 	Rainbow  bool   `long:"rainbow"`
 	Aurora   bool   `long:"aurora"`
@@ -73,12 +74,12 @@ func mow() error {
 
 func mowmow(opts *Options, args []string) error {
 	cow := &cowsay.Cow{
-		Type:     opts.File,
-		Bold:     opts.Bold,
-		Thinking: true,
-		Random:   opts.Random,
-		Rainbow:  opts.Rainbow,
-		Aurora:   opts.Aurora,
+		Type:      opts.File,
+		Bold:      opts.Bold,
+		Thinking:  true,
+		IsRandom:  opts.Random,
+		IsRainbow: opts.Rainbow,
+		IsAurora:  opts.Aurora,
 	}
 
 	selectFace(opts, cow)
@@ -100,6 +101,10 @@ func mowmow(opts *Options, args []string) error {
 		} else {
 			cow.Phrase = strings.Join(lines, " ")
 		}
+	}
+
+	if opts.Super {
+		return runSuperCow(cow)
 	}
 
 	say, err := cowsay.Say(cow)

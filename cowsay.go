@@ -7,16 +7,17 @@ import (
 	"time"
 )
 
+// Cow struct!!
 type Cow struct {
 	Phrase      string
 	Eyes        string
 	Tongue      string
 	Type        string
-	Random      bool
-	Aurora      bool
 	Thinking    bool
 	Bold        bool
-	Rainbow     bool
+	IsRandom    bool
+	IsAurora    bool
+	IsRainbow   bool
 	BallonWidth int
 }
 
@@ -27,8 +28,26 @@ func init() {
 
 // Say to return cowsay string.
 func Say(cow *Cow) (string, error) {
+	CowsInit(cow)
+	mow, err := cow.GetCow(0)
+	if err != nil {
+		return "", err
+	}
 
-	if cow.Random {
+	said := cow.Balloon() + mow
+
+	if cow.IsRainbow {
+		said = cow.Rainbow(said)
+	} else if cow.IsAurora {
+		said = cow.Aurora(rand.Intn(256), said)
+	}
+
+	return said, nil
+}
+
+// CowsInit to shape the Cow struct
+func CowsInit(cow *Cow) {
+	if cow.IsRandom {
 		cow.Type = pickCow()
 	}
 
@@ -43,19 +62,6 @@ func Say(cow *Cow) (string, error) {
 	if !strings.HasPrefix(cow.Type, "cows/") {
 		cow.Type = "cows/" + cow.Type
 	}
-
-	mow, err := cow.getCow()
-	if err != nil {
-		return "", err
-	}
-
-	if cow.Rainbow {
-		mow = cow.makeRainbow(cow.balloon() + mow)
-	} else if cow.Aurora {
-		mow = cow.makeAurora(rand.Intn(256), cow.balloon()+mow)
-	}
-
-	return mow, nil
 }
 
 // Cows to get list of cows
@@ -69,17 +75,19 @@ func Cows() []string {
 	return cows
 }
 
-func (cow *Cow) getCow() (string, error) {
+// GetCow to get cow's ascii art
+func (cow *Cow) GetCow(thoughts rune) (string, error) {
 	src, err := Asset(cow.Type)
 	if err != nil {
 		return "", err
 	}
 
-	var thoughts string
-	if cow.Thinking {
-		thoughts = "o"
-	} else {
-		thoughts = "\\"
+	if thoughts == 0 {
+		if cow.Thinking {
+			thoughts = 'o'
+		} else {
+			thoughts = '\\'
+		}
 	}
 
 	if len(cow.Eyes) > 2 {
@@ -102,8 +110,8 @@ func (cow *Cow) getCow() (string, error) {
 		"${eyes}", cow.Eyes,
 		"$tongue", cow.Tongue,
 		"${tongue}", cow.Tongue,
-		"$thoughts", thoughts,
-		"${thoughts}", thoughts,
+		"$thoughts", string(thoughts),
+		"${thoughts}", string(thoughts),
 	)
 	newsrc := r.Replace(string(src))
 	separate := strings.Split(newsrc, "\n")

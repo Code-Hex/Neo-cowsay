@@ -15,7 +15,8 @@ const (
 	cyan
 )
 
-func (cow *Cow) makeRainbow(mow string) string {
+// Rainbow to generate rainbow string
+func (cow *Cow) Rainbow(mow string) string {
 	var attribute string
 	if cow.Bold {
 		attribute = ";1"
@@ -37,7 +38,8 @@ func (cow *Cow) makeRainbow(mow string) string {
 	return b.String()
 }
 
-func (cow *Cow) makeAurora(i int, mow string) string {
+// Aurora to generate gradation colors string
+func (cow *Cow) Aurora(i int, mow string) string {
 	var attribute string
 	if cow.Bold {
 		attribute = ";1"
