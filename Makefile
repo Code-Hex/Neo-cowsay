@@ -5,7 +5,7 @@ COWTHINKPATH = ./cmd/cowthink/
 GOVERSION    = $(shell go version)
 GOOS         = $(word 1,$(subst /, ,$(lastword $(GOVERSION))))
 GOARCH       = $(word 2,$(subst /, ,$(lastword $(GOVERSION))))
-XC_OS        = "darwin"
+XC_OS        = "darwin windows linux"
 XC_ARCH      = "i386 amd64"
 VERSION      = $(patsubst "%",%,$(lastword $(shell grep 'version =' cmd/cowsay/main.go)))
 RELEASE      = ./releases/$(VERSION)
@@ -36,6 +36,9 @@ prepare-github: github-token
 release-upload: prepare-github release
 	@echo "Uploading..."
 	@ghr -u $(GITHUB_USERNAME) -t $(shell cat github-token) --draft --replace $(VERSION) $(RELEASE)
+
+lint:
+	@golint
 
 gen:
 	@go generate
