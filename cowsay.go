@@ -13,11 +13,11 @@ type Cow struct {
 	Eyes        string
 	Tongue      string
 	Type        string
-	Random      bool
-	Aurora      bool
 	Thinking    bool
 	Bold        bool
-	Rainbow     bool
+	isRandom    bool
+	isAurora    bool
+	isRainbow   bool
 	BallonWidth int
 }
 
@@ -29,7 +29,7 @@ func init() {
 // Say to return cowsay string.
 func Say(cow *Cow) (string, error) {
 
-	if cow.Random {
+	if cow.isRandom {
 		cow.Type = pickCow()
 	}
 
@@ -50,10 +50,10 @@ func Say(cow *Cow) (string, error) {
 		return "", err
 	}
 
-	if cow.Rainbow {
-		mow = cow.makeRainbow(cow.Balloon() + mow)
-	} else if cow.Aurora {
-		mow = cow.makeAurora(rand.Intn(256), cow.Balloon()+mow)
+	if cow.isRainbow {
+		mow = cow.Rainbow(cow.Balloon() + mow)
+	} else if cow.isAurora {
+		mow = cow.Aurora(rand.Intn(256), cow.Balloon()+mow)
 	}
 
 	return mow, nil
