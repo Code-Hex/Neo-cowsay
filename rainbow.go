@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"math"
-	"math/rand"
 )
 
 const (
@@ -17,7 +16,7 @@ const (
 )
 
 func (cow *Cow) makeRainbow(mow string) string {
-	attribute := ""
+	var attribute string
 	if cow.Bold {
 		attribute = ";1"
 	}
@@ -38,14 +37,12 @@ func (cow *Cow) makeRainbow(mow string) string {
 	return b.String()
 }
 
-func (cow *Cow) makeAurora(mow string) string {
-	attribute := ""
+func (cow *Cow) makeAurora(i int, mow string) string {
+	var attribute string
 	if cow.Bold {
 		attribute = ";1"
 	}
 
-	i := rand.Intn(256)
-	freq := 0.01
 	buf := bytes.NewBuffer(make([]byte, 0, len(mow)))
 	for _, char := range mow {
 		if char == '\n' {
@@ -53,13 +50,14 @@ func (cow *Cow) makeAurora(mow string) string {
 			continue
 		}
 
-		buf.WriteString(fmt.Sprintf("\033[38;5;%d%sm%c\033[0m", rgb(freq, float64(i)), attribute, char))
+		buf.WriteString(fmt.Sprintf("\033[38;5;%d%sm%c\033[0m", rgb(float64(i)), attribute, char))
 		i++
 	}
 	return buf.String()
 }
 
-func rgb(freq, i float64) int {
+func rgb(i float64) int {
+	freq := 0.01
 	red := int(6*((math.Sin(freq*i+0)*127+128)/256)) * 36
 	green := int(6*((math.Sin(freq*i+2*math.Pi/3)*127+128)/256)) * 6
 	blue := int(6*((math.Sin(freq*i+4*math.Pi/3)*127+128)/256)) * 1

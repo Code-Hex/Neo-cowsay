@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	cowsay "github.com/Code-Hex/go-cowsay"
+	cowsay "github.com/Code-Hex/Neo-cowsay"
 	wordwrap "github.com/Code-Hex/go-wordwrap"
 	flags "github.com/jessevdk/go-flags"
 )

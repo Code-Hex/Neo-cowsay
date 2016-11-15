@@ -20,10 +20,12 @@ type Cow struct {
 	BallonWidth int
 }
 
+//go:generate go-bindata -pkg cowsay cows
 func init() {
 	rand.Seed(time.Now().UTC().UnixNano())
 }
 
+// Say to return cowsay string.
 func Say(cow *Cow) (string, error) {
 
 	if cow.Random {
@@ -48,14 +50,15 @@ func Say(cow *Cow) (string, error) {
 	}
 
 	if cow.Rainbow {
-		mow = cow.makeRainbow(mow)
+		mow = cow.makeRainbow(cow.balloon() + mow)
 	} else if cow.Aurora {
-		mow = cow.makeAurora(mow)
+		mow = cow.makeAurora(rand.Intn(256), cow.balloon()+mow)
 	}
 
 	return mow, nil
 }
 
+// Cows to get list of cows
 func Cows() []string {
 	cows := make([]string, 0, len(AssetNames()))
 	for _, key := range AssetNames() {
@@ -103,9 +106,9 @@ func (cow *Cow) getCow() (string, error) {
 		"${thoughts}", thoughts,
 	)
 	newsrc := r.Replace(string(src))
-
-	var mow []string
-	for _, line := range strings.Split(newsrc, "\n") {
+	separate := strings.Split(newsrc, "\n")
+	mow := make([]string, 0, len(separate))
+	for _, line := range separate {
 		if strings.Contains(line, "$the_cow = <<EOC") || strings.HasPrefix(line, "##") {
 			continue
 		}
@@ -116,7 +119,7 @@ func (cow *Cow) getCow() (string, error) {
 
 		mow = append(mow, line)
 	}
-	return cow.balloon() + strings.Join(mow, "\n"), nil
+	return strings.Join(mow, "\n"), nil
 }
 
 func pickCow() string {
