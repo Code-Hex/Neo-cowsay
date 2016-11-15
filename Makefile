@@ -38,6 +38,7 @@ release-upload: prepare-github release
 	@ghr -u $(GITHUB_USERNAME) -t $(shell cat github-token) --draft --replace $(VERSION) $(RELEASE)
 
 lint:
+	go get github.com/golang/lint/golint
 	@golint
 
 gen:

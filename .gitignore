@@ -23,4 +23,6 @@ _testmain.go
 *.test
 *.prof
 
-go-cowsay
+github-token
+build
+releases
