@@ -1,12 +1,15 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"runtime"
 	"strings"
 	"time"
 
 	cowsay "github.com/Code-Hex/Neo-cowsay"
 	tm "github.com/Code-Hex/goterm"
+	colorable "github.com/mattn/go-colorable"
 	runewidth "github.com/mattn/go-runewidth"
 )
 
@@ -28,13 +31,20 @@ func runSuperCow(cow *cowsay.Cow) error {
 	saidCow := strings.Split(balloon+said, "\n")
 
 	// When it is higher than the height of the terminal
-	h := tm.Height()
+	h, err := height()
+	if err != nil {
+		return err
+	}
 	if len(saidCow) > h {
 		return fmt.Errorf("Too height messages...")
 	}
 
 	notSaidCow := strings.Split(blank+notSaid, "\n")
 	w, cowsWidth := tm.Width(), maxLen(notSaidCow)
+
+	if runtime.GOOS == "windows" {
+		tm.Output = bufio.NewWriter(colorable.NewColorableStdout())
+	}
 
 	max := w + cowsWidth
 	half := max / 2
@@ -50,8 +60,9 @@ func runSuperCow(cow *cowsay.Cow) error {
 						return
 					default:
 						tm.Clear()
-						for _, line := range saidCow {
-							tm.Println(tm.MoveTo(cow.Aurora(x*70, line), posx, h))
+						for j, line := range saidCow {
+							y := h - len(saidCow) + j - 1
+							tm.Println(tm.MoveTo(cow.Aurora(x*70, line), posx, y))
 						}
 						tm.Flush()
 						x++
@@ -62,20 +73,25 @@ func runSuperCow(cow *cowsay.Cow) error {
 
 			time.Sleep(3 * time.Second)
 			c <- true
+			close(c)
 		} else {
-			for _, line := range notSaidCow {
+			for j, line := range notSaidCow {
+				y := h - len(saidCow) + j - 1
 				posx := w - i
+				if posx < 1 {
+					posx = 1
+				}
 				if i > w {
 					n := i - w
 					if n < len(line) {
-						tm.Println(tm.MoveTo(cow.Aurora(x*70, line[n:]), 0, h))
+						tm.Print(tm.MoveTo(cow.Aurora(x*70, line[n:]), 1, y))
 					} else {
-						tm.Println(" ")
+						tm.Print(tm.MoveTo(cow.Aurora(x*70, " "), 1, y))
 					}
 				} else if i > len(line) {
-					tm.Println(tm.MoveTo(cow.Aurora(x*70, line), posx, h))
+					tm.Print(tm.MoveTo(cow.Aurora(x*70, line), posx, y))
 				} else {
-					tm.Println(tm.MoveTo(cow.Aurora(x*70, line[:i]), posx, h))
+					tm.Print(tm.MoveTo(cow.Aurora(x*70, line[:i]), posx, y))
 				}
 			}
 			tm.Flush()
