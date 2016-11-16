@@ -10,6 +10,7 @@ import (
 	cowsay "github.com/Code-Hex/Neo-cowsay"
 	wordwrap "github.com/Code-Hex/go-wordwrap"
 	flags "github.com/jessevdk/go-flags"
+	colorable "github.com/mattn/go-colorable"
 )
 
 // Options struct for parse command line arguments
@@ -112,7 +113,7 @@ func mowmow(opts *Options, args []string) error {
 		return err
 	}
 
-	fmt.Println(say)
+	fmt.Fprintln(colorable.NewColorableStdout(), say)
 
 	return nil
 }
