@@ -1,8 +1,8 @@
-package main
+package super
 
 import (
 	"bufio"
-	"fmt"
+	"errors"
 	"runtime"
 	"strings"
 	"time"
@@ -13,7 +13,12 @@ import (
 	runewidth "github.com/mattn/go-runewidth"
 )
 
-func runSuperCow(cow *cowsay.Cow) error {
+const (
+	span    = 40 * time.Millisecond
+	standup = 3 * time.Second
+)
+
+func RunSuperCow(cow *cowsay.Cow) error {
 	cowsay.CowsInit(cow)
 	balloon := cow.Balloon()
 	blank := createBlankSpace(balloon)
@@ -35,9 +40,8 @@ func runSuperCow(cow *cowsay.Cow) error {
 	if err != nil {
 		return err
 	}
-
 	if len(saidCow) > h {
-		return fmt.Errorf("Too height messages...")
+		return errors.New("Too height messages")
 	}
 
 	notSaidCow := strings.Split(blank+notSaid, "\n")
@@ -49,41 +53,43 @@ func runSuperCow(cow *cowsay.Cow) error {
 
 	max := w + cowsWidth
 	half := max / 2
-	x := 0
-	for i := 0; i < max+1; i++ {
+	diff := h - len(saidCow)
+	for x, i := 0, 0; i <= max; i++ {
 		tm.Clear()
 		if i == half {
-			c := make(chan bool)
-			go func(t <-chan bool, posx int) {
-				for {
-					select {
-					case <-t:
-						return
-					default:
-						tm.Clear()
-						for j, line := range saidCow {
-							y := h - len(saidCow) + j - 1
-							tm.Println(tm.MoveTo(cow.Aurora(x*70, line), posx, y))
-						}
-						tm.Flush()
-						x++
+			posx := w - i
+			after := time.After(standup)
+		DRAW:
+			for {
+				select {
+				case <-after:
+					break DRAW
+				default:
+					tm.Clear()
+					// draw colored cow
+					for j, line := range saidCow {
+						y := diff + j - 1
+						tm.Println(tm.MoveTo(cow.Aurora(x*70, line), posx, y))
 					}
-					time.Sleep(40 * time.Millisecond)
+					tm.Flush()
+					x++
 				}
-			}(c, w-i)
-
-			time.Sleep(3 * time.Second)
-			c <- true
-			close(c)
+				time.Sleep(span)
+			}
 		} else {
+			posx := w - i
+			if posx < 1 {
+				posx = 1
+			}
+
+			var n int
+			if i > w {
+				n = i - w
+			}
+
 			for j, line := range notSaidCow {
-				y := h - len(saidCow) + j - 1
-				posx := w - i
-				if posx < 1 {
-					posx = 1
-				}
+				y := diff + j - 1
 				if i > w {
-					n := i - w
 					if n < len(line) {
 						tm.Print(tm.MoveTo(cow.Aurora(x*70, line[n:]), 1, y))
 					} else {
@@ -96,7 +102,7 @@ func runSuperCow(cow *cowsay.Cow) error {
 				}
 			}
 			tm.Flush()
-			time.Sleep(40 * time.Millisecond)
+			time.Sleep(span)
 		}
 		x++
 	}

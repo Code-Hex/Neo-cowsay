@@ -1,10 +1,6 @@
 // +build windows
 
-package main
-
-import (
-	"github.com/mattn/go-tty"
-)
+package super
 
 func height() (int, error) {
 	t, err := tty.Open()

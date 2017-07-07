@@ -1,6 +1,6 @@
 // +build !windows
 
-package main
+package super
 
 import (
 	tm "github.com/Code-Hex/goterm"

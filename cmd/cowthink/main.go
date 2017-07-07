@@ -2,12 +2,12 @@ package main
 
 import (
 	"bufio"
-	"bytes"
 	"fmt"
 	"os"
 	"strings"
 
 	cowsay "github.com/Code-Hex/Neo-cowsay"
+	"github.com/Code-Hex/Neo-cowsay/internal/super"
 	wordwrap "github.com/Code-Hex/go-wordwrap"
 	flags "github.com/jessevdk/go-flags"
 	colorable "github.com/mattn/go-colorable"
@@ -38,7 +38,7 @@ type Options struct {
 }
 
 const (
-	version = "0.0.3"
+	version = "0.0.4"
 )
 
 func main() {
@@ -105,7 +105,7 @@ func mowmow(opts *Options, args []string) error {
 	}
 
 	if opts.Super {
-		return runSuperCow(cow)
+		return super.RunSuperCow(cow)
 	}
 
 	say, err := cowsay.Say(cow)
@@ -147,7 +147,7 @@ func selectFace(opts *Options, cow *cowsay.Cow) {
 	}
 }
 func parseOptions(opts *Options, argv []string) ([]string, error) {
-	p := flags.NewParser(opts, flags.PrintErrors)
+	p := flags.NewParser(opts, flags.None)
 	args, err := p.ParseArgs(argv)
 	if err != nil {
 		return nil, err
@@ -162,14 +162,11 @@ func parseOptions(opts *Options, argv []string) ([]string, error) {
 }
 
 func (opts Options) usage() []byte {
-	buf := new(bytes.Buffer)
-
-	fmt.Fprintf(buf, `cow{say,think} version `+version+`, (c) 2016 CodeHex
+	return []byte(`cow{say,think} version ` + version + `, (c) 2016 CodeHex
 Usage: cowthink [-bdgpstwy] [-h] [-e eyes] [-f cowfile] [--random]
           [-l] [-n] [-T tongue] [-W wrapcolumn]
           [--rainbow] [--aurora] [--super] [message]
 
 Original Author: (c) 1999 Tony Monroe
 `)
-	return buf.Bytes()
 }
