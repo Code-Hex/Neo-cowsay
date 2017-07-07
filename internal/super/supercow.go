@@ -67,9 +67,10 @@ func RunSuperCow(cow *cowsay.Cow) error {
 				default:
 					tm.Clear()
 					// draw colored cow
+					base := x * 70
 					for j, line := range saidCow {
 						y := diff + j - 1
-						tm.Println(tm.MoveTo(cow.Aurora(x*70, line), posx, y))
+						tm.Println(tm.MoveTo(cow.Aurora(base, line), posx, y))
 					}
 					tm.Flush()
 					x++
@@ -87,18 +88,19 @@ func RunSuperCow(cow *cowsay.Cow) error {
 				n = i - w
 			}
 
+			base := x * 70
 			for j, line := range notSaidCow {
 				y := diff + j - 1
 				if i > w {
 					if n < len(line) {
-						tm.Print(tm.MoveTo(cow.Aurora(x*70, line[n:]), 1, y))
+						tm.Print(tm.MoveTo(cow.Aurora(base, line[n:]), 1, y))
 					} else {
-						tm.Print(tm.MoveTo(cow.Aurora(x*70, " "), 1, y))
+						tm.Print(tm.MoveTo(cow.Aurora(base, " "), 1, y))
 					}
 				} else if i > len(line) {
-					tm.Print(tm.MoveTo(cow.Aurora(x*70, line), posx, y))
+					tm.Print(tm.MoveTo(cow.Aurora(base, line), posx, y))
 				} else {
-					tm.Print(tm.MoveTo(cow.Aurora(x*70, line[:i]), posx, y))
+					tm.Print(tm.MoveTo(cow.Aurora(base, line[:i]), posx, y))
 				}
 			}
 			tm.Flush()
