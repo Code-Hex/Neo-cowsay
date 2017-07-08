@@ -51,7 +51,6 @@ func (cow *Cow) Aurora(i int, mow string) string {
 			buf = append(buf, char)
 			continue
 		}
-
 		buf = append(buf, []rune(fmt.Sprintf("\033[38;5;%d%sm%c\033[0m", rgb(float64(i)), attribute, char))...)
 		i++
 	}

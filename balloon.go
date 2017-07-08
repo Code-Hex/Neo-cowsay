@@ -1,7 +1,6 @@
 package cowsay
 
 import (
-	"bytes"
 	"fmt"
 	"strings"
 
@@ -14,6 +13,12 @@ type border struct {
 	middle [2]rune
 	last   [2]rune
 	only   [2]rune
+}
+
+type buf []rune
+
+func (b buf) String() string {
+	return string(b)
 }
 
 func (cow *Cow) borderType() border {
@@ -36,8 +41,7 @@ func (cow *Cow) borderType() border {
 
 func (cow *Cow) getLines(width int) []string {
 	// Replace tab to 8 spaces
-	r := strings.NewReplacer("\t", "       ")
-	cow.Phrase = r.Replace(cow.Phrase)
+	cow.Phrase = strings.Replace(cow.Phrase, "\t", "       ", -1)
 	text := wordwrap.WrapString(cow.Phrase, uint(width))
 	return strings.Split(text, "\n")
 }
@@ -57,27 +61,28 @@ func (cow *Cow) Balloon() string {
 		maxWidth = width
 	}
 
-	top := bytes.NewBuffer(make([]byte, 0, maxWidth+2))
-	bottom := bytes.NewBuffer(make([]byte, 0, maxWidth+2))
+	top := make(buf, 0, maxWidth+2)
+	bottom := make(buf, 0, maxWidth+2)
 
 	borderType := cow.borderType()
 
-	top.WriteRune(' ')
-	bottom.WriteRune(' ')
+	top = append(top, ' ')
+	bottom = append(bottom, ' ')
 
 	for i := 0; i < maxWidth+2; i++ {
-		top.WriteRune('_')
-		bottom.WriteRune('-')
+		top = append(top, '_')
+		bottom = append(bottom, '-')
 	}
 
 	l := len(lines)
 	if l == 1 {
 		border := borderType.only
-		return flush(fmt.Sprintf("%c %s %c\n", border[0], lines[0], border[1]), top, bottom)
+		text := fmt.Sprintf("%c %s %c\n", border[0], lines[0], border[1])
+		return flush(buf(text), top, bottom)
 	}
 
 	var border [2]rune
-	phrase := make([]byte, 0, l*100)
+	phrase := make(buf, 0, l*100)
 	for i := 0; i < l; i++ {
 		switch i {
 		case 0:
@@ -87,17 +92,17 @@ func (cow *Cow) Balloon() string {
 		default:
 			border = borderType.middle
 		}
-		phrase = append(phrase, []byte(fmt.Sprintf("%c %s %c\n", border[0], padding(lines[i], maxWidth), border[1]))...)
+		phrase = append(phrase, buf(fmt.Sprintf("%c %s %c\n", border[0], padding(lines[i], maxWidth), border[1]))...)
 	}
 
-	return flush(string(phrase), top, bottom)
+	return flush(phrase, top, bottom)
 }
 
-func flush(text string, top, bottom *bytes.Buffer) string {
+func flush(text, top, bottom fmt.Stringer) string {
 	return fmt.Sprintf(
 		"%s\n%s%s\n",
 		top.String(),
-		text,
+		text.String(),
 		bottom.String(),
 	)
 }
@@ -109,11 +114,11 @@ func padding(line string, maxWidth int) string {
 	}
 
 	l := maxWidth - w
-	pad := make([]rune, 0, l)
+	pad := make(buf, 0, l)
 	for i := 0; i < l; i++ {
 		pad = append(pad, ' ')
 	}
-	return line + string(pad)
+	return line + pad.String()
 }
 
 func max(lines []string) int {
