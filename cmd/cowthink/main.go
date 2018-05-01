@@ -192,7 +192,7 @@ func parseOptions(opts *Options, argv []string) ([]string, error) {
 }
 
 func (opts Options) usage() []byte {
-	return []byte(`cow{say,think} version ` + version + `, (c) 2016 CodeHex
+	return []byte(`cow{say,think} version ` + version + `, (c) 2018 CodeHex
 Usage: cowsay [-bdgpstwy] [-h] [-e eyes] [-f cowfile] [--random]
           [-l] [-n] [-T tongue] [-W wrapcolumn]
           [--rainbow] [--aurora] [--super] [message]
