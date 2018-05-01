@@ -23,7 +23,7 @@ Neo Cowsay written in Go. This cowsay extended the original and added fun more o
 # Usage
 ## As command
 ```
-cow{say,think} version 0.0.1, (c) 2016 CodeHex
+cow{say,think} version 0.0.5, (c) 2018 CodeHex
 Usage: cowsay [-bdgpstwy] [-h] [-e eyes] [-f cowfile] [--random]
           [-l] [-n] [-T tongue] [-W wrapcolumn]
           [--rainbow] [--aurora] [--super] [message]
