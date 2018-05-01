@@ -20,6 +20,7 @@ type Cow struct {
 	ballonWidth int
 }
 
+// NewCow returns pointer of Cow struct that made by options
 func NewCow(options ...Option) (*Cow, error) {
 	cow := &Cow{
 		phrase:      "",
@@ -36,6 +37,7 @@ func NewCow(options ...Option) (*Cow, error) {
 	return cow, nil
 }
 
+// Say returns string that said by cow
 func (cow *Cow) Say() (string, error) {
 	mow, err := cow.GetCow(0)
 	if err != nil {
@@ -53,8 +55,10 @@ func (cow *Cow) Say() (string, error) {
 	return said, nil
 }
 
+// Option defined for Options
 type Option func(*Cow) error
 
+// Phrase specifies you want to say
 func Phrase(s string) Option {
 	return func(c *Cow) error {
 		c.phrase = s
@@ -62,6 +66,8 @@ func Phrase(s string) Option {
 	}
 }
 
+// Eyes specifies eyes
+// You must specify two length string
 func Eyes(s string) Option {
 	return func(c *Cow) error {
 		if l := len(s); l != 2 {
@@ -72,6 +78,8 @@ func Eyes(s string) Option {
 	}
 }
 
+// Tongue specifies tongue
+// You must specify two length string
 func Tongue(s string) Option {
 	return func(c *Cow) error {
 		if l := len(s); l != 2 {
@@ -91,6 +99,7 @@ func containCows(t string) bool {
 	return false
 }
 
+// Type specify cow type that is file name of .cow
 func Type(s string) Option {
 	if s == "" {
 		s = "cows/default.cow"
@@ -110,6 +119,7 @@ func Type(s string) Option {
 	}
 }
 
+// Thinking enables thinking mode
 func Thinking() Option {
 	return func(c *Cow) error {
 		c.thinking = true
@@ -117,6 +127,7 @@ func Thinking() Option {
 	}
 }
 
+// Random specifies something .cow from cows directory
 func Random() Option {
 	return func(c *Cow) error {
 		c.typ = pickCow()
@@ -124,6 +135,7 @@ func Random() Option {
 	}
 }
 
+// Bold enables bold mode
 func Bold() Option {
 	return func(c *Cow) error {
 		c.bold = true
@@ -131,6 +143,7 @@ func Bold() Option {
 	}
 }
 
+// Aurora enables aurora mode
 func Aurora() Option {
 	return func(c *Cow) error {
 		c.isAurora = true
@@ -138,6 +151,7 @@ func Aurora() Option {
 	}
 }
 
+// Rainbow enables raibow mode
 func Rainbow() Option {
 	return func(c *Cow) error {
 		c.isRainbow = true
@@ -145,13 +159,10 @@ func Rainbow() Option {
 	}
 }
 
-func BallonWidth(size int) Option {
+// BallonWidth specifies ballon size
+func BallonWidth(size uint) Option {
 	return func(c *Cow) error {
-		if size <= 0 {
-			c.ballonWidth = 1
-		} else {
-			c.ballonWidth = size
-		}
+		c.ballonWidth = int(size)
 		return nil
 	}
 }

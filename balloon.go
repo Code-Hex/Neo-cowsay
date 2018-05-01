@@ -49,11 +49,6 @@ func (cow *Cow) getLines(width int) []string {
 // Balloon to get the balloon and the string entered in the balloon.
 func (cow *Cow) Balloon() string {
 	width := cow.ballonWidth
-	if width <= 0 {
-		width = 1
-		cow.phrase = "0"
-	}
-
 	lines := cow.getLines(width)
 	// find max length from text lines
 	maxWidth := max(lines)
