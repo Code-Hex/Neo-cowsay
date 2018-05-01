@@ -2,6 +2,8 @@
 
 package super
 
+import "github.com/mattn/go-tty"
+
 func height() (int, error) {
 	t, err := tty.Open()
 	if err != nil {
