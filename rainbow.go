@@ -19,7 +19,7 @@ var rainbow = []int{magenta, red, yellow, green, cyan, blue}
 // Rainbow to generate rainbow string
 func (cow *Cow) Rainbow(mow string) string {
 	var attribute string
-	if cow.Bold {
+	if cow.bold {
 		attribute = ";1"
 	}
 
@@ -41,7 +41,7 @@ func (cow *Cow) Rainbow(mow string) string {
 // Aurora to generate gradation colors string
 func (cow *Cow) Aurora(i int, mow string) string {
 	var attribute string
-	if cow.Bold {
+	if cow.bold {
 		attribute = ";1"
 	}
 
@@ -57,12 +57,14 @@ func (cow *Cow) Aurora(i int, mow string) string {
 	return string(buf)
 }
 
-const freq = 0.01
+const (
+	freq = 0.01
+	m    = math.Pi / 3
+)
 
 func rgb(i float64) int {
 	red := int(6*((math.Sin(freq*i+0)*127+128)/256)) * 36
-	green := int(6*((math.Sin(freq*i+2*math.Pi/3)*127+128)/256)) * 6
-	blue := int(6*((math.Sin(freq*i+4*math.Pi/3)*127+128)/256)) * 1
-
+	green := int(6*((math.Sin(freq*i+2*m)*127+128)/256)) * 6
+	blue := int(6*((math.Sin(freq*i+4*m)*127+128)/256)) * 1
 	return 16 + red + green + blue
 }

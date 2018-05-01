@@ -7,28 +7,17 @@ import (
 	"time"
 )
 
-// Cow struct!!
-type Cow struct {
-	Phrase      string
-	Eyes        string
-	Tongue      string
-	Type        string
-	Thinking    bool
-	Bold        bool
-	IsRandom    bool
-	IsAurora    bool
-	IsRainbow   bool
-	BallonWidth int
-}
-
 //go:generate go-bindata -pkg cowsay cows
 func init() {
 	rand.Seed(time.Now().UTC().UnixNano())
 }
 
 // Say to return cowsay string.
-func Say(cow *Cow) (string, error) {
-	CowsInit(cow)
+func Say(options ...Option) (string, error) {
+	cow, err := NewCow(options...)
+	if err != nil {
+		return "", err
+	}
 	mow, err := cow.GetCow(0)
 	if err != nil {
 		return "", err
@@ -36,32 +25,13 @@ func Say(cow *Cow) (string, error) {
 
 	said := cow.Balloon() + mow
 
-	if cow.IsRainbow {
-		said = cow.Rainbow(said)
-	} else if cow.IsAurora {
-		said = cow.Aurora(rand.Intn(256), said)
+	if cow.isRainbow {
+		return cow.Rainbow(said), nil
 	}
-
+	if cow.isAurora {
+		return cow.Aurora(rand.Intn(256), said), nil
+	}
 	return said, nil
-}
-
-// CowsInit to shape the Cow struct
-func CowsInit(cow *Cow) {
-	if cow.IsRandom {
-		cow.Type = pickCow()
-	}
-
-	if cow.Type == "" {
-		cow.Type = "cows/default.cow"
-	}
-
-	if !strings.HasSuffix(cow.Type, ".cow") {
-		cow.Type += ".cow"
-	}
-
-	if !strings.HasPrefix(cow.Type, "cows/") {
-		cow.Type = "cows/" + cow.Type
-	}
 }
 
 // Cows to get list of cows
@@ -77,39 +47,35 @@ func Cows() []string {
 
 // GetCow to get cow's ascii art
 func (cow *Cow) GetCow(thoughts rune) (string, error) {
-	src, err := Asset(cow.Type)
+	src, err := Asset(cow.typ)
 	if err != nil {
 		return "", err
 	}
 
 	if thoughts == 0 {
-		if cow.Thinking {
+		if cow.thinking {
 			thoughts = 'o'
 		} else {
 			thoughts = '\\'
 		}
 	}
 
-	if len(cow.Eyes) > 2 {
-		cow.Eyes = cow.Eyes[0:2]
-	} else if cow.Eyes == "" {
-		cow.Eyes = "oo"
+	if len(cow.eyes) > 2 {
+		cow.eyes = cow.eyes[0:2]
 	}
 
-	if len(cow.Tongue) > 2 {
-		cow.Tongue = cow.Tongue[0:2]
-	} else if cow.Tongue == "" {
-		cow.Tongue = "  "
+	if len(cow.tongue) > 2 {
+		cow.tongue = cow.tongue[0:2]
 	}
 
 	r := strings.NewReplacer(
 		"\\\\", "\\",
 		"\\@", "@",
 		"\\$", "$",
-		"$eyes", cow.Eyes,
-		"${eyes}", cow.Eyes,
-		"$tongue", cow.Tongue,
-		"${tongue}", cow.Tongue,
+		"$eyes", cow.eyes,
+		"${eyes}", cow.eyes,
+		"$tongue", cow.tongue,
+		"${tongue}", cow.tongue,
 		"$thoughts", string(thoughts),
 		"${thoughts}", string(thoughts),
 	)
