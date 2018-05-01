@@ -19,7 +19,6 @@ const (
 )
 
 func RunSuperCow(cow *cowsay.Cow) error {
-	cowsay.CowsInit(cow)
 	balloon := cow.Balloon()
 	blank := createBlankSpace(balloon)
 
