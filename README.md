@@ -65,18 +65,18 @@ import (
 )
 
 func main() {
-	say, err := cowsay.Say(&cowsay.Cow{
-		Phrase:      "Hello!!",
-		Type:        "default",
-		BallonWidth: 40,
-	})
+	say, err := cowsay.Say(
+		cowsay.Phrase("Hello"),
+		cowsay.Type("default"),
+		cowsay.BallonWidth(40),
+	)
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println(say)
 }
 ```
- [Example](https://github.com/Code-Hex/Neo-cowsay/blob/master/cmd/cowsay/main.go#L75) or [GoDoc](https://godoc.org/github.com/Code-Hex/Neo-cowsay)
+[Example](https://github.com/Code-Hex/Neo-cowsay/blob/master/eg/main.go) or [GoDoc](https://godoc.org/github.com/Code-Hex/Neo-cowsay)
 # New options
 ## Random
 [![asciicast](https://asciinema.org/a/avq390avlf6ddb4jn7d0n0y37.png)](https://asciinema.org/a/avq390avlf6ddb4jn7d0n0y37)
@@ -89,9 +89,11 @@ asciinema is heavy...
 ## library
 
     go get -u github.com/Code-Hex/Neo-cowsay
+
 ## cowsay
 
     go get -u github.com/Code-Hex/Neo-cowsay/cmd/cowsay
+
 ## cowthink
 
     go get -u github.com/Code-Hex/Neo-cowsay/cmd/cowthink
