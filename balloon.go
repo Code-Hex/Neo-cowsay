@@ -22,7 +22,7 @@ func (b buf) String() string {
 }
 
 func (cow *Cow) borderType() border {
-	if cow.Thinking {
+	if cow.thinking {
 		return border{
 			first:  [2]rune{'(', ')'},
 			middle: [2]rune{'(', ')'},
@@ -41,19 +41,14 @@ func (cow *Cow) borderType() border {
 
 func (cow *Cow) getLines(width int) []string {
 	// Replace tab to 8 spaces
-	cow.Phrase = strings.Replace(cow.Phrase, "\t", "       ", -1)
-	text := wordwrap.WrapString(cow.Phrase, uint(width))
+	cow.phrase = strings.Replace(cow.phrase, "\t", "       ", -1)
+	text := wordwrap.WrapString(cow.phrase, uint(width))
 	return strings.Split(text, "\n")
 }
 
 // Balloon to get the balloon and the string entered in the balloon.
 func (cow *Cow) Balloon() string {
-	width := cow.BallonWidth
-	if width <= 0 {
-		width = 1
-		cow.Phrase = "0"
-	}
-
+	width := cow.ballonWidth
 	lines := cow.getLines(width)
 	// find max length from text lines
 	maxWidth := max(lines)

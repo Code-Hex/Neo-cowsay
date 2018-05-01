@@ -38,7 +38,7 @@ type Options struct {
 }
 
 const (
-	version = "0.0.4"
+	version = "0.0.5"
 )
 
 func main() {
@@ -73,79 +73,109 @@ func mow() error {
 	return nil
 }
 
-func mowmow(opts *Options, args []string) error {
-	cow := &cowsay.Cow{
-		Type:      opts.File,
-		Bold:      opts.Bold,
-		Thinking:  true,
-		IsRandom:  opts.Random,
-		IsRainbow: opts.Rainbow,
-		IsAurora:  opts.Aurora,
+func generateOptions(opts *Options, phrase string) []cowsay.Option {
+	o := make([]cowsay.Option, 0, 8)
+	o = append(o,
+		cowsay.Phrase(phrase),
+		cowsay.Type(opts.File),
+		cowsay.Thinking(),
+	)
+	if opts.Bold {
+		o = append(o, cowsay.Bold())
 	}
-
-	selectFace(opts, cow)
-
-	if opts.Width <= 0 {
-		cow.BallonWidth = 40
+	if opts.Random {
+		o = append(o, cowsay.Random())
 	}
+	if opts.Rainbow {
+		o = append(o, cowsay.Rainbow())
+	}
+	if opts.Aurora {
+		o = append(o, cowsay.Aurora())
+	}
+	return selectFace(opts, o)
+}
 
+func phrase(opts *Options, args []string) string {
 	if len(args) > 0 {
-		cow.Phrase = strings.Join(args, " ")
-	} else {
-		lines := make([]string, 0, 40)
-		scanner := bufio.NewScanner(os.Stdin)
-		for scanner.Scan() {
-			lines = append(lines, scanner.Text())
-		}
-		if opts.NewLine {
-			cow.Phrase = strings.Join(lines, "\n")
-		} else {
-			cow.Phrase = strings.Join(lines, " ")
-		}
+		return strings.Join(args, " ")
 	}
+	lines := make([]string, 0, 40)
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+	if opts.NewLine {
+		return strings.Join(lines, "\n")
+	}
+	return strings.Join(lines, " ")
+}
 
+func mowmow(opts *Options, args []string) error {
+	phrase := phrase(opts, args)
+	o := generateOptions(opts, phrase)
+	cow, err := cowsay.NewCow(o...)
+	if err != nil {
+		return err
+	}
 	if opts.Super {
 		return super.RunSuperCow(cow)
 	}
 
-	say, err := cowsay.Say(cow)
+	say, err := cow.Say()
 	if err != nil {
 		return err
 	}
-
 	fmt.Fprintln(colorable.NewColorableStdout(), say)
 
 	return nil
 }
 
-func selectFace(opts *Options, cow *cowsay.Cow) {
+func selectFace(opts *Options, o []cowsay.Option) []cowsay.Option {
 	switch {
 	case opts.Borg:
-		cow.Eyes = "=="
-		cow.Tongue = "  "
+		o = append(o,
+			cowsay.Eyes("=="),
+			cowsay.Tongue("  "),
+		)
 	case opts.Dead:
-		cow.Eyes = "xx"
-		cow.Tongue = "U "
+		o = append(o,
+			cowsay.Eyes("xx"),
+			cowsay.Tongue("U "),
+		)
 	case opts.Greedy:
-		cow.Eyes = "$$"
-		cow.Tongue = "  "
+		o = append(o,
+			cowsay.Eyes("$$"),
+			cowsay.Tongue("  "),
+		)
 	case opts.Paranoia:
-		cow.Eyes = "@@"
-		cow.Tongue = "  "
+		o = append(o,
+			cowsay.Eyes("@@"),
+			cowsay.Tongue("  "),
+		)
 	case opts.Stoned:
-		cow.Eyes = "**"
-		cow.Tongue = "U "
+		o = append(o,
+			cowsay.Eyes("**"),
+			cowsay.Tongue("U "),
+		)
 	case opts.Tired:
-		cow.Eyes = "--"
-		cow.Tongue = "  "
+		o = append(o,
+			cowsay.Eyes("--"),
+			cowsay.Tongue("  "),
+		)
 	case opts.Wired:
-		cow.Eyes = "OO"
-		cow.Tongue = "  "
+		o = append(o,
+			cowsay.Eyes("OO"),
+			cowsay.Tongue("  "),
+		)
 	case opts.Youthful:
-		cow.Eyes = ".."
-		cow.Tongue = "  "
+		o = append(o,
+			cowsay.Eyes(".."),
+			cowsay.Tongue("  "),
+		)
 	}
+	return o
 }
+
 func parseOptions(opts *Options, argv []string) ([]string, error) {
 	p := flags.NewParser(opts, flags.None)
 	args, err := p.ParseArgs(argv)
@@ -162,8 +192,8 @@ func parseOptions(opts *Options, argv []string) ([]string, error) {
 }
 
 func (opts Options) usage() []byte {
-	return []byte(`cow{say,think} version ` + version + `, (c) 2016 CodeHex
-Usage: cowthink [-bdgpstwy] [-h] [-e eyes] [-f cowfile] [--random]
+	return []byte(`cow{say,think} version ` + version + `, (c) 2018 CodeHex
+Usage: cowsay [-bdgpstwy] [-h] [-e eyes] [-f cowfile] [--random]
           [-l] [-n] [-T tongue] [-W wrapcolumn]
           [--rainbow] [--aurora] [--super] [message]
 
