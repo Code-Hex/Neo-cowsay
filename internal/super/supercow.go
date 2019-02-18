@@ -111,13 +111,15 @@ func RunSuperCow(cow *cowsay.Cow) error {
 	return nil
 }
 
+var buf strings.Builder
+
 func createBlankSpace(balloon string) string {
+	buf.Reset()
 	l := len(strings.Split(balloon, "\n"))
-	blank := make([]byte, 0, l)
 	for i := 1; i < l; i++ {
-		blank = append(blank, byte('\n'))
+		buf.WriteRune('\n')
 	}
-	return string(blank)
+	return buf.String()
 }
 
 func maxLen(cow []string) int {

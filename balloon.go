@@ -15,12 +15,6 @@ type border struct {
 	only   [2]rune
 }
 
-type buf []rune
-
-func (b buf) String() string {
-	return string(b)
-}
-
 func (cow *Cow) borderType() border {
 	if cow.thinking {
 		return border{
@@ -39,9 +33,11 @@ func (cow *Cow) borderType() border {
 	}
 }
 
+var replacer = strings.NewReplacer("\t", "       ")
+
 func (cow *Cow) getLines(width int) []string {
 	// Replace tab to 8 spaces
-	cow.phrase = strings.Replace(cow.phrase, "\t", "       ", -1)
+	cow.phrase = replacer.Replace(cow.phrase)
 	text := wordwrap.WrapString(cow.phrase, uint(width))
 	return strings.Split(text, "\n")
 }
@@ -56,28 +52,29 @@ func (cow *Cow) Balloon() string {
 		maxWidth = width
 	}
 
-	top := make(buf, 0, maxWidth+2)
-	bottom := make(buf, 0, maxWidth+2)
+	top, bottom := &strings.Builder{}, &strings.Builder{}
+	top.Grow(maxWidth + 2)
+	bottom.Grow(maxWidth + 2)
 
 	borderType := cow.borderType()
 
-	top = append(top, ' ')
-	bottom = append(bottom, ' ')
+	top.WriteRune(' ')
+	bottom.WriteRune(' ')
 
 	for i := 0; i < maxWidth+2; i++ {
-		top = append(top, '_')
-		bottom = append(bottom, '-')
+		top.WriteRune('_')
+		bottom.WriteRune('_')
 	}
 
 	l := len(lines)
 	if l == 1 {
 		border := borderType.only
 		text := fmt.Sprintf("%c %s %c\n", border[0], lines[0], border[1])
-		return flush(buf(text), top, bottom)
+		return flush(text, top, bottom)
 	}
 
 	var border [2]rune
-	phrase := make(buf, 0, l*100)
+	var phrase strings.Builder
 	for i := 0; i < l; i++ {
 		switch i {
 		case 0:
@@ -87,17 +84,17 @@ func (cow *Cow) Balloon() string {
 		default:
 			border = borderType.middle
 		}
-		phrase = append(phrase, buf(fmt.Sprintf("%c %s %c\n", border[0], padding(lines[i], maxWidth), border[1]))...)
+		fmt.Fprintf(&phrase, "%c %s %c\n", border[0], padding(lines[i], maxWidth), border[1])
 	}
 
-	return flush(phrase, top, bottom)
+	return flush(phrase.String(), top, bottom)
 }
 
-func flush(text, top, bottom fmt.Stringer) string {
+func flush(text string, top, bottom fmt.Stringer) string {
 	return fmt.Sprintf(
 		"%s\n%s%s\n",
 		top.String(),
-		text.String(),
+		text,
 		bottom.String(),
 	)
 }
@@ -109,11 +106,13 @@ func padding(line string, maxWidth int) string {
 	}
 
 	l := maxWidth - w
-	pad := make(buf, 0, l)
+	var buf strings.Builder
+	buf.Grow(l + len(line))
+	buf.WriteString(line)
 	for i := 0; i < l; i++ {
-		pad = append(pad, ' ')
+		buf.WriteRune(' ')
 	}
-	return line + pad.String()
+	return buf.String()
 }
 
 func max(lines []string) int {
