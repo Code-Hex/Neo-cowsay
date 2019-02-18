@@ -79,12 +79,12 @@ func main() {
 [Example](https://github.com/Code-Hex/Neo-cowsay/blob/master/eg/main.go) or [GoDoc](https://godoc.org/github.com/Code-Hex/Neo-cowsay)
 # New options
 ## Random
-[![asciicast](https://asciinema.org/a/avq390avlf6ddb4jn7d0n0y37.png)](https://asciinema.org/a/avq390avlf6ddb4jn7d0n0y37)
+[![asciicast](https://asciinema.org/a/228210.svg)](https://asciinema.org/a/228210)
 ## Rainbow and Aurora, Bold
-[![asciicast](https://asciinema.org/a/d3k3a182rsndlgez5sdzhqprk.png)](https://asciinema.org/a/d3k3a182rsndlgez5sdzhqprk)
+[![asciicast](https://asciinema.org/a/228213.svg)](https://asciinema.org/a/228213)
 # And, Super Cows mode
 asciinema is heavy...
-[![asciicast](https://asciinema.org/a/crf5crjim1d2nw01ioigug0ks.png)](https://asciinema.org/a/crf5crjim1d2nw01ioigug0ks)
+[![asciicast](https://asciinema.org/a/228215.svg)](https://asciinema.org/a/228215)
 # Install
 ## library
 
