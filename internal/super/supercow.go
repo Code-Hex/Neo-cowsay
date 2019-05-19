@@ -19,6 +19,7 @@ const (
 	standup = 3 * time.Second
 )
 
+// RunSuperCow runs super cow mode animation on the your terminal
 func RunSuperCow(cow *cowsay.Cow) error {
 	balloon := cow.Balloon()
 	blank := createBlankSpace(balloon)
