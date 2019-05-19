@@ -1,5 +1,7 @@
 builds:
-  - main: ./cmd/cowsay/main.go
+  - id: cowsay
+    main: ./cmd/cowsay/main.go
+    binary: cowsay
     env:
       - CGO_ENABLED=0
     ldflags: -s -w
@@ -10,7 +12,9 @@ builds:
     goarch:
       - 386
       - amd64
-  - main: ./cmd/cowthink/main.go
+  - id: cowthink
+    main: ./cmd/cowthink/main.go
+    binary: cowthink
     env:
       - CGO_ENABLED=0
     ldflags: -s -w
