@@ -25,19 +25,6 @@ jobs:
       - run:
           name: Build
           command: make build
-
-  modules:
-    docker:
-      - image: circleci/golang:1.12
-        environment:
-          GO111MODULE: "on"
-    working_directory: *working_directory
-    steps:
-      - checkout
-      - restore_cache: *restore_cache_modules
-      - run:
-          name: Module Download
-          command: go mod download
       - save_cache:
           key: go-mod-v1-{{ checksum "go.sum" }}
           paths:
@@ -47,7 +34,4 @@ workflows:
     version: 2
     build:
       jobs:
-        - build:
-            requires:
-                - modules
-        - modules
+        - build
