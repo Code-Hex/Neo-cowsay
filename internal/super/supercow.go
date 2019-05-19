@@ -3,7 +3,7 @@ package super
 import (
 	"bufio"
 	"errors"
-	"runtime"
+	"os"
 	"strings"
 	"time"
 
@@ -11,6 +11,7 @@ import (
 	tm "github.com/Code-Hex/goterm"
 	colorable "github.com/mattn/go-colorable"
 	runewidth "github.com/mattn/go-runewidth"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 const (
@@ -45,10 +46,7 @@ func RunSuperCow(cow *cowsay.Cow) error {
 
 	notSaidCow := strings.Split(blank+notSaid, "\n")
 	w, cowsWidth := tm.Width(), maxLen(notSaidCow)
-
-	if runtime.GOOS == "windows" {
-		tm.Output = bufio.NewWriter(colorable.NewColorableStdout())
-	}
+	tm.Output = bufio.NewWriter(colorable.NewColorableStdout())
 
 	max := w + cowsWidth
 	half := max / 2
@@ -131,4 +129,13 @@ func maxLen(cow []string) int {
 		}
 	}
 	return max
+}
+
+func height() (int, error) {
+	fd := int(os.Stdout.Fd())
+	_, height, err := terminal.GetSize(fd)
+	if err != nil {
+		return 0, err
+	}
+	return height, nil
 }
