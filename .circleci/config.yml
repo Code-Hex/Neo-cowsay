@@ -17,8 +17,12 @@ jobs:
     steps:
       - checkout
       - restore_cache: *restore_cache_modules
-      - make lint
-      - make build
+      - run:
+          name: Lint
+          command: make lint
+      - run:
+          name: Build
+          command: make build
 
   modules:
     docker:
