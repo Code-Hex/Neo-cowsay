@@ -31,14 +31,14 @@ jobs:
           paths:
             - "/go/pkg/mod"
     
-    release:
-      docker:
-        - image: circleci/golang:1.12
-          environment:
-            GO111MODULE: "on"
-      steps:
-        - checkout
-        - run: curl -sL https://git.io/goreleaser | bash
+  release:
+    docker:
+      - image: circleci/golang:1.12
+        environment:
+          GO111MODULE: "on"
+    steps:
+      - checkout
+      - run: curl -sL https://git.io/goreleaser | bash
 
 workflows:
     version: 2
