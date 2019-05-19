@@ -1,5 +1,6 @@
 builds:
   - main: ./cmd/cowsay/main.go
+    name: cowsay
     env:
       - CGO_ENABLED=0
     ldflags: -s -w
@@ -11,6 +12,7 @@ builds:
       - 386
       - amd64
   - main: ./cmd/cowthink/main.go
+    name: cowthink
     env:
       - CGO_ENABLED=0
     ldflags: -s -w
