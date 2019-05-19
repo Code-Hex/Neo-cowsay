@@ -26,3 +26,5 @@ _testmain.go
 github-token
 build
 releases
+bin/*
+!bin/.gitkeep

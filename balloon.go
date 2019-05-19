@@ -89,7 +89,6 @@ func (cow *Cow) Balloon() string {
 		}
 		phrase = append(phrase, buf(fmt.Sprintf("%c %s %c\n", border[0], padding(lines[i], maxWidth), border[1]))...)
 	}
-
 	return flush(phrase, top, bottom)
 }
 
@@ -109,9 +108,9 @@ func padding(line string, maxWidth int) string {
 	}
 
 	l := maxWidth - w
-	pad := make(buf, 0, l)
+	pad := make(buf, l)
 	for i := 0; i < l; i++ {
-		pad = append(pad, ' ')
+		pad[i] = ' '
 	}
 	return line + pad.String()
 }

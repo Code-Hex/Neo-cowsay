@@ -3,7 +3,7 @@ package super
 import (
 	"bufio"
 	"errors"
-	"runtime"
+	"os"
 	"strings"
 	"time"
 
@@ -11,6 +11,7 @@ import (
 	tm "github.com/Code-Hex/goterm"
 	colorable "github.com/mattn/go-colorable"
 	runewidth "github.com/mattn/go-runewidth"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 const (
@@ -18,6 +19,7 @@ const (
 	standup = 3 * time.Second
 )
 
+// RunSuperCow runs super cow mode animation on the your terminal
 func RunSuperCow(cow *cowsay.Cow) error {
 	balloon := cow.Balloon()
 	blank := createBlankSpace(balloon)
@@ -45,10 +47,7 @@ func RunSuperCow(cow *cowsay.Cow) error {
 
 	notSaidCow := strings.Split(blank+notSaid, "\n")
 	w, cowsWidth := tm.Width(), maxLen(notSaidCow)
-
-	if runtime.GOOS == "windows" {
-		tm.Output = bufio.NewWriter(colorable.NewColorableStdout())
-	}
+	tm.Output = bufio.NewWriter(colorable.NewColorableStdout())
 
 	max := w + cowsWidth
 	half := max / 2
@@ -111,13 +110,15 @@ func RunSuperCow(cow *cowsay.Cow) error {
 	return nil
 }
 
+var buf strings.Builder
+
 func createBlankSpace(balloon string) string {
+	buf.Reset()
 	l := len(strings.Split(balloon, "\n"))
-	blank := make([]byte, 0, l)
 	for i := 1; i < l; i++ {
-		blank = append(blank, byte('\n'))
+		buf.WriteRune('\n')
 	}
-	return string(blank)
+	return buf.String()
 }
 
 func maxLen(cow []string) int {
@@ -129,4 +130,13 @@ func maxLen(cow []string) int {
 		}
 	}
 	return max
+}
+
+func height() (int, error) {
+	fd := int(os.Stdout.Fd())
+	_, height, err := terminal.GetSize(fd)
+	if err != nil {
+		return 0, err
+	}
+	return height, nil
 }
