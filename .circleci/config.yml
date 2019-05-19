@@ -19,7 +19,9 @@ jobs:
       - restore_cache: *restore_cache_modules
       - run:
           name: Lint
-          command: make lint
+          command: |
+            go get golang.org/x/lint/golint
+            make lint
       - run:
           name: Build
           command: make build
