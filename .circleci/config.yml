@@ -1,0 +1,47 @@
+version: 2
+
+variables:
+  working_directory: &working_directory /go/src/github.com/Code-Hex/Neo-cowsay
+common_steps:
+  restore_cache_modules: &restore_cache_modules
+    keys:
+      - go-mod-v1-{{ checksum "go.sum" }}
+
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.12
+        environment:
+          GO111MODULE: "ON"
+    working_directory: *working_directory
+    steps:
+      - checkout
+      - restore_cache: *restore_cache_modules
+      - make lint
+      - make build
+
+  modules:
+    docker:
+      - image: circleci/golang:1.12
+        environment:
+          GO111MODULE: "ON"
+    working_directory: *working_directory
+    steps:
+      - checkout
+      - restore_cache: *restore_cache_modules
+      - run:
+          name: Module Download
+          command: go mod download
+      - save_cache:
+          key: go-mod-v1-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg/mod"
+
+workflows:
+    version: 2
+    build:
+      jobs:
+        - build:
+            requires:
+                - modules
+        - modules
