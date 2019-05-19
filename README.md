@@ -10,7 +10,7 @@ Fast, funny, everyone wanted? new cowsay!!
                ||----w |
                ||     ||
 ```
-[![GoDoc](https://godoc.org/github.com/Code-Hex/Neo-cowsay?status.svg)](https://godoc.org/github.com/Code-Hex/Neo-cowsay) [![Build Status](https://travis-ci.org/Code-Hex/Neo-cowsay.svg?branch=master)](https://travis-ci.org/Code-Hex/Neo-cowsay) [![Go Report Card](https://goreportcard.com/badge/github.com/Code-Hex/Neo-cowsay)](https://goreportcard.com/report/github.com/Code-Hex/Neo-cowsay)
+[![GoDoc](https://godoc.org/github.com/Code-Hex/Neo-cowsay?status.svg)](https://godoc.org/github.com/Code-Hex/Neo-cowsay) [![CircleCI](https://circleci.com/gh/Code-Hex/Neo-cowsay.svg?style=svg&circle-token=85672a8a4f988b8c6cab27d57880c08720c6596e)](https://circleci.com/gh/Code-Hex/Neo-cowsay) [![Go Report Card](https://goreportcard.com/badge/github.com/Code-Hex/Neo-cowsay)](https://goreportcard.com/report/github.com/Code-Hex/Neo-cowsay)
 # What's?
 ```
 cowsay is a configurable talking cow, written in Perl.  It operates
