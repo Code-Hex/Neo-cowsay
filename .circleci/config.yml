@@ -46,6 +46,9 @@ workflows:
       jobs:
         - build:
             context: *context
+            filters:
+              tags:
+                only: /.*/
         - release:
             context: *context
             requires:
