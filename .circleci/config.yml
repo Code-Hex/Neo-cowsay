@@ -1,6 +1,7 @@
 version: 2
 
 variables:
+  context: &context org-context
   working_directory: &working_directory /go/src/github.com/Code-Hex/Neo-cowsay
 common_steps:
   restore_cache_modules: &restore_cache_modules
@@ -29,9 +30,28 @@ jobs:
           key: go-mod-v1-{{ checksum "go.sum" }}
           paths:
             - "/go/pkg/mod"
+    
+    release:
+      docker:
+        - image: circleci/golang:1.12
+          environment:
+            GO111MODULE: "on"
+      steps:
+        - checkout
+        - run: curl -sL https://git.io/goreleaser | bash
 
 workflows:
     version: 2
-    build:
+    test-workflow:
       jobs:
-        - build
+        - build:
+            context: *context
+        - release:
+            context: *context
+            requires:
+              - build
+            filters:
+              branches:
+                ignore: /.*/
+              tags:
+                only: /v[0-9]+(\.[0-9]+)*(-.*)*/
