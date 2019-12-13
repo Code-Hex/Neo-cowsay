@@ -16,7 +16,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Cowsay LGTM
-      uses: Code-Hex/neo-cowsay-action@v1
+      uses: Code-Hex/neo-cowsay-action@v1.0.1
       if: steps.approved.outputs.approved == 'true'
       with:
         message: 'LGTM'
