@@ -20,6 +20,7 @@ jobs:
       if: steps.approved.outputs.approved == 'true'
       with:
         message: 'LGTM'
+        cow: 'random'
         cowsay_on_comment: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
