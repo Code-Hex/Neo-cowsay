@@ -5,6 +5,8 @@ on:
       - "master"
     tags:
       - "v*.*.*"
+  pull_request:
+
 jobs:
   build:
     name: Build
