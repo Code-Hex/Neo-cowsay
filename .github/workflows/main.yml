@@ -20,7 +20,7 @@ jobs:
     - name: Lint
       run: |
         go get golang.org/x/lint/golint
-        make lint
+        PATH="$PATH:$(go env GOPATH)" make lint
       env:
         GO111MODULE: off
     - name: Run GoReleaser
