@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	wordwrap "github.com/Code-Hex/go-wordwrap"
+	"github.com/Code-Hex/go-wordwrap"
 	runewidth "github.com/mattn/go-runewidth"
 )
 
@@ -42,7 +42,10 @@ func (cow *Cow) borderType() border {
 func (cow *Cow) getLines(width int) []string {
 	// Replace tab to 8 spaces
 	cow.phrase = strings.Replace(cow.phrase, "\t", "       ", -1)
-	text := wordwrap.WrapString(cow.phrase, uint(width))
+	text := cow.phrase
+	if !cow.nowrap {
+		text = wordwrap.WrapString(cow.phrase, uint(width))
+	}
 	return strings.Split(text, "\n")
 }
 
@@ -52,7 +55,7 @@ func (cow *Cow) Balloon() string {
 	lines := cow.getLines(width)
 	// find max length from text lines
 	maxWidth := max(lines)
-	if maxWidth > width {
+	if !cow.nowrap && maxWidth > width {
 		maxWidth = width
 	}
 
@@ -102,8 +105,8 @@ func flush(text, top, bottom fmt.Stringer) string {
 }
 
 func padding(line string, maxWidth int) string {
-	w := runewidth.StringWidth(line)
-	if maxWidth == w {
+	w := runewidth.StringWidth(UnANSI(line))
+	if maxWidth <= w {
 		return line
 	}
 
@@ -118,7 +121,7 @@ func padding(line string, maxWidth int) string {
 func max(lines []string) int {
 	maxWidth := 0
 	for _, line := range lines {
-		len := runewidth.StringWidth(line)
+		len := runewidth.StringWidth(UnANSI(line))
 		if len > maxWidth {
 			maxWidth = len
 		}

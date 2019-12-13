@@ -35,6 +35,7 @@ type Options struct {
 	Random   bool   `long:"random"`
 	Rainbow  bool   `long:"rainbow"`
 	Aurora   bool   `long:"aurora"`
+	Nowrap   bool   `long:"nowrap"`
 }
 
 const (
@@ -99,6 +100,9 @@ func generateOptions(opts *Options, phrase string) []cowsay.Option {
 	}
 	if opts.Width > 0 {
 		o = append(o, cowsay.BallonWidth(uint(opts.Width)))
+	}
+	if opts.Nowrap {
+		o = append(o, cowsay.Nowrap())
 	}
 	return selectFace(opts, o)
 }

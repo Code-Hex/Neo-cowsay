@@ -18,6 +18,7 @@ type Cow struct {
 	isAurora    bool
 	isRainbow   bool
 	ballonWidth int
+	nowrap      bool
 }
 
 // NewCow returns pointer of Cow struct that made by options
@@ -163,6 +164,14 @@ func Rainbow() Option {
 func BallonWidth(size uint) Option {
 	return func(c *Cow) error {
 		c.ballonWidth = int(size)
+		return nil
+	}
+}
+
+// Nowrap balloon message
+func Nowrap() Option {
+	return func(c *Cow) error {
+		c.nowrap = true
 		return nil
 	}
 }

@@ -68,3 +68,34 @@ func rgb(i float64) int {
 	blue := int(6*((math.Sin(freq*i+4*m)*127+128)/256)) * 1
 	return 16 + red + green + blue
 }
+
+// UnANSI color code syntax
+func UnANSI(str string) string {
+	const maxSearchChars = 30
+
+	l := len(str)
+	s := 0
+	buf := make([]rune, 0, l)
+
+	for i, char := range str {
+		if s > 0 {
+			s--
+			continue
+		}
+		if char == '\033' {
+			if l > i+1 && str[i+1] == '[' {
+				for n := 2; n < maxSearchChars; n++ {
+					if l > i+n && str[i+n] == 'm' {
+						s = n
+						break
+					}
+				}
+			}
+			continue
+		}
+
+		buf = append(buf, char)
+	}
+
+	return string(buf)
+}

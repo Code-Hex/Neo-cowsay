@@ -21,7 +21,7 @@ const (
 
 // RunSuperCow runs super cow mode animation on the your terminal
 func RunSuperCow(cow *cowsay.Cow) error {
-	balloon := cow.Balloon()
+	balloon := cowsay.UnANSI(cow.Balloon())
 	blank := createBlankSpace(balloon)
 
 	said, err := cow.GetCow(0)
