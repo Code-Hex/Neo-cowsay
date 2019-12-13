@@ -92,6 +92,15 @@ func generateOptions(opts *Options, phrase string) []cowsay.Option {
 	if opts.Aurora {
 		o = append(o, cowsay.Aurora())
 	}
+	if opts.Eyes != "" {
+		o = append(o, cowsay.Eyes(opts.Eyes))
+	}
+	if opts.Tongue != "" {
+		o = append(o, cowsay.Tongue(opts.Tongue))
+	}
+	if opts.Width > 0 {
+		o = append(o, cowsay.BallonWidth(uint(opts.Width)))
+	}
 	return selectFace(opts, o)
 }
 
