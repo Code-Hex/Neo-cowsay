@@ -1,4 +1,3 @@
-name: 'Cowsay Workflow'
 on:
   push:
     branches:
