@@ -2,6 +2,7 @@ package super
 
 import (
 	"errors"
+	"io"
 	"os"
 	"strings"
 	"time"
@@ -14,7 +15,7 @@ import (
 )
 
 const (
-	span    = 50 * time.Millisecond
+	span    = 20 * time.Millisecond
 	standup = 3 * time.Second
 )
 
@@ -46,66 +47,70 @@ func RunSuperCow(cow *cowsay.Cow) error {
 
 	notSaidCow := strings.Split(blank+notSaid, "\n")
 	w, cowsWidth := tm.Width(), maxLen(notSaidCow)
-	tm.Output = tm.NewWriter(colorable.NewColorableStdout())
+	output := colorable.NewColorableStdout()
 
-	tm.Clear()
+	output.Write([]byte("\033[2J\033[?25l"))
 
-	max := w + cowsWidth
-	half := max / 2
-	diff := h - len(saidCow)
-	for x, i := 0, 0; i <= max; i++ {
+	// tm.Clear()
 
-		if i == half {
-			posx := w - i
-			after := time.After(standup)
-		DRAW:
-			for {
-				select {
-				case <-after:
-					break DRAW
-				default:
+	views := make(chan string, 10000)
+	go func() {
+		max := w + cowsWidth
+		half := max / 2
+		diff := h - len(saidCow)
+		for x, i := 0, 0; i <= max; i++ {
+			if i == half {
+				posx := w - i
+				times := standup / span
+				for k := 0; k < int(times); k++ {
 					// draw colored cow
 					base := x * 70
 					for j, line := range saidCow {
 						y := diff + j - 1
 						tm.MoveTo(cow.Aurora(base, line), posx, y)
 					}
-					tm.Flush()
+					views <- tm.Flush()
 					x++
 				}
-				time.Sleep(span)
-			}
-		} else {
-			posx := w - i
-			if posx < 1 {
-				posx = 1
-			}
-
-			var n int
-			if i > w {
-				n = i - w
-			}
-
-			base := x * 70
-			for j, line := range notSaidCow {
-				y := diff + j - 1
-				if i > w {
-					if n < len(line) {
-						tm.MoveTo(cow.Aurora(base, line[n:]), 1, y)
-					} else {
-						tm.MoveTo(cow.Aurora(base, " "), 1, y)
-					}
-				} else if i > len(line) {
-					tm.MoveTo(cow.Aurora(base, line), posx, y)
-				} else {
-					tm.MoveTo(cow.Aurora(base, line[:i]), posx, y)
+			} else {
+				posx := w - i
+				if posx < 1 {
+					posx = 1
 				}
+
+				var n int
+				if i > w {
+					n = i - w
+				}
+
+				base := x * 70
+				for j, line := range notSaidCow {
+					y := diff + j - 1
+					if i > w {
+						if n < len(line) {
+							tm.MoveTo(cow.Aurora(base, line[n:]), 1, y)
+						} else {
+							tm.MoveTo(cow.Aurora(base, " "), 1, y)
+						}
+					} else if i > len(line) {
+						tm.MoveTo(cow.Aurora(base, line), posx, y)
+					} else {
+						tm.MoveTo(cow.Aurora(base, line[:i]), posx, y)
+					}
+				}
+				views <- tm.Flush()
 			}
-			tm.Flush()
-			time.Sleep(span)
+			x++
 		}
-		x++
+		close(views)
+	}()
+
+	for view := range views {
+		io.Copy(output, strings.NewReader(view))
+		time.Sleep(span)
 	}
+
+	output.Write([]byte("\033[?25h"))
 
 	return nil
 }

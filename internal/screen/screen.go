@@ -33,10 +33,9 @@ func Clear() {
 }
 
 // Flush buffer and ensure that it will not overflow screen
-func Flush() {
-	Output.WriteString(Screen.String())
-	Output.Flush()
-	Screen.Reset()
+func Flush() string {
+	defer Screen.Reset()
+	return Screen.String()
 }
 
 var size struct {
