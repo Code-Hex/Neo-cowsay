@@ -15,12 +15,6 @@ type border struct {
 	only   [2]rune
 }
 
-type buf []rune
-
-func (b buf) String() string {
-	return string(b)
-}
-
 func (cow *Cow) borderType() border {
 	if cow.thinking {
 		return border{
@@ -48,6 +42,8 @@ func (cow *Cow) getLines(width int) []string {
 
 // Balloon to get the balloon and the string entered in the balloon.
 func (cow *Cow) Balloon() string {
+	defer cow.buf.Reset()
+
 	width := cow.ballonWidth
 	lines := cow.getLines(width)
 	// find max length from text lines
@@ -56,8 +52,8 @@ func (cow *Cow) Balloon() string {
 		maxWidth = width
 	}
 
-	top := make(buf, 0, maxWidth+2)
-	bottom := make(buf, 0, maxWidth+2)
+	top := make([]byte, maxWidth+2)
+	bottom := make([]byte, maxWidth+2)
 
 	borderType := cow.borderType()
 
@@ -72,12 +68,23 @@ func (cow *Cow) Balloon() string {
 	l := len(lines)
 	if l == 1 {
 		border := borderType.only
-		text := fmt.Sprintf("%c %s %c\n", border[0], lines[0], border[1])
-		return flush(buf(text), top, bottom)
+		cow.buf.Write(top)
+		cow.buf.WriteRune('\n')
+		cow.buf.WriteRune(border[0])
+		cow.buf.WriteRune(' ')
+		cow.buf.WriteString(lines[0])
+		cow.buf.WriteRune(' ')
+		cow.buf.WriteRune(border[1])
+		cow.buf.WriteRune('\n')
+		cow.buf.Write(bottom)
+		cow.buf.WriteRune('\n')
+		return cow.buf.String()
 	}
 
+	cow.buf.Write(top)
+	cow.buf.WriteRune('\n')
+
 	var border [2]rune
-	phrase := make(buf, 0, l*100)
 	for i := 0; i < l; i++ {
 		switch i {
 		case 0:
@@ -87,12 +94,20 @@ func (cow *Cow) Balloon() string {
 		default:
 			border = borderType.middle
 		}
-		phrase = append(phrase, buf(fmt.Sprintf("%c %s %c\n", border[0], padding(lines[i], maxWidth), border[1]))...)
+		cow.buf.WriteRune(border[0])
+		cow.buf.WriteRune(' ')
+		padding(&cow.buf, lines[i], maxWidth)
+		cow.buf.WriteRune(' ')
+		cow.buf.WriteRune(border[1])
+		cow.buf.WriteRune('\n')
 	}
-	return flush(phrase, top, bottom)
+
+	cow.buf.Write(bottom)
+	cow.buf.WriteRune('\n')
+	return cow.buf.String()
 }
 
-func flush(text, top, bottom fmt.Stringer) string {
+func (cow *Cow) flush(text, top, bottom fmt.Stringer) string {
 	return fmt.Sprintf(
 		"%s\n%s%s\n",
 		top.String(),
@@ -101,18 +116,18 @@ func flush(text, top, bottom fmt.Stringer) string {
 	)
 }
 
-func padding(line string, maxWidth int) string {
+func padding(b *strings.Builder, line string, maxWidth int) {
 	w := runewidth.StringWidth(line)
-	if maxWidth == w {
-		return line
+	if maxWidth <= w {
+		b.WriteString(line)
+		return
 	}
 
 	l := maxWidth - w
-	pad := make(buf, l)
 	for i := 0; i < l; i++ {
-		pad[i] = ' '
+		b.WriteRune(' ')
 	}
-	return line + pad.String()
+	b.WriteString(line)
 }
 
 func max(lines []string) int {

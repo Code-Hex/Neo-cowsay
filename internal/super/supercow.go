@@ -1,21 +1,20 @@
 package super
 
 import (
-	"bufio"
 	"errors"
 	"os"
 	"strings"
 	"time"
 
 	cowsay "github.com/Code-Hex/Neo-cowsay"
-	tm "github.com/Code-Hex/goterm"
+	tm "github.com/Code-Hex/Neo-cowsay/internal/screen"
 	colorable "github.com/mattn/go-colorable"
 	runewidth "github.com/mattn/go-runewidth"
 	"golang.org/x/crypto/ssh/terminal"
 )
 
 const (
-	span    = 40 * time.Millisecond
+	span    = 50 * time.Millisecond
 	standup = 3 * time.Second
 )
 
@@ -47,13 +46,15 @@ func RunSuperCow(cow *cowsay.Cow) error {
 
 	notSaidCow := strings.Split(blank+notSaid, "\n")
 	w, cowsWidth := tm.Width(), maxLen(notSaidCow)
-	tm.Output = bufio.NewWriter(colorable.NewColorableStdout())
+	tm.Output = tm.NewWriter(colorable.NewColorableStdout())
+
+	tm.Clear()
 
 	max := w + cowsWidth
 	half := max / 2
 	diff := h - len(saidCow)
 	for x, i := 0, 0; i <= max; i++ {
-		tm.Clear()
+
 		if i == half {
 			posx := w - i
 			after := time.After(standup)
@@ -63,12 +64,11 @@ func RunSuperCow(cow *cowsay.Cow) error {
 				case <-after:
 					break DRAW
 				default:
-					tm.Clear()
 					// draw colored cow
 					base := x * 70
 					for j, line := range saidCow {
 						y := diff + j - 1
-						tm.Println(tm.MoveTo(cow.Aurora(base, line), posx, y))
+						tm.MoveTo(cow.Aurora(base, line), posx, y)
 					}
 					tm.Flush()
 					x++
@@ -91,14 +91,14 @@ func RunSuperCow(cow *cowsay.Cow) error {
 				y := diff + j - 1
 				if i > w {
 					if n < len(line) {
-						tm.Print(tm.MoveTo(cow.Aurora(base, line[n:]), 1, y))
+						tm.MoveTo(cow.Aurora(base, line[n:]), 1, y)
 					} else {
-						tm.Print(tm.MoveTo(cow.Aurora(base, " "), 1, y))
+						tm.MoveTo(cow.Aurora(base, " "), 1, y)
 					}
 				} else if i > len(line) {
-					tm.Print(tm.MoveTo(cow.Aurora(base, line), posx, y))
+					tm.MoveTo(cow.Aurora(base, line), posx, y)
 				} else {
-					tm.Print(tm.MoveTo(cow.Aurora(base, line[:i]), posx, y))
+					tm.MoveTo(cow.Aurora(base, line[:i]), posx, y)
 				}
 			}
 			tm.Flush()
