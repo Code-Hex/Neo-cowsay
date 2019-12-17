@@ -18,6 +18,8 @@ type Cow struct {
 	isAurora    bool
 	isRainbow   bool
 	ballonWidth int
+
+	buf strings.Builder
 }
 
 // NewCow returns pointer of Cow struct that made by options
