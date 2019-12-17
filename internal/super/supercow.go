@@ -3,7 +3,9 @@ package super
 import (
 	"errors"
 	"os"
+	"os/signal"
 	"strings"
+	"syscall"
 	"time"
 
 	cowsay "github.com/Code-Hex/Neo-cowsay"
@@ -58,6 +60,9 @@ func RunSuperCow(cow *cowsay.Cow) error {
 	screen.HideCursor()
 	screen.Clear()
 
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
+
 	go func() {
 		for x, i := 0, 0; i <= max; i++ {
 			if i == half {
@@ -110,7 +115,14 @@ func RunSuperCow(cow *cowsay.Cow) error {
 		close(views)
 	}()
 
+LOOP:
 	for view := range views {
+		select {
+		case <-quit:
+			screen.Clear()
+			break LOOP
+		default:
+		}
 		screen.Stdout.Write([]byte(view))
 		time.Sleep(span)
 	}
