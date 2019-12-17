@@ -2,20 +2,18 @@ package super
 
 import (
 	"errors"
-	"io"
 	"os"
 	"strings"
 	"time"
 
 	cowsay "github.com/Code-Hex/Neo-cowsay"
-	tm "github.com/Code-Hex/Neo-cowsay/internal/screen"
-	colorable "github.com/mattn/go-colorable"
+	"github.com/Code-Hex/Neo-cowsay/internal/screen"
 	runewidth "github.com/mattn/go-runewidth"
 	"golang.org/x/crypto/ssh/terminal"
 )
 
 const (
-	span    = 20 * time.Millisecond
+	span    = 30 * time.Millisecond
 	standup = 3 * time.Second
 )
 
@@ -46,18 +44,18 @@ func RunSuperCow(cow *cowsay.Cow) error {
 	}
 
 	notSaidCow := strings.Split(blank+notSaid, "\n")
-	w, cowsWidth := tm.Width(), maxLen(notSaidCow)
-	output := colorable.NewColorableStdout()
+	w, cowsWidth := screen.Width(), maxLen(notSaidCow)
 
-	output.Write([]byte("\033[2J\033[?25l"))
+	max := w + cowsWidth
+	half := max / 2
+	diff := h - len(saidCow)
+	views := make(chan string, max)
 
-	// tm.Clear()
+	screen.SaveState()
+	screen.HideCursor()
+	screen.Clear()
 
-	views := make(chan string, 10000)
 	go func() {
-		max := w + cowsWidth
-		half := max / 2
-		diff := h - len(saidCow)
 		for x, i := 0, 0; i <= max; i++ {
 			if i == half {
 				posx := w - i
@@ -67,9 +65,9 @@ func RunSuperCow(cow *cowsay.Cow) error {
 					base := x * 70
 					for j, line := range saidCow {
 						y := diff + j - 1
-						tm.MoveTo(cow.Aurora(base, line), posx, y)
+						screen.MoveTo(cow.Aurora(base, line), posx, y)
 					}
-					views <- tm.Flush()
+					views <- screen.Flush()
 					x++
 				}
 			} else {
@@ -88,17 +86,17 @@ func RunSuperCow(cow *cowsay.Cow) error {
 					y := diff + j - 1
 					if i > w {
 						if n < len(line) {
-							tm.MoveTo(cow.Aurora(base, line[n:]), 1, y)
+							screen.MoveTo(cow.Aurora(base, line[n:]), 1, y)
 						} else {
-							tm.MoveTo(cow.Aurora(base, " "), 1, y)
+							screen.MoveTo(cow.Aurora(base, " "), 1, y)
 						}
 					} else if i > len(line) {
-						tm.MoveTo(cow.Aurora(base, line), posx, y)
+						screen.MoveTo(cow.Aurora(base, line), posx, y)
 					} else {
-						tm.MoveTo(cow.Aurora(base, line[:i]), posx, y)
+						screen.MoveTo(cow.Aurora(base, line[:i]), posx, y)
 					}
 				}
-				views <- tm.Flush()
+				views <- screen.Flush()
 			}
 			x++
 		}
@@ -106,11 +104,12 @@ func RunSuperCow(cow *cowsay.Cow) error {
 	}()
 
 	for view := range views {
-		io.Copy(output, strings.NewReader(view))
+		screen.Stdout.Write([]byte(view))
 		time.Sleep(span)
 	}
 
-	output.Write([]byte("\033[?25h"))
+	screen.UnHideCursor()
+	screen.RestoreState()
 
 	return nil
 }
