@@ -12,6 +12,9 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 )
 
+// Frequency the color changes
+const magic = 2
+
 const (
 	span    = 30 * time.Millisecond
 	standup = 3 * time.Second
@@ -68,7 +71,9 @@ func RunSuperCow(cow *cowsay.Cow) error {
 						screen.MoveTo(cow.Aurora(base, line), posx, y)
 					}
 					views <- screen.Flush()
-					x++
+					if k%magic == 0 {
+						x++
+					}
 				}
 			} else {
 				posx := w - i
@@ -98,7 +103,9 @@ func RunSuperCow(cow *cowsay.Cow) error {
 				}
 				views <- screen.Flush()
 			}
-			x++
+			if i%magic == 0 {
+				x++
+			}
 		}
 		close(views)
 	}()

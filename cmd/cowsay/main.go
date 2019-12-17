@@ -37,9 +37,7 @@ type Options struct {
 	Aurora   bool   `long:"aurora"`
 }
 
-const (
-	version = "0.0.5"
-)
+var version string
 
 func main() {
 	os.Exit(run())
