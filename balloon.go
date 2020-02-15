@@ -52,8 +52,8 @@ func (cow *Cow) Balloon() string {
 		maxWidth = width
 	}
 
-	top := make([]byte, maxWidth+2)
-	bottom := make([]byte, maxWidth+2)
+	top := make([]byte, 0, maxWidth+2)
+	bottom := make([]byte, 0, maxWidth+2)
 
 	borderType := cow.borderType()
 
