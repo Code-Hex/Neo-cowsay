@@ -26,9 +26,9 @@ jobs:
         GO111MODULE: off
     - name: Run GoReleaser
       if: contains(github.ref, 'tags/v')
-      uses: goreleaser/goreleaser-action@v1
+      uses: goreleaser/goreleaser-action@v2
       with:
-        version: v0.123.3
+        version: latest
         args: release --rm-dist
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

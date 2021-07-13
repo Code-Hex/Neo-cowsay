@@ -12,6 +12,20 @@ builds:
     goarch:
       - 386
       - amd64
+      - arm
+      - arm64
+    goarm:
+      - 6
+      - 7
+    ignore:
+      - goos: darwin
+        goarch: 386
+      - goos: linux
+        goarch: arm
+        goarm: 7
+      - goos: windows
+        goarch: arm
+        goarm: 7
   - id: cowthink
     main: ./cmd/cowthink/main.go
     binary: cowthink
@@ -25,10 +39,24 @@ builds:
     goarch:
       - 386
       - amd64
+      - arm
+      - arm64
+    goarm:
+      - 6
+      - 7
+    ignore:
+      - goos: darwin
+        goarch: 386
+      - goos: linux
+        goarch: arm
+        goarm: 7
+      - goos: windows
+        goarch: arm
+        goarm: 7
 archive:
   name_template: 'cowsay_{{ .Tag }}_{{ .Os }}_{{ .Arch }}'
   replacements:
-    darwin: Darwin
+    darwin: macOS
     linux: Linux
     windows: Windows
     386: i386
