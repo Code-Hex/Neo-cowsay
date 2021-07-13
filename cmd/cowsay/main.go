@@ -2,9 +2,11 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	cowsay "github.com/Code-Hex/Neo-cowsay"
 	"github.com/Code-Hex/Neo-cowsay/internal/super"
@@ -198,11 +200,16 @@ func parseOptions(opts *Options, argv []string) ([]string, error) {
 }
 
 func (opts Options) usage() []byte {
-	return []byte(`cow{say,think} version ` + version + `, (c) 2018 CodeHex
-Usage: cowsay [-bdgpstwy] [-h] [-e eyes] [-f cowfile] [--random]
-          [-l] [-n] [-T tongue] [-W wrapcolumn]
-          [--rainbow] [--aurora] [--super] [message]
+	year := time.Now().Year()
+	var buf bytes.Buffer
+	fmt.Fprintf(&buf, "cow{say,think} version %s, (c) %d codehex\n", version, year)
+	buf.WriteString(`Usage: cowsay [-bdgpstwy] [-h] [-e eyes] [-f cowfile] [--random]
+      [-l] [-n] [-T tongue] [-W wrapcolumn]
+      [--rainbow] [--aurora] [--super] [message]
 
 Original Author: (c) 1999 Tony Monroe
 `)
+	buf.WriteString("Repository: https://github.com/Code-Hex/Neo-cowsay\n")
+
+	return buf.Bytes()
 }
