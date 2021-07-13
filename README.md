@@ -10,7 +10,7 @@ Fast, funny, everyone wanted? new cowsay!!
                ||----w |
                ||     ||
 ```
-[![GoDoc](https://godoc.org/github.com/Code-Hex/Neo-cowsay?status.svg)](https://godoc.org/github.com/Code-Hex/Neo-cowsay) [![CircleCI](https://circleci.com/gh/Code-Hex/Neo-cowsay.svg?style=svg&circle-token=85672a8a4f988b8c6cab27d57880c08720c6596e)](https://circleci.com/gh/Code-Hex/Neo-cowsay) [![Go Report Card](https://goreportcard.com/badge/github.com/Code-Hex/Neo-cowsay)](https://goreportcard.com/report/github.com/Code-Hex/Neo-cowsay)
+[![GoDoc](https://godoc.org/github.com/Code-Hex/Neo-cowsay?status.svg)](https://godoc.org/github.com/Code-Hex/Neo-cowsay) [![.github/workflows/main.yml](https://github.com/Code-Hex/Neo-cowsay/actions/workflows/main.yml/badge.svg)](https://github.com/Code-Hex/Neo-cowsay/actions/workflows/main.yml) [![Go Report Card](https://goreportcard.com/badge/github.com/Code-Hex/Neo-cowsay)](https://goreportcard.com/report/github.com/Code-Hex/Neo-cowsay)
 # What's?
 ```
 cowsay is a configurable talking cow, written in Perl.  It operates
@@ -23,12 +23,13 @@ Neo Cowsay written in Go. This cowsay extended the original and added fun more o
 # Usage
 ## As command
 ```
-cow{say,think} version 0.0.5, (c) 2018 CodeHex
+cow{say,think} version 1.0.0, (c) 2021 codehex
 Usage: cowsay [-bdgpstwy] [-h] [-e eyes] [-f cowfile] [--random]
-          [-l] [-n] [-T tongue] [-W wrapcolumn]
-          [--rainbow] [--aurora] [--super] [message]
+      [-l] [-n] [-T tongue] [-W wrapcolumn]
+      [--rainbow] [--aurora] [--super] [message]
 
 Original Author: (c) 1999 Tony Monroe
+Repository: https://github.com/Code-Hex/Neo-cowsay
 ```
 Normal
 ```
