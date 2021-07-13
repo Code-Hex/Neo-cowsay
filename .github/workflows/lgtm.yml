@@ -10,7 +10,7 @@ jobs:
     if: github.event.review.state == 'approved'
     steps:
     - name: Cowsay LGTM
-      uses: Code-Hex/neo-cowsay-action@v1.0.1
+      uses: Code-Hex/neo-cowsay-action@v1.0.2
       with:
         message: 'LGTM'
         cow: 'random'
