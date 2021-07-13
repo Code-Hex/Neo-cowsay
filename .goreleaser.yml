@@ -53,8 +53,12 @@ builds:
       - goos: windows
         goarch: arm
         goarm: 7
-archive:
-  name_template: 'cowsay_{{ .Tag }}_{{ .Os }}_{{ .Arch }}'
+
+archives:
+- builds:
+  - cowsay
+  - cowthink
+  name_template: 'cowsay_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
   replacements:
     darwin: macOS
     linux: Linux
@@ -64,8 +68,10 @@ archive:
   format_overrides:
   - goos: windows
     format: zip
+
 checksum:
   name_template: 'cowsay_checksums.txt'
+
 changelog:
   sort: asc
   filters:
