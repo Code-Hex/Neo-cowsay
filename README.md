@@ -10,6 +10,9 @@ Fast, funny, everyone wanted? new cowsay!!
                ||----w |
                ||     ||
 ```
+
+for GitHub Actions users: [Code-Hex/neo-cowsay-action](https://github.com/marketplace/actions/neo-cowsay)
+
 [![GoDoc](https://godoc.org/github.com/Code-Hex/Neo-cowsay?status.svg)](https://godoc.org/github.com/Code-Hex/Neo-cowsay) [![.github/workflows/main.yml](https://github.com/Code-Hex/Neo-cowsay/actions/workflows/main.yml/badge.svg)](https://github.com/Code-Hex/Neo-cowsay/actions/workflows/main.yml) [![Go Report Card](https://goreportcard.com/badge/github.com/Code-Hex/Neo-cowsay)](https://goreportcard.com/report/github.com/Code-Hex/Neo-cowsay)
 # What's?
 ```
