@@ -14,13 +14,13 @@ func Asset(path string) ([]byte, error) {
 
 func AssetNames() []string {
 	const cows = "cows"
-	entries, err := cowsDir.ReadDir("cows")
+	entries, err := cowsDir.ReadDir(cows)
 	if err != nil {
 		panic(err)
 	}
 	names := make([]string, 0, len(entries))
 	for _, entry := range entries {
-		filename := filepath.Join("cows", entry.Name())
+		filename := filepath.Join(cows, entry.Name())
 		names = append(names, filename)
 	}
 	return names
