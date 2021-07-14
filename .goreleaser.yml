@@ -69,6 +69,19 @@ archives:
   - goos: windows
     format: zip
 
+brews:
+- name: neo-cowsay
+  tap:
+    owner: Code-Hex
+    name: homebrew-tap
+    token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+  homepage: "https://github.com/Code-Hex/Neo-cowsay"
+  description: "Fast, funny, everyone wanted? new cowsay!!"
+  folder: Formula
+  install: |
+    bin.install "cowsay"
+    bin.install "cowthink"
+
 checksum:
   name_template: 'cowsay_checksums.txt'
 
