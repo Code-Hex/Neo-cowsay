@@ -6,7 +6,7 @@ import (
 )
 
 // buffer is the global screen buffer
-// Its not recommented write to buffer dirrectly, use package Print,Printf,Println fucntions instead.
+// Its not recommended write to buffer dirrectly, use package Print,Printf,Println functions instead.
 var buffer strings.Builder
 
 // Flush buffer and ensure that it will not overflow screen
@@ -15,7 +15,7 @@ func Flush() string {
 	return buffer.String()
 }
 
-// MoveTo moves string to possition
+// MoveTo moves string to position
 func MoveTo(str string, x int, y int) {
 	x, y = getXY(x, y)
 	applyTransform(str, func(idx int, line string) {
