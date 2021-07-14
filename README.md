@@ -89,6 +89,7 @@ func main() {
 # And, Super Cows mode
 asciinema is heavy...
 [![asciicast](https://asciinema.org/a/228215.svg)](https://asciinema.org/a/228215)
+
 # Install
 ## library
 
@@ -102,6 +103,10 @@ asciinema is heavy...
 
     go get -u github.com/Code-Hex/Neo-cowsay/cmd/cowthink
     
+# Mac and Linux users via Homebrew
+
+    brew install Code-Hex/tap/neo-cowsay
+
 # Binary
 You can download [here](https://github.com/Code-Hex/Neo-cowsay/releases)
 
