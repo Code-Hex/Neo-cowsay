@@ -21,7 +21,8 @@ much as the figlet program does, and it written in the same spirit
 of silliness.
 ```  
 by [Original](https://github.com/schacon/cowsay).  
-Neo Cowsay written in Go. This cowsay extended the original and added fun more options. And it can be used as a library.
+
+Neo Cowsay is written in Go. This cowsay is extended the original cowsay. added fun more options, and you can be used as a library.
 
 # Usage
 ## As command
@@ -93,22 +94,25 @@ asciinema is heavy...
 # Install
 ## library
 
-    go get -u github.com/Code-Hex/Neo-cowsay
+    $ go get -u github.com/Code-Hex/Neo-cowsay
 
-## cowsay
+## Go
 
-    go get -u github.com/Code-Hex/Neo-cowsay/cmd/cowsay
+### cowsay
 
-## cowthink
+    $ go get -u github.com/Code-Hex/Neo-cowsay/cmd/cowsay
 
-    go get -u github.com/Code-Hex/Neo-cowsay/cmd/cowthink
+### cowthink
+
+    $ go get -u github.com/Code-Hex/Neo-cowsay/cmd/cowthink
     
-# Mac and Linux users via Homebrew
+## Mac and Linux users via Homebrew
 
-    brew install Code-Hex/tap/neo-cowsay
+    $ brew update
+    $ brew install Code-Hex/tap/neo-cowsay
 
-# Binary
-You can download [here](https://github.com/Code-Hex/Neo-cowsay/releases)
+## Binary
+You can download from [here](https://github.com/Code-Hex/Neo-cowsay/releases)
 
 # License
 [cowsay license](https://github.com/Code-Hex/Neo-cowsay/blob/master/LICENSE)  
