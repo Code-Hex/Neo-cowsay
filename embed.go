@@ -8,10 +8,14 @@ import (
 //go:embed cows/*
 var cowsDir embed.FS
 
+// Asset loads and returns the asset for the given name.
+// It returns an error if the asset could not be found or
+// could not be loaded.
 func Asset(path string) ([]byte, error) {
 	return cowsDir.ReadFile(path)
 }
 
+// AssetNames returns the names of the assets.
 func AssetNames() []string {
 	const cows = "cows"
 	entries, err := cowsDir.ReadDir(cows)
