@@ -2,6 +2,7 @@ package super
 
 import (
 	"errors"
+	"io"
 	"os"
 	"os/signal"
 	"strings"
@@ -11,15 +12,6 @@ import (
 	cowsay "github.com/Code-Hex/Neo-cowsay"
 	"github.com/Code-Hex/Neo-cowsay/internal/screen"
 	runewidth "github.com/mattn/go-runewidth"
-	"golang.org/x/crypto/ssh/terminal"
-)
-
-// Frequency the color changes
-const magic = 2
-
-const (
-	span    = 30 * time.Millisecond
-	standup = 3 * time.Second
 )
 
 // RunSuperCow runs super cow mode animation on the your terminal
@@ -37,95 +29,25 @@ func RunSuperCow(cow *cowsay.Cow) error {
 		return err
 	}
 
-	saidCow := strings.Split(balloon+said, "\n")
+	saidCowLines := strings.Split(balloon+said, "\n")
 
 	// When it is higher than the height of the terminal
-	h, err := height()
-	if err != nil {
-		return err
-	}
-	if len(saidCow) > h {
-		return errors.New("Too height messages")
+	h := screen.Height()
+	if len(saidCowLines) > h {
+		return errors.New("too height messages")
 	}
 
-	notSaidCow := strings.Split(blank+notSaid, "\n")
-	w, cowsWidth := screen.Width(), maxLen(notSaidCow)
+	notSaidCowLines := strings.Split(blank+notSaid, "\n")
 
-	max := w + cowsWidth
-	half := max / 2
-	diff := h - len(saidCow)
-	views := make(chan string, max)
+	renderer := newRenderer(saidCowLines, notSaidCowLines)
 
 	screen.SaveState()
 	screen.HideCursor()
 	screen.Clear()
 
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
+	go renderer.createFrames(cow)
 
-	go func() {
-		for x, i := 0, 0; i <= max; i++ {
-			if i == half {
-				posx := w - i
-				times := standup / span
-				for k := 0; k < int(times); k++ {
-					// draw colored cow
-					base := x * 70
-					for j, line := range saidCow {
-						y := diff + j - 1
-						screen.MoveTo(cow.Aurora(base, line), posx, y)
-					}
-					views <- screen.Flush()
-					if k%magic == 0 {
-						x++
-					}
-				}
-			} else {
-				posx := w - i
-				if posx < 1 {
-					posx = 1
-				}
-
-				var n int
-				if i > w {
-					n = i - w
-				}
-
-				base := x * 70
-				for j, line := range notSaidCow {
-					y := diff + j - 1
-					if i > w {
-						if n < len(line) {
-							screen.MoveTo(cow.Aurora(base, line[n:]), 1, y)
-						} else {
-							screen.MoveTo(cow.Aurora(base, " "), 1, y)
-						}
-					} else if i > len(line) {
-						screen.MoveTo(cow.Aurora(base, line), posx, y)
-					} else {
-						screen.MoveTo(cow.Aurora(base, line[:i]), posx, y)
-					}
-				}
-				views <- screen.Flush()
-			}
-			if i%magic == 0 {
-				x++
-			}
-		}
-		close(views)
-	}()
-
-LOOP:
-	for view := range views {
-		select {
-		case <-quit:
-			screen.Clear()
-			break LOOP
-		default:
-		}
-		screen.Stdout.Write([]byte(view))
-		time.Sleep(span)
-	}
+	renderer.render()
 
 	screen.UnHideCursor()
 	screen.RestoreState()
@@ -133,10 +55,8 @@ LOOP:
 	return nil
 }
 
-var buf strings.Builder
-
 func createBlankSpace(balloon string) string {
-	buf.Reset()
+	var buf strings.Builder
 	l := len(strings.Split(balloon, "\n"))
 	for i := 1; i < l; i++ {
 		buf.WriteRune('\n')
@@ -155,11 +75,118 @@ func maxLen(cow []string) int {
 	return max
 }
 
-func height() (int, error) {
-	fd := int(os.Stdout.Fd())
-	_, height, err := terminal.GetSize(fd)
-	if err != nil {
-		return 0, err
+type renderer struct {
+	max         int
+	middle      int
+	screenWidth int
+	heightDiff  int
+	frames      chan string
+
+	saidCowLines    []string
+	notSaidCowLines []string
+
+	quit chan os.Signal
+}
+
+func newRenderer(saidCowLines, notSaidCowLines []string) *renderer {
+	w, cowsWidth := screen.Width(), maxLen(notSaidCowLines)
+	max := w + cowsWidth
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
+
+	return &renderer{
+		max:             max,
+		middle:          max / 2,
+		screenWidth:     w,
+		heightDiff:      screen.Height() - len(saidCowLines),
+		frames:          make(chan string, max),
+		saidCowLines:    saidCowLines,
+		notSaidCowLines: notSaidCowLines,
+		quit:            quit,
 	}
-	return height, nil
+}
+
+const (
+	// Frequency the color changes
+	magic = 2
+
+	span    = 30 * time.Millisecond
+	standup = 3 * time.Second
+)
+
+func (r *renderer) createFrames(cow *cowsay.Cow) {
+	const times = standup / span
+	for x, i := 0, 0; i <= r.max; i++ {
+		if i == r.middle {
+			posx := r.posX(i)
+			for k := 0; k < int(times); k++ {
+				base := x * 70
+				// draw colored cow
+				for j, line := range r.saidCowLines {
+					screen.MoveTo(cow.Aurora(base, line), posx, r.posY(j))
+				}
+				r.frames <- screen.Flush()
+				if k%magic == 0 {
+					x++
+				}
+			}
+		} else {
+			posx := r.posX(i)
+
+			var n int
+			if i > r.screenWidth {
+				n = i - r.screenWidth
+			}
+
+			base := x * 70
+			for j, line := range r.notSaidCowLines {
+				y := r.posY(j)
+				if i > r.screenWidth {
+					if n < len(line) {
+						screen.MoveTo(cow.Aurora(base, line[n:]), 1, y)
+					} else {
+						screen.MoveTo(cow.Aurora(base, " "), 1, y)
+					}
+				} else if i > len(line) {
+					screen.MoveTo(cow.Aurora(base, line), posx, y)
+				} else {
+					screen.MoveTo(cow.Aurora(base, line[:i]), posx, y)
+				}
+			}
+			r.frames <- screen.Flush()
+		}
+		if i%magic == 0 {
+			x++
+		}
+	}
+	close(r.frames)
+}
+
+func (r *renderer) render() {
+	initCh := make(chan struct{}, 1)
+	initCh <- struct{}{}
+
+	for view := range r.frames {
+		select {
+		case <-r.quit:
+			screen.Clear()
+			return
+		case <-initCh:
+		case <-time.After(span):
+		}
+		io.Copy(screen.Stdout, strings.NewReader(view))
+	}
+}
+
+func (r *renderer) posX(i int) int {
+	posx := r.screenWidth - i
+	if posx < 1 {
+		posx = 1
+	}
+	return posx
+}
+
+func (r *renderer) posY(i int) int {
+	return r.heightDiff + i - 1
 }
