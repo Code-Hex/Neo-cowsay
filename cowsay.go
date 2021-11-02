@@ -7,7 +7,6 @@ import (
 	"time"
 )
 
-//go:generate go-bindata -pkg cowsay cows
 func init() {
 	rand.Seed(time.Now().UTC().UnixNano())
 }
