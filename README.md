@@ -100,11 +100,11 @@ asciinema is heavy...
 
 ### cowsay
 
-    $ go get -u github.com/Code-Hex/Neo-cowsay/cmd/cowsay
+    $ go install github.com/Code-Hex/Neo-cowsay/cmd/cowsay@latest
 
 ### cowthink
 
-    $ go get -u github.com/Code-Hex/Neo-cowsay/cmd/cowthink
+    $ go install github.com/Code-Hex/Neo-cowsay/cmd/cowthink@latest
     
 ## Mac and Linux users via Homebrew
 
