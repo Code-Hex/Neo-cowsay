@@ -2,6 +2,7 @@ package cowsay
 
 import (
 	"fmt"
+	"log"
 	"strings"
 
 	wordwrap "github.com/Code-Hex/go-wordwrap"
@@ -33,11 +34,37 @@ func (cow *Cow) borderType() border {
 	}
 }
 
-func (cow *Cow) getLines(width int) []string {
+type line struct {
+	text      string
+	runeWidth int
+}
+
+type lines []*line
+
+func (lines lines) max() int {
+	maxWidth := 0
+	for _, line := range lines {
+		if line.runeWidth > maxWidth {
+			maxWidth = line.runeWidth
+		}
+	}
+	return maxWidth
+}
+
+func (cow *Cow) getLines(width int) lines {
 	// Replace tab to 8 spaces
 	cow.phrase = strings.Replace(cow.phrase, "\t", "       ", -1)
 	text := wordwrap.WrapString(cow.phrase, uint(width))
-	return strings.Split(text, "\n")
+	lineTexts := strings.Split(text, "\n")
+	lines := make([]*line, 0, len(lineTexts))
+	for _, lineText := range lineTexts {
+		lines = append(lines, &line{
+			text:      lineText,
+			runeWidth: runewidth.StringWidth(lineText),
+		})
+		log.Println(lineText)
+	}
+	return lines
 }
 
 // Balloon to get the balloon and the string entered in the balloon.
@@ -46,8 +73,7 @@ func (cow *Cow) Balloon() string {
 
 	width := cow.ballonWidth
 	lines := cow.getLines(width)
-	// find max length from text lines
-	maxWidth := max(lines)
+	maxWidth := lines.max()
 	if maxWidth > width {
 		maxWidth = width
 	}
@@ -72,7 +98,7 @@ func (cow *Cow) Balloon() string {
 		cow.buf.WriteRune('\n')
 		cow.buf.WriteRune(border[0])
 		cow.buf.WriteRune(' ')
-		cow.buf.WriteString(lines[0])
+		cow.buf.WriteString(lines[0].text)
 		cow.buf.WriteRune(' ')
 		cow.buf.WriteRune(border[1])
 		cow.buf.WriteRune('\n')
@@ -96,7 +122,7 @@ func (cow *Cow) Balloon() string {
 		}
 		cow.buf.WriteRune(border[0])
 		cow.buf.WriteRune(' ')
-		padding(&cow.buf, lines[i], maxWidth)
+		cow.padding(lines[i], maxWidth)
 		cow.buf.WriteRune(' ')
 		cow.buf.WriteRune(border[1])
 		cow.buf.WriteRune('\n')
@@ -116,27 +142,15 @@ func (cow *Cow) flush(text, top, bottom fmt.Stringer) string {
 	)
 }
 
-func padding(b *strings.Builder, line string, maxWidth int) {
-	w := runewidth.StringWidth(line)
-	if maxWidth <= w {
-		b.WriteString(line)
+func (cow *Cow) padding(line *line, maxWidth int) {
+	if maxWidth <= line.runeWidth {
+		cow.buf.WriteString(line.text)
 		return
 	}
 
-	l := maxWidth - w
+	cow.buf.WriteString(line.text)
+	l := maxWidth - line.runeWidth
 	for i := 0; i < l; i++ {
-		b.WriteRune(' ')
+		cow.buf.WriteRune(' ')
 	}
-	b.WriteString(line)
-}
-
-func max(lines []string) int {
-	maxWidth := 0
-	for _, line := range lines {
-		len := runewidth.StringWidth(line)
-		if len > maxWidth {
-			maxWidth = len
-		}
-	}
-	return maxWidth
 }
