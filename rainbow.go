@@ -59,14 +59,25 @@ func (cow *Cow) Aurora(i int, mow string) string {
 	return cow.buf.String()
 }
 
+// https://sking7.github.io/articles/139888127.html#:~:text=value%20of%20frequency.-,Using,-out-of-phase
 const (
 	freq = 0.01
 	m    = math.Pi / 3
+
+	redPhase   = 0
+	greenPhase = 2 * m
+	bluePhase  = 4 * m
 )
 
+var rgbMemo = map[float64]int64{}
+
 func rgb(i float64) int64 {
-	red := int64(6*((math.Sin(freq*i+0)*127+128)/256)) * 36
-	green := int64(6*((math.Sin(freq*i+2*m)*127+128)/256)) * 6
-	blue := int64(6*((math.Sin(freq*i+4*m)*127+128)/256)) * 1
-	return 16 + red + green + blue
+	if v, ok := rgbMemo[i]; ok {
+		return v
+	}
+	red := int64(6*(math.Sin(freq*i+redPhase)*127+128)/256) * 36
+	green := int64(6*(math.Sin(freq*i+greenPhase)*127+128)/256) * 6
+	blue := int64(6*(math.Sin(freq*i+bluePhase)*127+128)/256) * 1
+	rgbMemo[i] = 16 + red + green + blue
+	return rgbMemo[i]
 }
