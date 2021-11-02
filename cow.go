@@ -137,6 +137,15 @@ func Random() Option {
 	}
 }
 
+func pickCow() string {
+	cows := AssetNames()
+	n := len(cows)
+	rand.Shuffle(n, func(i, j int) {
+		cows[i], cows[j] = cows[j], cows[i]
+	})
+	return cows[rand.Intn(n)]
+}
+
 // Bold enables bold mode
 func Bold() Option {
 	return func(c *Cow) error {

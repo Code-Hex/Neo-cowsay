@@ -94,13 +94,3 @@ func (cow *Cow) GetCow(thoughts rune) (string, error) {
 	}
 	return strings.Join(mow, "\n"), nil
 }
-
-func pickCow() string {
-	cows := AssetNames()
-	n := len(cows)
-	for i := n - 1; i >= 0; i-- {
-		j := rand.Intn(i + 1)
-		cows[i], cows[j] = cows[j], cows[i]
-	}
-	return cows[rand.Intn(n)]
-}
