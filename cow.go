@@ -63,7 +63,7 @@ type Option func(*Cow) error
 // Phrase specifies you want to say
 func Phrase(s string) Option {
 	return func(c *Cow) error {
-		c.phrase = s
+		c.phrase = strings.Replace(s, "\t", "       ", -1)
 		return nil
 	}
 }

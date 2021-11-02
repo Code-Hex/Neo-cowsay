@@ -2,7 +2,6 @@ package cowsay
 
 import (
 	"fmt"
-	"log"
 	"strings"
 
 	wordwrap "github.com/Code-Hex/go-wordwrap"
@@ -53,7 +52,6 @@ func (lines lines) max() int {
 
 func (cow *Cow) getLines(width int) lines {
 	// Replace tab to 8 spaces
-	cow.phrase = strings.Replace(cow.phrase, "\t", "       ", -1)
 	text := wordwrap.WrapString(cow.phrase, uint(width))
 	lineTexts := strings.Split(text, "\n")
 	lines := make([]*line, 0, len(lineTexts))
@@ -62,7 +60,6 @@ func (cow *Cow) getLines(width int) lines {
 			text:      lineText,
 			runeWidth: runewidth.StringWidth(lineText),
 		})
-		log.Println(lineText)
 	}
 	return lines
 }
