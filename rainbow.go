@@ -3,6 +3,7 @@ package cowsay
 import (
 	"fmt"
 	"math"
+	"unicode"
 )
 
 const (
@@ -32,7 +33,11 @@ func (cow *Cow) Rainbow(mow string) string {
 			cow.buf.WriteRune(char)
 			continue
 		}
-		fmt.Fprintf(&cow.buf, "\x1b[%d%sm%c\x1b[0m", rainbow[i%6], attribute, char)
+		if unicode.IsSpace(char) {
+			cow.buf.WriteRune(char)
+		} else {
+			fmt.Fprintf(&cow.buf, "\x1b[%d%sm%c\x1b[0m", rainbow[i%len(rainbow)], attribute, char)
+		}
 		i++
 	}
 
@@ -53,7 +58,11 @@ func (cow *Cow) Aurora(i int, mow string) string {
 			cow.buf.WriteRune(char)
 			continue
 		}
-		fmt.Fprintf(&cow.buf, "\033[38;5;%d%sm%c\033[0m", rgb(float64(i)), attribute, char)
+		if unicode.IsSpace(char) {
+			cow.buf.WriteRune(char)
+		} else {
+			fmt.Fprintf(&cow.buf, "\033[38;5;%d%sm%c\033[0m", rgb(float64(i)), attribute, char)
+		}
 		i++
 	}
 	return cow.buf.String()
