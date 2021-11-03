@@ -35,8 +35,9 @@ func Say(options ...Option) (string, error) {
 
 // Cows to get list of cows
 func Cows() []string {
-	cows := make([]string, 0, len(AssetNames()))
-	for _, key := range AssetNames() {
+	assets := AssetNames()
+	cows := make([]string, 0, len(assets))
+	for _, key := range assets {
 		cows = append(cows, strings.TrimSuffix(strings.TrimPrefix(key, "cows/"), ".cow"))
 	}
 
