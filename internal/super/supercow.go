@@ -14,17 +14,30 @@ import (
 	runewidth "github.com/mattn/go-runewidth"
 )
 
+func getNoSaidCow(opts ...cowsay.Option) (string, error) {
+	opts = append(opts, cowsay.Thoughts(' '))
+	cow, err := cowsay.NewCow(opts...)
+	if err != nil {
+		return "", err
+	}
+	return cow.GetCow()
+}
+
 // RunSuperCow runs super cow mode animation on the your terminal
-func RunSuperCow(cow *cowsay.Cow) error {
+func RunSuperCow(opts ...cowsay.Option) error {
+	cow, err := cowsay.NewCow(opts...)
+	if err != nil {
+		return err
+	}
 	balloon := cow.Balloon()
 	blank := createBlankSpace(balloon)
 
-	said, err := cow.GetCow(0)
+	said, err := cow.GetCow()
 	if err != nil {
 		return err
 	}
 
-	notSaid, err := cow.GetCow(' ')
+	notSaid, err := getNoSaidCow(opts...)
 	if err != nil {
 		return err
 	}

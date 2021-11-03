@@ -121,14 +121,14 @@ func phrase(opts *Options, args []string) string {
 func mowmow(opts *Options, args []string) error {
 	phrase := phrase(opts, args)
 	o := generateOptions(opts, phrase)
+	if opts.Super {
+		return super.RunSuperCow(o...)
+	}
+
 	cow, err := cowsay.NewCow(o...)
 	if err != nil {
 		return err
 	}
-	if opts.Super {
-		return super.RunSuperCow(cow)
-	}
-
 	say, err := cow.Say()
 	if err != nil {
 		return err

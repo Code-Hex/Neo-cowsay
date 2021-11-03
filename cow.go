@@ -13,6 +13,7 @@ type Cow struct {
 	eyes        string
 	tongue      string
 	typ         string
+	thoughts    rune
 	thinking    bool
 	bold        bool
 	isAurora    bool
@@ -28,6 +29,7 @@ func NewCow(options ...Option) (*Cow, error) {
 		phrase:      "",
 		eyes:        "oo",
 		tongue:      "  ",
+		thoughts:    '\\',
 		typ:         "cows/default.cow",
 		ballonWidth: 40,
 	}
@@ -41,7 +43,7 @@ func NewCow(options ...Option) (*Cow, error) {
 
 // Say returns string that said by cow
 func (cow *Cow) Say() (string, error) {
-	mow, err := cow.GetCow(0)
+	mow, err := cow.GetCow()
 	if err != nil {
 		return "", err
 	}
@@ -125,6 +127,16 @@ func Type(s string) Option {
 func Thinking() Option {
 	return func(c *Cow) error {
 		c.thinking = true
+		return nil
+	}
+}
+
+// Thoughts Thoughts allows you to specify
+// the rune that will be drawn between
+// the speech bubbles and the cow
+func Thoughts(thoughts rune) Option {
+	return func(c *Cow) error {
+		c.thoughts = thoughts
 		return nil
 	}
 }
