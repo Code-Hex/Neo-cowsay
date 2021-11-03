@@ -70,8 +70,8 @@ func RunSuperCow(phrase string, opts ...cowsay.Option) error {
 
 func createBlankSpace(balloon string) string {
 	var buf strings.Builder
-	l := len(strings.Split(balloon, "\n"))
-	for i := 1; i < l; i++ {
+	l := strings.Count(balloon, "\n")
+	for i := 0; i < l; i++ {
 		buf.WriteRune('\n')
 	}
 	return buf.String()
