@@ -41,13 +41,6 @@ func New(options ...Option) (*Cow, error) {
 	return cow, nil
 }
 
-// NewCow returns pointer of Cow struct that made by options
-//
-// Deprecated: Use New instead.
-func NewCow(options ...Option) (*Cow, error) {
-	return New(options...)
-}
-
 // Say returns string that said by cow
 func (cow *Cow) Say() (string, error) {
 	mow, err := cow.GetCow()
