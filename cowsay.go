@@ -17,7 +17,7 @@ func Say(options ...Option) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	mow, err := cow.GetCow(0)
+	mow, err := cow.GetCow()
 	if err != nil {
 		return "", err
 	}
@@ -46,18 +46,10 @@ func Cows() []string {
 }
 
 // GetCow to get cow's ascii art
-func (cow *Cow) GetCow(thoughts rune) (string, error) {
+func (cow *Cow) GetCow() (string, error) {
 	src, err := Asset(cow.typ)
 	if err != nil {
 		return "", err
-	}
-
-	if thoughts == 0 {
-		if cow.thinking {
-			thoughts = 'o'
-		} else {
-			thoughts = '\\'
-		}
 	}
 
 	if len(cow.eyes) > 2 {
@@ -76,8 +68,8 @@ func (cow *Cow) GetCow(thoughts rune) (string, error) {
 		"${eyes}", cow.eyes,
 		"$tongue", cow.tongue,
 		"${tongue}", cow.tongue,
-		"$thoughts", string(thoughts),
-		"${thoughts}", string(thoughts),
+		"$thoughts", string(cow.thoughts),
+		"${thoughts}", string(cow.thoughts),
 	)
 	newsrc := r.Replace(string(src))
 	separate := strings.Split(newsrc, "\n")

@@ -77,6 +77,7 @@ func generateOptions(opts *Options, phrase string) []cowsay.Option {
 		cowsay.Phrase(phrase),
 		cowsay.Type(opts.File),
 		cowsay.Thinking(),
+		cowsay.Thoughts('o'),
 	)
 	if opts.Bold {
 		o = append(o, cowsay.Bold())
@@ -120,14 +121,14 @@ func phrase(opts *Options, args []string) string {
 func mowmow(opts *Options, args []string) error {
 	phrase := phrase(opts, args)
 	o := generateOptions(opts, phrase)
+	if opts.Super {
+		return super.RunSuperCow(o...)
+	}
+
 	cow, err := cowsay.NewCow(o...)
 	if err != nil {
 		return err
 	}
-	if opts.Super {
-		return super.RunSuperCow(cow)
-	}
-
 	say, err := cow.Say()
 	if err != nil {
 		return err
