@@ -50,9 +50,10 @@ func (lines lines) max() int {
 	return maxWidth
 }
 
-func (cow *Cow) getLines(width int) lines {
+func (cow *Cow) getLines(phrase string, width int) lines {
 	// Replace tab to 8 spaces
-	text := wordwrap.WrapString(cow.phrase, uint(width))
+	phrase = strings.Replace(phrase, "\t", "       ", -1)
+	text := wordwrap.WrapString(phrase, uint(width))
 	lineTexts := strings.Split(text, "\n")
 	lines := make([]*line, 0, len(lineTexts))
 	for _, lineText := range lineTexts {
@@ -65,11 +66,11 @@ func (cow *Cow) getLines(width int) lines {
 }
 
 // Balloon to get the balloon and the string entered in the balloon.
-func (cow *Cow) Balloon() string {
+func (cow *Cow) Balloon(phrase string) string {
 	defer cow.buf.Reset()
 
 	width := cow.ballonWidth
-	lines := cow.getLines(width)
+	lines := cow.getLines(phrase, width)
 	maxWidth := lines.max()
 	if maxWidth > width {
 		maxWidth = width

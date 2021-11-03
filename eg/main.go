@@ -16,7 +16,7 @@ func main() {
 
 func simple() {
 	say, err := cowsay.Say(
-		cowsay.Phrase("Hello"),
+		"Hello",
 		cowsay.Type("default"),
 		cowsay.BallonWidth(40),
 	)
@@ -28,7 +28,6 @@ func simple() {
 
 func complex() {
 	cow, err := cowsay.New(
-		cowsay.Phrase("Hello"),
 		cowsay.BallonWidth(40),
 		//cowsay.Thinking(),
 		cowsay.Random(),
@@ -36,7 +35,7 @@ func complex() {
 	if err != nil {
 		panic(err)
 	}
-	say, err := cow.Say()
+	say, err := cow.Say("Hello")
 	if err != nil {
 		panic(err)
 	}

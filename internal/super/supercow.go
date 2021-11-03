@@ -24,12 +24,12 @@ func getNoSaidCow(opts ...cowsay.Option) (string, error) {
 }
 
 // RunSuperCow runs super cow mode animation on the your terminal
-func RunSuperCow(opts ...cowsay.Option) error {
+func RunSuperCow(phrase string, opts ...cowsay.Option) error {
 	cow, err := cowsay.New(opts...)
 	if err != nil {
 		return err
 	}
-	balloon := cow.Balloon()
+	balloon := cow.Balloon(phrase)
 	blank := createBlankSpace(balloon)
 
 	said, err := cow.GetCow()

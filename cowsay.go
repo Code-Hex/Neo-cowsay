@@ -12,12 +12,12 @@ func init() {
 }
 
 // Say to return cowsay string.
-func Say(options ...Option) (string, error) {
+func Say(phrase string, options ...Option) (string, error) {
 	cow, err := New(options...)
 	if err != nil {
 		return "", err
 	}
-	return cow.Say()
+	return cow.Say(phrase)
 }
 
 // Cows to get list of cows
