@@ -100,12 +100,9 @@ func (c *CLI) mow() error {
 	return nil
 }
 
-func (c *CLI) generateOptions(opts *options, phrase string) []cowsay.Option {
+func (c *CLI) generateOptions(opts *options) []cowsay.Option {
 	o := make([]cowsay.Option, 0, 8)
-	o = append(o,
-		cowsay.Phrase(phrase),
-		cowsay.Type(opts.File),
-	)
+	o = append(o, cowsay.Type(opts.File))
 	if c.Thinking {
 		o = append(o,
 			cowsay.Thinking(),
@@ -153,16 +150,12 @@ func phrase(opts *options, args []string) string {
 
 func (c *CLI) mowmow(opts *options, args []string) error {
 	phrase := phrase(opts, args)
-	o := c.generateOptions(opts, phrase)
+	o := c.generateOptions(opts)
 	if opts.Super {
-		return super.RunSuperCow(o...)
+		return super.RunSuperCow(phrase, o...)
 	}
 
-	cow, err := cowsay.NewCow(o...)
-	if err != nil {
-		return err
-	}
-	say, err := cow.Say()
+	say, err := cowsay.Say(phrase, o...)
 	if err != nil {
 		return err
 	}

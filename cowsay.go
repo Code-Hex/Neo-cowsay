@@ -12,25 +12,12 @@ func init() {
 }
 
 // Say to return cowsay string.
-func Say(options ...Option) (string, error) {
-	cow, err := NewCow(options...)
+func Say(phrase string, options ...Option) (string, error) {
+	cow, err := New(options...)
 	if err != nil {
 		return "", err
 	}
-	mow, err := cow.GetCow()
-	if err != nil {
-		return "", err
-	}
-
-	said := cow.Balloon() + mow
-
-	if cow.isRainbow {
-		return cow.Rainbow(said), nil
-	}
-	if cow.isAurora {
-		return cow.Aurora(rand.Intn(256), said), nil
-	}
-	return said, nil
+	return cow.Say(phrase)
 }
 
 // Cows to get list of cows

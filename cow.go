@@ -9,7 +9,6 @@ import (
 
 // Cow struct!!
 type Cow struct {
-	phrase      string
 	eyes        string
 	tongue      string
 	typ         string
@@ -23,10 +22,9 @@ type Cow struct {
 	buf strings.Builder
 }
 
-// NewCow returns pointer of Cow struct that made by options
-func NewCow(options ...Option) (*Cow, error) {
+// New returns pointer of Cow struct that made by options
+func New(options ...Option) (*Cow, error) {
 	cow := &Cow{
-		phrase:      "",
 		eyes:        "oo",
 		tongue:      "  ",
 		thoughts:    '\\',
@@ -42,13 +40,13 @@ func NewCow(options ...Option) (*Cow, error) {
 }
 
 // Say returns string that said by cow
-func (cow *Cow) Say() (string, error) {
+func (cow *Cow) Say(phrase string) (string, error) {
 	mow, err := cow.GetCow()
 	if err != nil {
 		return "", err
 	}
 
-	said := cow.Balloon() + mow
+	said := cow.Balloon(phrase) + mow
 
 	if cow.isRainbow {
 		return cow.Rainbow(said), nil
@@ -61,14 +59,6 @@ func (cow *Cow) Say() (string, error) {
 
 // Option defined for Options
 type Option func(*Cow) error
-
-// Phrase specifies you want to say
-func Phrase(s string) Option {
-	return func(c *Cow) error {
-		c.phrase = strings.Replace(s, "\t", "       ", -1)
-		return nil
-	}
-}
 
 // Eyes specifies eyes
 // You must specify two length string

@@ -16,7 +16,7 @@ import (
 
 func getNoSaidCow(opts ...cowsay.Option) (string, error) {
 	opts = append(opts, cowsay.Thoughts(' '))
-	cow, err := cowsay.NewCow(opts...)
+	cow, err := cowsay.New(opts...)
 	if err != nil {
 		return "", err
 	}
@@ -24,12 +24,12 @@ func getNoSaidCow(opts ...cowsay.Option) (string, error) {
 }
 
 // RunSuperCow runs super cow mode animation on the your terminal
-func RunSuperCow(opts ...cowsay.Option) error {
-	cow, err := cowsay.NewCow(opts...)
+func RunSuperCow(phrase string, opts ...cowsay.Option) error {
+	cow, err := cowsay.New(opts...)
 	if err != nil {
 		return err
 	}
-	balloon := cow.Balloon()
+	balloon := cow.Balloon(phrase)
 	blank := createBlankSpace(balloon)
 
 	said, err := cow.GetCow()
@@ -70,8 +70,8 @@ func RunSuperCow(opts ...cowsay.Option) error {
 
 func createBlankSpace(balloon string) string {
 	var buf strings.Builder
-	l := len(strings.Split(balloon, "\n"))
-	for i := 1; i < l; i++ {
+	l := strings.Count(balloon, "\n")
+	for i := 0; i < l; i++ {
 		buf.WriteRune('\n')
 	}
 	return buf.String()
