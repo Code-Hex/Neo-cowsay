@@ -39,11 +39,13 @@ type options struct {
 	Aurora   bool   `long:"aurora"`
 }
 
+// CLI prepare for running command-line.
 type CLI struct {
 	Version  string
 	Thinking bool
 }
 
+// Run runs command-line.
 func (c *CLI) Run() int {
 	if err := c.mow(); err != nil {
 		fmt.Fprintf(os.Stderr, "Error:\n  %v\n", err)
