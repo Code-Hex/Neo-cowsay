@@ -158,7 +158,7 @@ func (c *CLI) mowmow(opts *options, args []string) error {
 		return super.RunSuperCow(o...)
 	}
 
-	cow, err := cowsay.NewCow(o...)
+	cow, err := cowsay.New(o...)
 	if err != nil {
 		return err
 	}

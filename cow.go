@@ -23,8 +23,8 @@ type Cow struct {
 	buf strings.Builder
 }
 
-// NewCow returns pointer of Cow struct that made by options
-func NewCow(options ...Option) (*Cow, error) {
+// New returns pointer of Cow struct that made by options
+func New(options ...Option) (*Cow, error) {
 	cow := &Cow{
 		phrase:      "",
 		eyes:        "oo",
@@ -39,6 +39,13 @@ func NewCow(options ...Option) (*Cow, error) {
 		}
 	}
 	return cow, nil
+}
+
+// NewCow returns pointer of Cow struct that made by options
+//
+// Deprecated: Use New instead.
+func NewCow(options ...Option) (*Cow, error) {
+	return New(options...)
 }
 
 // Say returns string that said by cow

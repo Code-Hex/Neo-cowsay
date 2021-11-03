@@ -16,7 +16,7 @@ import (
 
 func getNoSaidCow(opts ...cowsay.Option) (string, error) {
 	opts = append(opts, cowsay.Thoughts(' '))
-	cow, err := cowsay.NewCow(opts...)
+	cow, err := cowsay.New(opts...)
 	if err != nil {
 		return "", err
 	}
@@ -25,7 +25,7 @@ func getNoSaidCow(opts ...cowsay.Option) (string, error) {
 
 // RunSuperCow runs super cow mode animation on the your terminal
 func RunSuperCow(opts ...cowsay.Option) error {
-	cow, err := cowsay.NewCow(opts...)
+	cow, err := cowsay.New(opts...)
 	if err != nil {
 		return err
 	}

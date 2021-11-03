@@ -27,7 +27,7 @@ func simple() {
 }
 
 func complex() {
-	cow, err := cowsay.NewCow(
+	cow, err := cowsay.New(
 		cowsay.Phrase("Hello"),
 		cowsay.BallonWidth(40),
 		//cowsay.Thinking(),

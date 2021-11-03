@@ -13,7 +13,7 @@ func init() {
 
 // Say to return cowsay string.
 func Say(options ...Option) (string, error) {
-	cow, err := NewCow(options...)
+	cow, err := New(options...)
 	if err != nil {
 		return "", err
 	}
