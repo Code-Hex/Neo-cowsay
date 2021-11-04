@@ -42,17 +42,18 @@ func RunSuperCow(phrase string, opts ...cowsay.Option) error {
 		return err
 	}
 
-	saidCowLines := strings.Split(balloon+said, "\n")
+	saidCow := balloon + said
+	saidCowLines := strings.Count(saidCow, "\n") + 1
 
 	// When it is higher than the height of the terminal
 	h := screen.Height()
-	if len(saidCowLines) > h {
+	if saidCowLines > h {
 		return errors.New("too height messages")
 	}
 
 	notSaidCowLines := strings.Split(blank+notSaid, "\n")
 
-	renderer := newRenderer(saidCowLines, notSaidCowLines)
+	renderer := newRenderer(saidCow, notSaidCowLines)
 
 	screen.SaveState()
 	screen.HideCursor()
@@ -95,13 +96,13 @@ type renderer struct {
 	heightDiff  int
 	frames      chan string
 
-	saidCowLines    []string
+	saidCow         string
 	notSaidCowLines []string
 
 	quit chan os.Signal
 }
 
-func newRenderer(saidCowLines, notSaidCowLines []string) *renderer {
+func newRenderer(saidCow string, notSaidCowLines []string) *renderer {
 	w, cowsWidth := screen.Width(), maxLen(notSaidCowLines)
 	max := w + cowsWidth
 
@@ -112,9 +113,9 @@ func newRenderer(saidCowLines, notSaidCowLines []string) *renderer {
 		max:             max,
 		middle:          max / 2,
 		screenWidth:     w,
-		heightDiff:      screen.Height() - len(saidCowLines),
+		heightDiff:      screen.Height() - strings.Count(saidCow, "\n") + 1,
 		frames:          make(chan string, max),
-		saidCowLines:    saidCowLines,
+		saidCow:         saidCow,
 		notSaidCowLines: notSaidCowLines,
 		quit:            quit,
 	}
@@ -130,43 +131,40 @@ const (
 
 func (r *renderer) createFrames(cow *cowsay.Cow) {
 	const times = standup / span
+	var buf strings.Builder
 	for x, i := 0, 0; i <= r.max; i++ {
 		if i == r.middle {
 			posx := r.posX(i)
 			for k := 0; k < int(times); k++ {
 				base := x * 70
 				// draw colored cow
-				for j, line := range r.saidCowLines {
-					screen.MoveTo(cow.Aurora(base, line), posx, r.posY(j))
-				}
+				screen.MoveTo(cow.Aurora(base, r.saidCow), posx, r.posY(0))
 				r.frames <- screen.Flush()
 				if k%magic == 0 {
 					x++
 				}
 			}
 		} else {
-			posx := r.posX(i)
-
 			var n int
 			if i > r.screenWidth {
 				n = i - r.screenWidth
 			}
 
 			base := x * 70
-			for j, line := range r.notSaidCowLines {
-				y := r.posY(j)
+			buf.Reset()
+			for _, line := range r.notSaidCowLines {
 				if i > r.screenWidth {
 					if n < len(line) {
-						screen.MoveTo(cow.Aurora(base, line[n:]), 1, y)
-					} else {
-						screen.MoveTo(cow.Aurora(base, " "), 1, y)
+						buf.WriteString(line[n:])
 					}
 				} else if i > len(line) {
-					screen.MoveTo(cow.Aurora(base, line), posx, y)
+					buf.WriteString(line)
 				} else {
-					screen.MoveTo(cow.Aurora(base, line[:i]), posx, y)
+					buf.WriteString(line[:i])
 				}
+				buf.WriteString("\n")
 			}
+			screen.MoveTo(cow.Aurora(base, buf.String()), r.posX(i), r.posY(0))
 			r.frames <- screen.Flush()
 		}
 		if i%magic == 0 {
