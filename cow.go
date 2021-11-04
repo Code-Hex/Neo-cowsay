@@ -57,6 +57,14 @@ func (cow *Cow) Say(phrase string) (string, error) {
 	return said, nil
 }
 
+// Clone returns a copy of cow.
+func (cow *Cow) Clone() *Cow {
+	ret := new(Cow)
+	*ret = *cow
+	ret.buf.Reset()
+	return ret
+}
+
 // Option defined for Options
 type Option func(*Cow) error
 
