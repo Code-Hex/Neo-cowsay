@@ -20,7 +20,7 @@ cowsay is a configurable talking cow, written in Perl.  It operates
 much as the figlet program does, and it written in the same spirit
 of silliness.
 ```  
-by [Original](https://github.com/schacon/cowsay).  
+by [Original](https://web.archive.org/web/20071026043648/http://www.nog.net/~tony/warez/cowsay.shtml).  
 
 Neo Cowsay is written in Go. This cowsay is extended the original cowsay. added fun more options, and you can be used as a library.
 
@@ -71,7 +71,7 @@ import (
 
 func main() {
 	say, err := cowsay.Say(
-		cowsay.Phrase("Hello"),
+		"Hello",
 		cowsay.Type("default"),
 		cowsay.BallonWidth(40),
 	)
