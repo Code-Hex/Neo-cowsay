@@ -148,8 +148,9 @@ func Thoughts(thoughts rune) Option {
 
 // Random specifies something .cow from cows directory
 func Random() Option {
+	pick := pickCow()
 	return func(c *Cow) error {
-		c.typ = pickCow()
+		c.typ = pick
 		return nil
 	}
 }

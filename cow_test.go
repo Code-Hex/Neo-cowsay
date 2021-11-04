@@ -81,4 +81,20 @@ func TestCow_Clone(t *testing.T) {
 			}
 		})
 	}
+
+	t.Run("random", func(t *testing.T) {
+		cow, _ := New(
+			Thinking(),
+			Thoughts('o'),
+			Random(),
+		)
+
+		cloned, _ := cow.Clone()
+
+		if diff := cmp.Diff(cow, cloned,
+			cmp.AllowUnexported(Cow{}),
+			cmpopts.IgnoreFields(Cow{}, "buf")); diff != "" {
+			t.Errorf("(-want, +got)\n%s", diff)
+		}
+	})
 }
