@@ -19,6 +19,8 @@ jobs:
       uses: actions/checkout@v1
     - name: Vet
       run: go vet ./...
+    - name: Test
+      run: make test
     - name: Lint
       run: |
         go get golang.org/x/lint/golint

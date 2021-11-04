@@ -14,9 +14,9 @@ import (
 	runewidth "github.com/mattn/go-runewidth"
 )
 
-func getNoSaidCow(opts ...cowsay.Option) (string, error) {
+func getNoSaidCow(cow *cowsay.Cow, opts ...cowsay.Option) (string, error) {
 	opts = append(opts, cowsay.Thoughts(' '))
-	cow, err := cowsay.New(opts...)
+	cow, err := cow.Clone(opts...)
 	if err != nil {
 		return "", err
 	}
@@ -37,7 +37,7 @@ func RunSuperCow(phrase string, opts ...cowsay.Option) error {
 		return err
 	}
 
-	notSaid, err := getNoSaidCow(opts...)
+	notSaid, err := getNoSaidCow(cow, opts...)
 	if err != nil {
 		return err
 	}

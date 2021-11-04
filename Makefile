@@ -17,6 +17,10 @@ build/cowthink:
 lint:
 	golint ./...
 
+.PHONY: test
+test:
+	go test ./...
+
 .PHONY: man
 man:
 	asciidoctor --doctype manpage --backend manpage doc/neo-cowsay.1.txt.tpl -o doc/neo-cowsay.1

@@ -57,6 +57,21 @@ func (cow *Cow) Say(phrase string) (string, error) {
 	return said, nil
 }
 
+// Clone returns a copy of cow.
+//
+// If any options are specified, they will be reflected.
+func (cow *Cow) Clone(options ...Option) (*Cow, error) {
+	ret := new(Cow)
+	*ret = *cow
+	ret.buf.Reset()
+	for _, o := range options {
+		if err := o(ret); err != nil {
+			return nil, err
+		}
+	}
+	return ret, nil
+}
+
 // Option defined for Options
 type Option func(*Cow) error
 
@@ -133,8 +148,9 @@ func Thoughts(thoughts rune) Option {
 
 // Random specifies something .cow from cows directory
 func Random() Option {
+	pick := pickCow()
 	return func(c *Cow) error {
-		c.typ = pickCow()
+		c.typ = pick
 		return nil
 	}
 }
