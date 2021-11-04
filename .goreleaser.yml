@@ -68,6 +68,9 @@ archives:
   format_overrides:
   - goos: windows
     format: zip
+  files:
+  - LICENSE
+  - doc/neo-cowsay.1
 
 brews:
 - name: neo-cowsay
@@ -81,6 +84,7 @@ brews:
   install: |
     bin.install "cowsay"
     bin.install "cowthink"
+    man1.install Dir["doc/neo-cowsay.1"]
 
 checksum:
   name_template: 'cowsay_checksums.txt'
