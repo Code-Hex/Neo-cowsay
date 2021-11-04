@@ -1,0 +1,132 @@
+'\" t
+.\"     Title: cowsay
+.\"    Author: [see the "AUTHOR(S)" section]
+.\" Generator: Asciidoctor 2.0.16
+.\"      Date: 2021-11-04
+.\"    Manual: \ \&
+.\"    Source: \ \&
+.\"  Language: English
+.\"
+.TH "NEO COWSAY/COWTHINK" "1" "2021-11-04" "\ \&" "\ \&"
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.ss \n[.ss] 0
+.nh
+.ad l
+.de URL
+\fI\\$2\fP <\\$1>\\$3
+..
+.als MTO URL
+.if \n[.g] \{\
+.  mso www.tmac
+.  am URL
+.    ad l
+.  .
+.  am MTO
+.    ad l
+.  .
+.  LINKSTYLE blue R < >
+.\}
+.SH "NAME"
+Neo cowsay/cowthink \- configurable speaking/thinking cow (and a bit more)
+.SH "SYNOPSIS"
+.sp
+cowsay [\-e \fIeye_string\fP] [\-f \fIcowfile\fP] [\-h] [\-l] [\-n] [\-T \fItongue_string\fP] [\-W \fIcolumn\fP] [\-bdgpstwy]
+[\-\-random] [\-\-rainbow] [\-\-aurora] [\-\-super] [\fImessage\fP]
+.SH "DESCRIPTION"
+.sp
+\fINeo\-cowsay\fP (cowsay) generates an ASCII picture of a cow saying something provided by the
+user.  If run with no arguments, it accepts standard input, word\-wraps
+the message given at about 40 columns, and prints the cow saying the
+given message on standard output.
+.sp
+To aid in the use of arbitrary messages with arbitrary whitespace,
+use the \fB\-n\fP option.  If it is specified, the given message will not be
+word\-wrapped.  This is possibly useful if you want to make the cow
+think or speak in figlet(6).  If \fB\-n\fP is specified, there must not be any command\-line arguments left
+after all the switches have been processed.
+.sp
+The \fB\-W\fP specifies roughly (where the message should be wrapped. The default
+is equivalent to \fB\-W 40\fP i.e. wrap words at or before the 40th column.
+.sp
+If any command\-line arguments are left over after all switches have
+been processed, they become the cow\(cqs message. The program will not
+accept standard input for a message in this case.
+.sp
+There are several provided modes which change the appearance of the
+cow depending on its particular emotional/physical state.
+.sp
+The \fB\-b\fP option initiates Borg mode
+.sp
+\fB\-d\fP causes the cow to appear dead
+.sp
+\fB\-g\fP invokes greedy mode
+.sp
+\fB\-p\fP causes a state of paranoia to come over the cow
+.sp
+\fB\-s\fP makes the cow appear thoroughly stoned
+.sp
+\fB\-t\fP yields a tired cow
+.sp
+\fB\-w\fP is somewhat the opposite of \fB\-t\fP and initiates wired mode
+.sp
+\fB\-y\fP brings on the cow\(cqs youthful appearance.
+.sp
+The user may specify the \fB\-e\fP option to select the appearance of the cow\(cqs eyes, in which case
+the first two characters of the argument string \fIeye_string\fP will be used. The default eyes are \fIoo\fP. The tongue is similarly
+configurable through \fB\-T\fP and \fItongue_string\fP; it must be two characters and does not appear by default. However,
+it does appear in the \fIdead\fP and \fIstoned\fP modes. Any configuration
+done by \fB\-e\fP and \fB\-T\fP will be lost if one of the provided modes is used.
+.sp
+The \fB\-f\fP option specifies a particular cow picture file (\(lqcowfile\(rq) to
+use. If the cowfile spec contains \fI/\fP then it will be interpreted
+as a path relative to the current directory. Otherwise, cowsay
+will search the path specified in the \fBCOWPATH\fP environment variable. To list all cowfiles on the current \fBCOWPATH\fP, invoke \fBcowsay\fP with the \fB\-l\fP switch.
+.sp
+\fB\-\-random\fP pick randomly from available cowfiles
+.sp
+\fB\-\-rainbow\fP and \fB\-\-aurora\fP filters with colors an ASCII picture of a cow saying something
+.sp
+\fB\-\-super\fP ...enjoy!
+.sp
+If the program is invoked as \fBcowthink\fP then the cow will think its message instead of saying it.
+.SH "COWFILE FORMAT"
+.sp
+A cowfile is made up of a simple block of \fBperl(1)\fP code, which assigns a picture of a cow to the variable \fB$the_cow\fP.
+Should you wish to customize the eyes or the tongue of the cow,
+then the variables \fB$eyes\fP and \fB$tongue\fP may be used. The trail leading up to the cow\(cqs message balloon is
+composed of the character(s) in the \fB$thoughts\fP variable. Any backslashes must be reduplicated to prevent interpolation.
+The name of a cowfile should end with \fB.cow ,\fP otherwise it is assumed not to be a cowfile. Also, at\-signs (\(lq@\(rq)
+must be backslashed because that is what Perl 5 expects.
+.SH "ENVIRONMENT"
+.sp
+The COWPATH environment variable, if present, will be used to search
+for cowfiles.  It contains a colon\-separated list of directories,
+much like \fBPATH or MANPATH\fP. It should always contain the \fB/usr/local/share/cows\fP
+directory, or at least a directory with a file called \fBdefault.cow\fP in it.
+.SH "FILES"
+.sp
+\fB%PREFIX%/share/cows\fP holds a sample set of cowfiles. If your \fBCOWPATH\fP is not explicitly set, it automatically contains this directory.
+.SH "BUGS"
+.sp
+.URL "https://github.com/Code\-Hex/Neo\-cowsay" "" ""
+.sp
+If there are any, please report bugs and feature requests in the issue tracker.
+Please do your best to provide a reproducible test case for bugs. This should
+include the \fBcowsay\fP command, the actual output and the expected output.
+.SH "AUTHORS"
+.sp
+Neo\-cowsay author is Kei Kamikawa (\c
+.MTO "x00.x7f.x86\(atgmail.com" "" ")."
+.sp
+The original author is Tony Monroe (\c
+.MTO "tony\(atnog.net" "" "),"
+with suggestions from Shannon
+Appel (\c
+.MTO "appel\(atCSUA.Berkeley.EDU" "" ")"
+and contributions from Anthony Polito
+(\c
+.MTO "aspolito\(atCSUA.Berkeley.EDU" "" ")."
+.SH "SEE ALSO"
+.sp
+perl(1), wall(1), nwrite(1), figlet(6)
