@@ -58,11 +58,18 @@ func (cow *Cow) Say(phrase string) (string, error) {
 }
 
 // Clone returns a copy of cow.
-func (cow *Cow) Clone() *Cow {
+//
+// If any options are specified, they will be reflected.
+func (cow *Cow) Clone(options ...Option) (*Cow, error) {
 	ret := new(Cow)
 	*ret = *cow
 	ret.buf.Reset()
-	return ret
+	for _, o := range options {
+		if err := o(ret); err != nil {
+			return nil, err
+		}
+	}
+	return ret, nil
 }
 
 // Option defined for Options
