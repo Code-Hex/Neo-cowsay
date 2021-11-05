@@ -7,6 +7,7 @@ require (
 	github.com/mattn/go-colorable v0.1.11
 	github.com/mattn/go-runewidth v0.0.13
 	github.com/pkg/errors v0.9.1
+	github.com/rivo/uniseg v0.2.0
 	golang.org/x/crypto v0.0.0-20190211182817-74369b46fc67
 	golang.org/x/sys v0.0.0-20211102061401-a2f17f7b995c // indirect
 )
