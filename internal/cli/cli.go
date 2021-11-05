@@ -130,6 +130,9 @@ func (c *CLI) generateOptions(opts *options) []cowsay.Option {
 	if opts.Width > 0 {
 		o = append(o, cowsay.BallonWidth(uint(opts.Width)))
 	}
+	if opts.NewLine {
+		o = append(o, cowsay.DisableWordWrap())
+	}
 	return selectFace(opts, o)
 }
 
@@ -142,10 +145,7 @@ func phrase(opts *options, args []string) string {
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text())
 	}
-	if opts.NewLine {
-		return strings.Join(lines, "\n")
-	}
-	return strings.Join(lines, " ")
+	return strings.Join(lines, "\n")
 }
 
 func (c *CLI) mowmow(opts *options, args []string) error {
