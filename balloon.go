@@ -40,20 +40,21 @@ type line struct {
 
 type lines []*line
 
-func (lines lines) max() int {
+func (cow *Cow) maxLineWidth(lines []*line) int {
 	maxWidth := 0
 	for _, line := range lines {
 		if line.runeWidth > maxWidth {
 			maxWidth = line.runeWidth
 		}
+		if !cow.disableWordWrap && maxWidth > cow.ballonWidth {
+			return cow.ballonWidth
+		}
 	}
 	return maxWidth
 }
 
-func (cow *Cow) getLines(phrase string, width int) lines {
-	// Replace tab to 8 spaces
-	phrase = strings.Replace(phrase, "\t", "       ", -1)
-	text := wordwrap.WrapString(phrase, uint(width))
+func (cow *Cow) getLines(phrase string) []*line {
+	text := cow.canonicalizePhrase(phrase)
 	lineTexts := strings.Split(text, "\n")
 	lines := make([]*line, 0, len(lineTexts))
 	for _, lineText := range lineTexts {
@@ -65,14 +66,25 @@ func (cow *Cow) getLines(phrase string, width int) lines {
 	return lines
 }
 
+func (cow *Cow) canonicalizePhrase(phrase string) string {
+	// Replace tab to 8 spaces
+	phrase = strings.Replace(phrase, "\t", "       ", -1)
+
+	if cow.disableWordWrap {
+		return phrase
+	}
+	width := cow.ballonWidth
+	return wordwrap.WrapString(phrase, uint(width))
+}
+
 // Balloon to get the balloon and the string entered in the balloon.
 func (cow *Cow) Balloon(phrase string) string {
 	defer cow.buf.Reset()
 
 	width := cow.ballonWidth
-	lines := cow.getLines(phrase, width)
-	maxWidth := lines.max()
-	if maxWidth > width {
+	lines := cow.getLines(phrase)
+	maxWidth := cow.maxLineWidth(lines)
+	if !cow.disableWordWrap && maxWidth > width {
 		maxWidth = width
 	}
 
