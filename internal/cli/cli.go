@@ -3,6 +3,7 @@ package cli
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"strconv"
 	"strings"
@@ -43,15 +44,43 @@ type options struct {
 type CLI struct {
 	Version  string
 	Thinking bool
+	writer   io.Writer
+	reader   io.Reader
 }
 
 // Run runs command-line.
-func (c *CLI) Run() int {
-	if err := c.mow(); err != nil {
+func (c *CLI) Run(argv []string) int {
+	if c.writer == nil {
+		c.writer = colorable.NewColorableStdout()
+	}
+	if c.reader == nil {
+		c.reader = os.Stdin
+	}
+	if err := c.mow(argv); err != nil {
 		fmt.Fprintf(os.Stderr, "Error:\n  %v\n", err)
 		return 1
 	}
 	return 0
+}
+
+// mow will parsing for cowsay command line arguments and invoke cowsay.
+func (c *CLI) mow(argv []string) error {
+	var opts options
+	args, err := c.parseOptions(&opts, argv)
+	if err != nil {
+		return err
+	}
+
+	if opts.List {
+		fmt.Println(wordwrap.WrapString(strings.Join(cowsay.Cows(), " "), 80))
+		return nil
+	}
+
+	if err := c.mowmow(&opts, args); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (c *CLI) parseOptions(opts *options, argv []string) ([]string, error) {
@@ -78,26 +107,6 @@ Usage: cowsay [-bdgpstwy] [-h] [-e eyes] [-f cowfile] [--random]
 
 Original Author: (c) 1999 Tony Monroe
 `)
-}
-
-// mow will parsing for cowsay command line arguments and invoke cowsay.
-func (c *CLI) mow() error {
-	var opts options
-	args, err := c.parseOptions(&opts, os.Args[1:])
-	if err != nil {
-		return err
-	}
-
-	if opts.List {
-		fmt.Println(wordwrap.WrapString(strings.Join(cowsay.Cows(), " "), 80))
-		return nil
-	}
-
-	if err := c.mowmow(&opts, args); err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func (c *CLI) generateOptions(opts *options) []cowsay.Option {
@@ -130,26 +139,26 @@ func (c *CLI) generateOptions(opts *options) []cowsay.Option {
 	if opts.Width > 0 {
 		o = append(o, cowsay.BallonWidth(uint(opts.Width)))
 	}
+	if opts.NewLine {
+		o = append(o, cowsay.DisableWordWrap())
+	}
 	return selectFace(opts, o)
 }
 
-func phrase(opts *options, args []string) string {
+func (c *CLI) phrase(opts *options, args []string) string {
 	if len(args) > 0 {
 		return strings.Join(args, " ")
 	}
 	lines := make([]string, 0, 40)
-	scanner := bufio.NewScanner(os.Stdin)
+	scanner := bufio.NewScanner(c.reader)
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text())
 	}
-	if opts.NewLine {
-		return strings.Join(lines, "\n")
-	}
-	return strings.Join(lines, " ")
+	return strings.Join(lines, "\n")
 }
 
 func (c *CLI) mowmow(opts *options, args []string) error {
-	phrase := phrase(opts, args)
+	phrase := c.phrase(opts, args)
 	o := c.generateOptions(opts)
 	if opts.Super {
 		return super.RunSuperCow(phrase, o...)
@@ -159,7 +168,7 @@ func (c *CLI) mowmow(opts *options, args []string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Fprintln(colorable.NewColorableStdout(), say)
+	fmt.Fprintln(c.writer, say)
 
 	return nil
 }

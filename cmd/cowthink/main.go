@@ -12,5 +12,5 @@ func main() {
 	os.Exit((&cli.CLI{
 		Version:  version,
 		Thinking: true,
-	}).Run())
+	}).Run(os.Args[1:]))
 }

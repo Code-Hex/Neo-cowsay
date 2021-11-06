@@ -9,15 +9,16 @@ import (
 
 // Cow struct!!
 type Cow struct {
-	eyes        string
-	tongue      string
-	typ         string
-	thoughts    rune
-	thinking    bool
-	bold        bool
-	isAurora    bool
-	isRainbow   bool
-	ballonWidth int
+	eyes            string
+	tongue          string
+	typ             string
+	thoughts        rune
+	thinking        bool
+	bold            bool
+	isAurora        bool
+	isRainbow       bool
+	ballonWidth     int
+	disableWordWrap bool
 
 	buf strings.Builder
 }
@@ -192,6 +193,15 @@ func Rainbow() Option {
 func BallonWidth(size uint) Option {
 	return func(c *Cow) error {
 		c.ballonWidth = int(size)
+		return nil
+	}
+}
+
+// DisableWordWrap disables word wrap.
+// Ignoring width of the ballon.
+func DisableWordWrap() Option {
+	return func(c *Cow) error {
+		c.disableWordWrap = true
 		return nil
 	}
 }
