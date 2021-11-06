@@ -81,17 +81,17 @@ func (cow *Cow) canonicalizePhrase(phrase string) string {
 func (cow *Cow) Balloon(phrase string) string {
 	defer cow.buf.Reset()
 
-	width := cow.ballonWidth
 	lines := cow.getLines(phrase)
 	maxWidth := cow.maxLineWidth(lines)
-	if !cow.disableWordWrap && maxWidth > width {
-		maxWidth = width
-	}
 
+	cow.writeBallon(lines, maxWidth)
+
+	return cow.buf.String()
+}
+
+func (cow *Cow) writeBallon(lines []*line, maxWidth int) {
 	top := make([]byte, 0, maxWidth+2)
 	bottom := make([]byte, 0, maxWidth+2)
-
-	borderType := cow.borderType()
 
 	top = append(top, ' ')
 	bottom = append(bottom, ' ')
@@ -101,24 +101,26 @@ func (cow *Cow) Balloon(phrase string) string {
 		bottom = append(bottom, '-')
 	}
 
+	borderType := cow.borderType()
+
+	cow.buf.Write(top)
+	cow.buf.Write([]byte{' ', '\n'})
+	defer func() {
+		cow.buf.Write(bottom)
+		cow.buf.Write([]byte{' ', '\n'})
+	}()
+
 	l := len(lines)
 	if l == 1 {
 		border := borderType.only
-		cow.buf.Write(top)
-		cow.buf.WriteRune('\n')
 		cow.buf.WriteRune(border[0])
 		cow.buf.WriteRune(' ')
 		cow.buf.WriteString(lines[0].text)
 		cow.buf.WriteRune(' ')
 		cow.buf.WriteRune(border[1])
 		cow.buf.WriteRune('\n')
-		cow.buf.Write(bottom)
-		cow.buf.WriteRune('\n')
-		return cow.buf.String()
+		return
 	}
-
-	cow.buf.Write(top)
-	cow.buf.WriteRune('\n')
 
 	var border [2]rune
 	for i := 0; i < l; i++ {
@@ -137,10 +139,6 @@ func (cow *Cow) Balloon(phrase string) string {
 		cow.buf.WriteRune(border[1])
 		cow.buf.WriteRune('\n')
 	}
-
-	cow.buf.Write(bottom)
-	cow.buf.WriteRune('\n')
-	return cow.buf.String()
 }
 
 func (cow *Cow) flush(text, top, bottom fmt.Stringer) string {

@@ -38,6 +38,12 @@ func TestCLI_Run(t *testing.T) {
 					argv:     []string{"-n"},
 					testfile: "n_option.txt",
 				},
+				{
+					name:     "-t",
+					phrase:   "tired",
+					argv:     []string{"-t"},
+					testfile: "t_option.txt",
+				},
 			}
 			for _, tt := range tests {
 				tt := tt
