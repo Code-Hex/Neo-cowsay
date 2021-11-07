@@ -180,7 +180,7 @@ func (c *CLI) mowmow(opts *options, args []string) error {
 	if err != nil {
 		var notfound *cowsay.NotFound
 		if errors.As(err, &notfound) {
-			return fmt.Errorf("Could not find %s cowfile!", notfound.Cowfile)
+			return fmt.Errorf("could not find %s cowfile", notfound.Cowfile)
 		}
 		return err
 	}

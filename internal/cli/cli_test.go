@@ -155,7 +155,7 @@ func TestCLI_Run(t *testing.T) {
 				if exit == 0 {
 					t.Errorf("unexpected exit code: %d", exit)
 				}
-				want := fmt.Sprintf("%s: Could not find unknown cowfile!\n", cli.name)
+				want := fmt.Sprintf("%s: could not find unknown cowfile\n", cli.name)
 				if want != stderr.String() {
 					t.Errorf("want %q, but got %q", want, stderr.String())
 				}
