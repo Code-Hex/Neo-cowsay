@@ -1,10 +1,9 @@
 package cowsay
 
 import (
+	"fmt"
 	"math/rand"
 	"strings"
-
-	"github.com/pkg/errors"
 )
 
 // Cow struct!!
@@ -113,7 +112,18 @@ func containCows(t string) bool {
 	return false
 }
 
-// Type specify cow type that is file name of .cow
+// NotFound is indicated not found the cowfile.
+type NotFound struct {
+	Cowfile string
+}
+
+var _ error = (*NotFound)(nil)
+
+func (n *NotFound) Error() string {
+	return fmt.Sprintf("not found %q cowfile", n.Cowfile)
+}
+
+// Type specify name of the cowfile
 func Type(s string) Option {
 	if s == "" {
 		s = "cows/default.cow"
@@ -129,7 +139,9 @@ func Type(s string) Option {
 			c.typ = s
 			return nil
 		}
-		return errors.Errorf("Could not find %s", s)
+		s = strings.TrimPrefix(s, "cows/")
+		s = strings.TrimSuffix(s, ".cow")
+		return &NotFound{Cowfile: s}
 	}
 }
 

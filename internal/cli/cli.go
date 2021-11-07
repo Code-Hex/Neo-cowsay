@@ -2,6 +2,7 @@ package cli
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -44,20 +45,31 @@ type options struct {
 type CLI struct {
 	Version  string
 	Thinking bool
-	writer   io.Writer
-	reader   io.Reader
+	stderr   io.Writer
+	stdout   io.Writer
+	stdin    io.Reader
+}
+
+func (c *CLI) program() string {
+	if c.Thinking {
+		return "cowthink"
+	}
+	return "cowsay"
 }
 
 // Run runs command-line.
 func (c *CLI) Run(argv []string) int {
-	if c.writer == nil {
-		c.writer = colorable.NewColorableStdout()
+	if c.stderr == nil {
+		c.stderr = os.Stderr
 	}
-	if c.reader == nil {
-		c.reader = os.Stdin
+	if c.stdout == nil {
+		c.stdout = colorable.NewColorableStdout()
+	}
+	if c.stdin == nil {
+		c.stdin = os.Stdin
 	}
 	if err := c.mow(argv); err != nil {
-		fmt.Fprintf(os.Stderr, "Error:\n  %v\n", err)
+		fmt.Fprintf(c.stderr, "%s: %s\n", c.program(), err.Error())
 		return 1
 	}
 	return 0
@@ -91,7 +103,7 @@ func (c *CLI) parseOptions(opts *options, argv []string) ([]string, error) {
 	}
 
 	if opts.Help {
-		os.Stdout.Write(c.usage())
+		c.stdout.Write(c.usage())
 		os.Exit(0)
 	}
 
@@ -100,8 +112,8 @@ func (c *CLI) parseOptions(opts *options, argv []string) ([]string, error) {
 
 func (c *CLI) usage() []byte {
 	year := strconv.Itoa(time.Now().Year())
-	return []byte(`cow{say,think} version ` + c.Version + `, (c) ` + year + ` codehex
-Usage: cowsay [-bdgpstwy] [-h] [-e eyes] [-f cowfile] [--random]
+	return []byte(c.program() + ` version ` + c.Version + `, (c) ` + year + ` codehex
+Usage: ` + c.program() + ` [-bdgpstwy] [-h] [-e eyes] [-f cowfile] [--random]
           [-l] [-n] [-T tongue] [-W wrapcolumn]
           [--rainbow] [--aurora] [--super] [message]
 
@@ -150,7 +162,7 @@ func (c *CLI) phrase(opts *options, args []string) string {
 		return strings.Join(args, " ")
 	}
 	lines := make([]string, 0, 40)
-	scanner := bufio.NewScanner(c.reader)
+	scanner := bufio.NewScanner(c.stdin)
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text())
 	}
@@ -166,9 +178,13 @@ func (c *CLI) mowmow(opts *options, args []string) error {
 
 	say, err := cowsay.Say(phrase, o...)
 	if err != nil {
+		var notfound *cowsay.NotFound
+		if errors.As(err, &notfound) {
+			return fmt.Errorf("could not find %s cowfile", notfound.Cowfile)
+		}
 		return err
 	}
-	fmt.Fprintln(c.writer, say)
+	fmt.Fprintln(c.stdout, say)
 
 	return nil
 }
