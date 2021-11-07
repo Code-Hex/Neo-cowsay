@@ -135,6 +135,13 @@ func TestCLI_Run(t *testing.T) {
 					}
 				})
 			}
+
+			t.Run("program name", func(t *testing.T) {
+				c := &CLI{Thinking: cli.thinking}
+				if cli.name != c.program() {
+					t.Fatalf("want %q, but got %q", cli.name, c.program())
+				}
+			})
 		})
 	}
 }

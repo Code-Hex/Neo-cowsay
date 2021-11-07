@@ -2,6 +2,7 @@ package cli
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -48,6 +49,13 @@ type CLI struct {
 	reader   io.Reader
 }
 
+func (c *CLI) program() string {
+	if c.Thinking {
+		return "cowthink"
+	}
+	return "cowsay"
+}
+
 // Run runs command-line.
 func (c *CLI) Run(argv []string) int {
 	if c.writer == nil {
@@ -57,7 +65,7 @@ func (c *CLI) Run(argv []string) int {
 		c.reader = os.Stdin
 	}
 	if err := c.mow(argv); err != nil {
-		fmt.Fprintf(os.Stderr, "Error:\n  %v\n", err)
+		fmt.Fprintf(os.Stderr, "%s: %s\n", c.program(), err.Error())
 		return 1
 	}
 	return 0
@@ -100,8 +108,8 @@ func (c *CLI) parseOptions(opts *options, argv []string) ([]string, error) {
 
 func (c *CLI) usage() []byte {
 	year := strconv.Itoa(time.Now().Year())
-	return []byte(`cow{say,think} version ` + c.Version + `, (c) ` + year + ` codehex
-Usage: cowsay [-bdgpstwy] [-h] [-e eyes] [-f cowfile] [--random]
+	return []byte(c.program() + ` version ` + c.Version + `, (c) ` + year + ` codehex
+Usage: ` + c.program() + ` [-bdgpstwy] [-h] [-e eyes] [-f cowfile] [--random]
           [-l] [-n] [-T tongue] [-W wrapcolumn]
           [--rainbow] [--aurora] [--super] [message]
 
@@ -166,6 +174,10 @@ func (c *CLI) mowmow(opts *options, args []string) error {
 
 	say, err := cowsay.Say(phrase, o...)
 	if err != nil {
+		var notfound *cowsay.NotFound
+		if errors.As(err, &notfound) {
+			return fmt.Errorf("Could not find %s cowfile!", notfound.Cowfile)
+		}
 		return err
 	}
 	fmt.Fprintln(c.writer, say)
