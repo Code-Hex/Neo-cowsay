@@ -2,6 +2,7 @@ package cli
 
 import (
 	"bytes"
+	"fmt"
 	"io/ioutil"
 	"path/filepath"
 	"strings"
@@ -117,8 +118,8 @@ func TestCLI_Run(t *testing.T) {
 					var stdout bytes.Buffer
 					c := &CLI{
 						Thinking: cli.thinking,
-						writer:   &stdout,
-						reader:   strings.NewReader(tt.phrase),
+						stdout:   &stdout,
+						stdin:    strings.NewReader(tt.phrase),
 					}
 					exit := c.Run(tt.argv)
 					if exit != 0 {
@@ -140,6 +141,23 @@ func TestCLI_Run(t *testing.T) {
 				c := &CLI{Thinking: cli.thinking}
 				if cli.name != c.program() {
 					t.Fatalf("want %q, but got %q", cli.name, c.program())
+				}
+			})
+
+			t.Run("not found cowfile", func(t *testing.T) {
+				var stderr bytes.Buffer
+				c := &CLI{
+					Thinking: cli.thinking,
+					stderr:   &stderr,
+				}
+
+				exit := c.Run([]string{"-f", "unknown"})
+				if exit == 0 {
+					t.Errorf("unexpected exit code: %d", exit)
+				}
+				want := fmt.Sprintf("%s: Could not find unknown cowfile!\n", cli.name)
+				if want != stderr.String() {
+					t.Errorf("want %q, but got %q", want, stderr.String())
 				}
 			})
 		})
