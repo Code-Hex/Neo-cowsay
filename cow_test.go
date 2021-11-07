@@ -98,3 +98,39 @@ func TestCow_Clone(t *testing.T) {
 		}
 	})
 }
+
+func Test_adjustTo2Chars(t *testing.T) {
+	tests := []struct {
+		name string
+		s    string
+		want string
+	}{
+		{
+			name: "empty",
+			s:    "",
+			want: "  ",
+		},
+		{
+			name: "1 character",
+			s:    "1",
+			want: "1 ",
+		},
+		{
+			name: "2 characters",
+			s:    "12",
+			want: "12",
+		},
+		{
+			name: "3 characters",
+			s:    "123",
+			want: "12",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.s, func(t *testing.T) {
+			if got := adjustTo2Chars(tt.s); got != tt.want {
+				t.Errorf("adjustTo2Chars() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
