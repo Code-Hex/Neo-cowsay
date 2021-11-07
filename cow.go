@@ -77,27 +77,31 @@ func (cow *Cow) Clone(options ...Option) (*Cow, error) {
 type Option func(*Cow) error
 
 // Eyes specifies eyes
-// You must specify two length string
+// The specified string will always be adjusted to be equal to two characters.
 func Eyes(s string) Option {
 	return func(c *Cow) error {
-		if l := len(s); l != 2 {
-			return errors.New("You should pass 2 length string because cow has only two eyes")
-		}
-		c.eyes = s
+		c.eyes = adjustTo2Chars(s)
 		return nil
 	}
 }
 
 // Tongue specifies tongue
-// You must specify two length string
+// The specified string will always be adjusted to be less than or equal to two characters.
 func Tongue(s string) Option {
 	return func(c *Cow) error {
-		if l := len(s); l != 2 {
-			return errors.New("You should pass 2 length string because cow has only two space on mouth")
-		}
-		c.tongue = s
+		c.tongue = adjustTo2Chars(s)
 		return nil
 	}
+}
+
+func adjustTo2Chars(s string) string {
+	if len(s) >= 2 {
+		return s[:2]
+	}
+	if len(s) == 1 {
+		return s + " "
+	}
+	return "  "
 }
 
 func containCows(t string) bool {

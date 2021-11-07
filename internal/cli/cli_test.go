@@ -33,16 +33,82 @@ func TestCLI_Run(t *testing.T) {
 				testfile string
 			}{
 				{
-					name:     "-n",
+					name:     "ignore wordwrap option",
 					phrase:   "foo\nbar\nbaz",
 					argv:     []string{"-n"},
 					testfile: "n_option.txt",
 				},
 				{
-					name:     "-t",
+					name:     "tired option",
 					phrase:   "tired",
 					argv:     []string{"-t"},
 					testfile: "t_option.txt",
+				},
+				{
+					name:     "specifies width of the ballon is 3",
+					phrase:   "foobarbaz",
+					argv:     []string{"-W", "3"},
+					testfile: "W_option.txt",
+				},
+				{
+					name:     "borg mode",
+					phrase:   "foobarbaz",
+					argv:     []string{"-b"},
+					testfile: "b_option.txt",
+				},
+				{
+					name:     "dead mode",
+					phrase:   "0xdeadbeef",
+					argv:     []string{"-d"},
+					testfile: "d_option.txt",
+				},
+				{
+					name:     "greedy mode",
+					phrase:   "give me money",
+					argv:     []string{"-g"},
+					testfile: "g_option.txt",
+				},
+				{
+					name:     "paranoid mode",
+					phrase:   "everyone hates me",
+					argv:     []string{"-p"},
+					testfile: "p_option.txt",
+				},
+				{
+					name:     "stoned mode",
+					phrase:   "I don't know",
+					argv:     []string{"-s"},
+					testfile: "s_option.txt",
+				},
+				{
+					name:     "wired mode",
+					phrase:   "Wanna Netflix and chill?",
+					argv:     []string{"-w"},
+					testfile: "wired_option.txt",
+				},
+				{
+					name:     "youthful mode",
+					phrase:   "I forgot my ID at home",
+					argv:     []string{"-y"},
+					testfile: "y_option.txt",
+				},
+				{
+					name:     "eyes option",
+					phrase:   "I'm not angry",
+					argv:     []string{"-e", "^^"},
+					testfile: "eyes_option.txt",
+				},
+				{
+					name:     "tongue option",
+					phrase:   "hungry",
+					argv:     []string{"-T", ":"},
+					testfile: "tongue_option.txt",
+				},
+				{
+					name:     "-f tux",
+					phrase:   "what is macOS?",
+					argv:     []string{"-f", "tux"},
+					testfile: "f_tux_option.txt",
 				},
 			}
 			for _, tt := range tests {
