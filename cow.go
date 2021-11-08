@@ -10,7 +10,7 @@ import (
 type Cow struct {
 	eyes            string
 	tongue          string
-	typ             string
+	typ             *CowFile
 	thoughts        rune
 	thinking        bool
 	bold            bool
@@ -25,10 +25,14 @@ type Cow struct {
 // New returns pointer of Cow struct that made by options
 func New(options ...Option) (*Cow, error) {
 	cow := &Cow{
-		eyes:        "oo",
-		tongue:      "  ",
-		thoughts:    '\\',
-		typ:         "cows/default.cow",
+		eyes:     "oo",
+		tongue:   "  ",
+		thoughts: '\\',
+		typ: &CowFile{
+			Name:         "default",
+			BasePath:     "cows",
+			LocationType: InBinary,
+		},
 		ballonWidth: 40,
 	}
 	for _, o := range options {
@@ -103,13 +107,18 @@ func adjustTo2Chars(s string) string {
 	return "  "
 }
 
-func containCows(t string) bool {
-	for _, cow := range AssetNames() {
-		if t == cow {
-			return true
+func containCows(target string) (*CowFile, error) {
+	cowPaths, err := Cows()
+	if err != nil {
+		return nil, err
+	}
+	for _, cowPath := range cowPaths {
+		cowfile, ok := cowPath.Lookup(target)
+		if ok {
+			return cowfile, nil
 		}
 	}
-	return false
+	return nil, nil
 }
 
 // NotFound is indicated not found the cowfile.
@@ -126,21 +135,17 @@ func (n *NotFound) Error() string {
 // Type specify name of the cowfile
 func Type(s string) Option {
 	if s == "" {
-		s = "cows/default.cow"
-	}
-	if !strings.HasSuffix(s, ".cow") {
-		s += ".cow"
-	}
-	if !strings.HasPrefix(s, "cows/") {
-		s = "cows/" + s
+		s = "default"
 	}
 	return func(c *Cow) error {
-		if containCows(s) {
-			c.typ = s
+		cowfile, err := containCows(s)
+		if err != nil {
+			return err
+		}
+		if cowfile != nil {
+			c.typ = cowfile
 			return nil
 		}
-		s = strings.TrimPrefix(s, "cows/")
-		s = strings.TrimSuffix(s, ".cow")
 		return &NotFound{Cowfile: s}
 	}
 }
@@ -165,20 +170,30 @@ func Thoughts(thoughts rune) Option {
 
 // Random specifies something .cow from cows directory
 func Random() Option {
-	pick := pickCow()
+	pick, err := pickCow()
 	return func(c *Cow) error {
+		if err != nil {
+			return err
+		}
 		c.typ = pick
 		return nil
 	}
 }
 
-func pickCow() string {
-	cows := AssetNames()
-	n := len(cows)
-	rand.Shuffle(n, func(i, j int) {
-		cows[i], cows[j] = cows[j], cows[i]
-	})
-	return cows[rand.Intn(n)]
+func pickCow() (*CowFile, error) {
+	cowPaths, err := Cows()
+	if err != nil {
+		return nil, err
+	}
+	cowPath := cowPaths[rand.Intn(len(cowPaths))]
+
+	n := len(cowPath.CowFiles)
+	cowfile := cowPath.CowFiles[rand.Intn(n)]
+	return &CowFile{
+		Name:         cowfile,
+		BasePath:     cowPath.Name,
+		LocationType: cowPath.LocationType,
+	}, nil
 }
 
 // Bold enables bold mode

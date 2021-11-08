@@ -2,7 +2,8 @@ package cowsay
 
 import (
 	"embed"
-	"path/filepath"
+	"sort"
+	"strings"
 )
 
 //go:embed cows/*
@@ -15,17 +16,25 @@ func Asset(path string) ([]byte, error) {
 	return cowsDir.ReadFile(path)
 }
 
-// AssetNames returns the names of the assets.
+// AssetNames returns the list of filename of the assets.
 func AssetNames() []string {
-	const cows = "cows"
-	entries, err := cowsDir.ReadDir(cows)
+	entries, err := cowsDir.ReadDir("cows")
 	if err != nil {
 		panic(err)
 	}
 	names := make([]string, 0, len(entries))
 	for _, entry := range entries {
-		filename := filepath.Join(cows, entry.Name())
-		names = append(names, filename)
+		name := strings.TrimSuffix(entry.Name(), ".cow")
+		names = append(names, name)
 	}
+	sort.Strings(names)
 	return names
+}
+
+var cowsInBinary = AssetNames()
+
+// CowsInBinary returns the list of cowfiles which are in binary.
+// this list is not sorted.
+func CowsInBinary() []string {
+	return cowsInBinary
 }
