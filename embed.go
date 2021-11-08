@@ -34,7 +34,7 @@ func AssetNames() []string {
 var cowsInBinary = AssetNames()
 
 // CowsInBinary returns the list of cowfiles which are in binary.
-// this list is not sorted.
+// the list is memoized.
 func CowsInBinary() []string {
 	return cowsInBinary
 }
