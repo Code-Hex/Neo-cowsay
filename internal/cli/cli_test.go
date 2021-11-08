@@ -125,7 +125,7 @@ func TestCLI_Run(t *testing.T) {
 					if exit != 0 {
 						t.Fatalf("unexpected exit code: %d", exit)
 					}
-					testpath := filepath.Join("testdata", cli.name, tt.testfile)
+					testpath := filepath.Join("..", "..", "testdata", cli.name, tt.testfile)
 					content, err := ioutil.ReadFile(testpath)
 					if err != nil {
 						t.Fatal(err)

@@ -84,7 +84,19 @@ func (c *CLI) mow(argv []string) error {
 	}
 
 	if opts.List {
-		fmt.Println(wordwrap.WrapString(strings.Join(cowsay.Cows(), " "), 80))
+		cowPaths, err := cowsay.Cows()
+		if err != nil {
+			return err
+		}
+		for _, cowPath := range cowPaths {
+			if cowPath.LocationType == cowsay.InBinary {
+				fmt.Fprintf(c.stdout, "Cow files in binary:\n")
+			} else {
+				fmt.Fprintf(c.stdout, "Cow files in %s:\n", cowPath.Name)
+			}
+			fmt.Fprintln(c.stdout, wordwrap.WrapString(strings.Join(cowPath.CowFiles, " "), 80))
+			fmt.Fprintln(c.stdout)
+		}
 		return nil
 	}
 
