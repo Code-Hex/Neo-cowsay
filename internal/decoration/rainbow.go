@@ -23,7 +23,7 @@ func (w *Writer) writeAsRainbow(b []byte) (nn int, err error) {
 	for len(b) > 0 {
 		char, size := utf8.DecodeRune(b)
 		if char == '\n' {
-			w.colorSeq = 0
+			w.options.colorSeq = 0
 			w.buf.WriteRune(char)
 			b = b[size:]
 			continue
@@ -32,12 +32,12 @@ func (w *Writer) writeAsRainbow(b []byte) (nn int, err error) {
 			w.buf.WriteRune(char)
 		} else {
 			fmt.Fprintf(&w.buf, "\x1b[%d%sm%c\x1b[0m",
-				rainbow[w.colorSeq%len(rainbow)],
+				rainbow[w.options.colorSeq%len(rainbow)],
 				w.options.maybeBold(),
 				char,
 			)
 		}
-		w.colorSeq++
+		w.options.colorSeq++
 		b = b[size:]
 	}
 

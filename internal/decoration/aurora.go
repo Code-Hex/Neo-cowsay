@@ -21,12 +21,12 @@ func (w *Writer) writeAsAurora(b []byte) (nn int, err error) {
 			w.buf.WriteRune(char)
 		} else {
 			fmt.Fprintf(&w.buf, "\033[38;5;%d%sm%c\033[0m",
-				rgb(float64(w.colorSeq)),
+				rgb(float64(w.options.colorSeq)),
 				w.options.maybeBold(),
 				char,
 			)
 		}
-		w.colorSeq++
+		w.options.colorSeq++
 		b = b[size:]
 	}
 

@@ -49,10 +49,9 @@ func WithAurora(initialSeq int) Option {
 
 // Writer is a writer to decorates.
 type Writer struct {
-	writer   io.Writer
-	buf      bytes.Buffer
-	colorSeq int
-	options  *options
+	writer  io.Writer
+	buf     bytes.Buffer
+	options *options
 }
 
 // NewWriter creates a new writer.
@@ -78,6 +77,11 @@ func (w *Writer) Write(b []byte) (nn int, err error) {
 	default:
 		return w.writer.Write(b)
 	}
+}
+
+// WriteString is wrapper of the Write method.
+func (w *Writer) WriteString(s string) (int, error) {
+	return w.Write([]byte(s))
 }
 
 func (w *Writer) writeAsDefaultBold(b []byte) (nn int, err error) {
