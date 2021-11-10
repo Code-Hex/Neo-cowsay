@@ -2,20 +2,40 @@ package cli
 
 import (
 	"bufio"
+	cryptorand "crypto/rand"
 	"errors"
 	"fmt"
 	"io"
+	"math"
+	"math/big"
+	"math/rand"
 	"os"
 	"strconv"
 	"strings"
 	"time"
 
 	cowsay "github.com/Code-Hex/Neo-cowsay"
+	"github.com/Code-Hex/Neo-cowsay/internal/decoration"
 	"github.com/Code-Hex/Neo-cowsay/internal/super"
 	"github.com/Code-Hex/go-wordwrap"
 	"github.com/jessevdk/go-flags"
 	"github.com/mattn/go-colorable"
 )
+
+// stolen from: https://github.com/docker/cli/blob/aaa7a7cb9567cb5ed2e82facc2bbdd8a85347512/vendor/github.com/docker/docker/pkg/stringid/stringid.go#L81-L93
+func init() {
+	// safely set the seed globally so we generate random ids. Tries to use a
+	// crypto seed before falling back to time.
+	var seed int64
+	cryptoseed, err := cryptorand.Int(cryptorand.Reader, big.NewInt(math.MaxInt64))
+	if err != nil {
+		// This should not happen, but worst-case fallback to time-based seed.
+		seed = time.Now().UnixNano()
+	} else {
+		seed = cryptoseed.Int64()
+	}
+	rand.Seed(seed)
+}
 
 // options struct for parse command line arguments
 type options struct {
@@ -142,17 +162,8 @@ func (c *CLI) generateOptions(opts *options) []cowsay.Option {
 			cowsay.Thoughts('o'),
 		)
 	}
-	if opts.Bold {
-		o = append(o, cowsay.Bold())
-	}
 	if opts.Random {
 		o = append(o, cowsay.Random())
-	}
-	if opts.Rainbow {
-		o = append(o, cowsay.Rainbow())
-	}
-	if opts.Aurora {
-		o = append(o, cowsay.Aurora())
 	}
 	if opts.Eyes != "" {
 		o = append(o, cowsay.Eyes(opts.Eyes))
@@ -196,7 +207,21 @@ func (c *CLI) mowmow(opts *options, args []string) error {
 		}
 		return err
 	}
-	fmt.Fprintln(c.stdout, say)
+
+	options := make([]decoration.Option, 0)
+
+	if opts.Bold {
+		options = append(options, decoration.WithBold())
+	}
+	if opts.Rainbow {
+		options = append(options, decoration.WithRainbow())
+	}
+	if opts.Aurora {
+		options = append(options, decoration.WithAurora(rand.Intn(256)))
+	}
+
+	w := decoration.NewWriter(c.stdout, options...)
+	fmt.Fprintln(w, say)
 
 	return nil
 }
