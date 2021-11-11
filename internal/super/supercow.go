@@ -26,7 +26,7 @@ func getNoSaidCow(cow *cowsay.Cow, opts ...cowsay.Option) (string, error) {
 }
 
 // RunSuperCow runs super cow mode animation on the your terminal
-func RunSuperCow(phrase string, opts ...cowsay.Option) error {
+func RunSuperCow(phrase string, withBold bool, opts ...cowsay.Option) error {
 	cow, err := cowsay.New(opts...)
 	if err != nil {
 		return err
@@ -61,7 +61,7 @@ func RunSuperCow(phrase string, opts ...cowsay.Option) error {
 	screen.HideCursor()
 	screen.Clear()
 
-	go renderer.createFrames(cow)
+	go renderer.createFrames(cow, withBold)
 
 	renderer.render()
 
@@ -165,9 +165,9 @@ const (
 	standup = 3 * time.Second
 )
 
-func (r *renderer) createFrames(cow *cowsay.Cow) {
+func (r *renderer) createFrames(cow *cowsay.Cow, withBold bool) {
 	const times = standup / span
-	w := r.newWriter()
+	w := r.newWriter(withBold)
 
 	for x, i := 0, 1; i <= r.max; i++ {
 		if i == r.middle {
@@ -241,10 +241,16 @@ type Writer struct {
 	dw  *decoration.Writer
 }
 
-func (r *renderer) newWriter() *Writer {
+func (r *renderer) newWriter(withBold bool) *Writer {
 	var buf strings.Builder
 	mw := screen.NewMoveWriter(&buf, r.posX(0), r.heightDiff)
-	dw := decoration.NewWriter(mw, decoration.WithAurora(0))
+	options := []decoration.Option{
+		decoration.WithAurora(0),
+	}
+	if withBold {
+		options = append(options, decoration.WithBold())
+	}
+	dw := decoration.NewWriter(mw, options...)
 	return &Writer{
 		buf: &buf,
 		mw:  mw,

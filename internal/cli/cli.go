@@ -196,7 +196,7 @@ func (c *CLI) mowmow(opts *options, args []string) error {
 	phrase := c.phrase(opts, args)
 	o := c.generateOptions(opts)
 	if opts.Super {
-		return super.RunSuperCow(phrase, o...)
+		return super.RunSuperCow(phrase, opts.Bold, o...)
 	}
 
 	say, err := cowsay.Say(phrase, o...)
