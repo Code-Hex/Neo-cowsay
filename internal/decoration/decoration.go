@@ -66,6 +66,11 @@ func NewWriter(w io.Writer, opts ...Option) *Writer {
 	}
 }
 
+// SetColorSeq sets current color sequence.
+func (w *Writer) SetColorSeq(colorSeq int) {
+	w.options.colorSeq = colorSeq
+}
+
 func (w *Writer) Write(b []byte) (nn int, err error) {
 	switch {
 	case w.options.withAurora:
@@ -77,11 +82,6 @@ func (w *Writer) Write(b []byte) (nn int, err error) {
 	default:
 		return w.writer.Write(b)
 	}
-}
-
-// WriteString is wrapper of the Write method.
-func (w *Writer) WriteString(s string) (int, error) {
-	return w.Write([]byte(s))
 }
 
 func (w *Writer) writeAsDefaultBold(b []byte) (nn int, err error) {

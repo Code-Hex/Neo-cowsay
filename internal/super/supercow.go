@@ -10,6 +10,7 @@ import (
 	"time"
 
 	cowsay "github.com/Code-Hex/Neo-cowsay"
+	"github.com/Code-Hex/Neo-cowsay/internal/decoration"
 	"github.com/Code-Hex/Neo-cowsay/internal/screen"
 	runewidth "github.com/mattn/go-runewidth"
 	"github.com/rivo/uniseg"
@@ -166,39 +167,42 @@ const (
 
 func (r *renderer) createFrames(cow *cowsay.Cow) {
 	const times = standup / span
-	var buf strings.Builder
+	w := r.newWriter()
+
 	for x, i := 0, 1; i <= r.max; i++ {
 		if i == r.middle {
-			posx := r.posX(i)
+			w.SetPosx(r.posX(i))
 			for k := 0; k < int(times); k++ {
 				base := x * 70
 				// draw colored cow
-				screen.MoveTo(cow.Aurora(base, r.saidCow), posx, r.heightDiff)
-				r.frames <- screen.Flush()
+				w.SetColorSeq(base)
+				w.WriteString(r.saidCow)
+				r.frames <- w.String()
 				if k%magic == 0 {
 					x++
 				}
 			}
 		} else {
 			base := x * 70
-			buf.Reset()
+			w.SetPosx(r.posX(i))
+			w.SetColorSeq(base)
+
 			for _, line := range r.notSaidCowLines {
 				if i > r.screenWidth {
 					// Left side animations
 					n := i - r.screenWidth
 					if n < line.Len() {
-						buf.WriteString(line.Slice(n, line.Len()))
+						w.WriteString(line.Slice(n, line.Len()))
 					}
 				} else if i <= line.Len() {
 					// Right side animations
-					buf.WriteString(line.Slice(0, i-1))
+					w.WriteString(line.Slice(0, i-1))
 				} else {
-					buf.WriteString(line.raw)
+					w.WriteString(line.raw)
 				}
-				buf.WriteString("\n")
+				w.Write([]byte{'\n'})
 			}
-			screen.MoveTo(cow.Aurora(base, buf.String()), r.posX(i), r.heightDiff)
-			r.frames <- screen.Flush()
+			r.frames <- w.String()
 		}
 		if i%magic == 0 {
 			x++
@@ -229,4 +233,39 @@ func (r *renderer) posX(i int) int {
 		posx = 1
 	}
 	return posx
+}
+
+type Writer struct {
+	buf *strings.Builder
+	mw  *screen.MoveWriter
+	dw  *decoration.Writer
+}
+
+func (r *renderer) newWriter() *Writer {
+	var buf strings.Builder
+	mw := screen.NewMoveWriter(&buf, r.posX(0), r.heightDiff)
+	dw := decoration.NewWriter(mw, decoration.WithAurora(0))
+	return &Writer{
+		buf: &buf,
+		mw:  mw,
+		dw:  dw,
+	}
+}
+
+func (w *Writer) WriteString(s string) (int, error) { return w.dw.Write([]byte(s)) }
+
+func (w *Writer) Write(p []byte) (int, error) { return w.dw.Write(p) }
+
+func (w *Writer) SetPosx(x int) { w.mw.SetPosx(x) }
+
+func (w *Writer) SetColorSeq(colorSeq int) { w.dw.SetColorSeq(colorSeq) }
+
+func (w *Writer) Reset() {
+	w.buf.Reset()
+	w.mw.Reset()
+}
+
+func (w *Writer) String() string {
+	defer w.Reset()
+	return w.buf.String()
 }

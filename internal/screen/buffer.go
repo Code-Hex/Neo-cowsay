@@ -1,6 +1,9 @@
 package screen
 
 import (
+	"bytes"
+	"fmt"
+	"io"
 	"strconv"
 	"strings"
 )
@@ -13,6 +16,65 @@ var buffer strings.Builder
 func Flush() string {
 	defer buffer.Reset()
 	return buffer.String()
+}
+
+type MoveWriter struct {
+	idx  int
+	x, y int
+	w    io.Writer
+	buf  bytes.Buffer
+}
+
+func NewMoveWriter(w io.Writer, x, y int) *MoveWriter {
+	x, y = getXY(x, y)
+	return &MoveWriter{
+		w: w,
+		x: x,
+		y: y,
+	}
+}
+
+// SetPosx sets pos x
+func (m *MoveWriter) SetPosx(x int) {
+	x, _ = getXY(x, 0)
+	m.x = x
+}
+
+// Reset resets
+func (m *MoveWriter) Reset() {
+	m.idx = 0
+	m.buf.Reset()
+}
+
+func (m *MoveWriter) Write(bs []byte) (nn int, _ error) {
+	br := bytes.NewReader(bs)
+	for {
+		b, err := br.ReadByte()
+		if err != nil && err != io.EOF {
+			return 0, err
+		}
+		if err == io.EOF {
+			n, _ := fmt.Fprintf(m.w, "\x1b[%d;%dH%s\x1b[0K",
+				m.y+m.idx,
+				m.x,
+				m.buf.String(),
+			)
+			nn += n
+			return
+		}
+		if b == '\n' {
+			n, _ := fmt.Fprintf(m.w, "\x1b[%d;%dH%s\x1b[0K",
+				m.y+m.idx,
+				m.x,
+				m.buf.String(),
+			)
+			m.buf.Reset()
+			m.idx++
+			nn += n
+		} else {
+			m.buf.WriteByte(b)
+		}
+	}
 }
 
 // MoveTo moves string to position
