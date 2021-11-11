@@ -49,16 +49,7 @@ func (cow *Cow) Say(phrase string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-
-	said := cow.Balloon(phrase) + mow
-
-	if cow.isRainbow {
-		return cow.Rainbow(said), nil
-	}
-	if cow.isAurora {
-		return cow.Aurora(rand.Intn(256), said), nil
-	}
-	return said, nil
+	return cow.Balloon(phrase) + mow, nil
 }
 
 // Clone returns a copy of cow.

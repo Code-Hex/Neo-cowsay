@@ -1,7 +1,9 @@
 package screen
 
 import (
-	"strconv"
+	"bytes"
+	"fmt"
+	"io"
 	"strings"
 )
 
@@ -15,27 +17,98 @@ func Flush() string {
 	return buffer.String()
 }
 
-// MoveTo moves string to position
-func MoveTo(str string, x int, y int) {
-	x, y = getXY(x, y)
-	applyTransform(str, func(idx int, line string) {
-		buffer.WriteString("\033[")
-		buffer.WriteString(strconv.Itoa(y + idx))
-		buffer.WriteRune(';')
-		buffer.WriteString(strconv.Itoa(x))
-		buffer.WriteRune('H')
-		buffer.WriteString(line)
-		buffer.WriteString("\033[0K")
-	})
+// MoveWriter is implemented io.Writer and io.StringWriter.
+type MoveWriter struct {
+	idx  int
+	x, y int
+	w    io.Writer
+	buf  bytes.Buffer
 }
 
-type sf func(int, string)
+var _ interface {
+	io.Writer
+	io.StringWriter
+} = (*MoveWriter)(nil)
 
-// Apply given transformation func for each line in string
-func applyTransform(str string, transform sf) {
-	for idx, line := range strings.Split(str, "\n") {
-		transform(idx, line)
+// NewMoveWriter creates a new MoveWriter.
+func NewMoveWriter(w io.Writer, x, y int) *MoveWriter {
+	x, y = getXY(x, y)
+	return &MoveWriter{
+		w: w,
+		x: x,
+		y: y,
 	}
+}
+
+// SetPosx sets pos x
+func (m *MoveWriter) SetPosx(x int) {
+	x, _ = getXY(x, 0)
+	m.x = x
+}
+
+// Reset resets
+func (m *MoveWriter) Reset() {
+	m.idx = 0
+	m.buf.Reset()
+}
+
+// Write writes bytes. which is implemented io.Writer.
+func (m *MoveWriter) Write(bs []byte) (nn int, _ error) {
+	br := bytes.NewReader(bs)
+	for {
+		b, err := br.ReadByte()
+		if err != nil && err != io.EOF {
+			return 0, err
+		}
+		if err == io.EOF {
+			n, _ := fmt.Fprintf(m.w, "\x1b[%d;%dH%s\x1b[0K",
+				m.y+m.idx,
+				m.x,
+				m.buf.String(),
+			)
+			nn += n
+			return
+		}
+		if b == '\n' {
+			n, _ := fmt.Fprintf(m.w, "\x1b[%d;%dH%s\x1b[0K",
+				m.y+m.idx,
+				m.x,
+				m.buf.String(),
+			)
+			m.buf.Reset()
+			m.idx++
+			nn += n
+		} else {
+			m.buf.WriteByte(b)
+		}
+	}
+}
+
+// WriteString writes string. which is implemented io.StringWriter.
+func (m *MoveWriter) WriteString(s string) (nn int, _ error) {
+	for _, char := range s {
+		if char == '\n' {
+			n, _ := fmt.Fprintf(m.w, "\x1b[%d;%dH%s\x1b[0K",
+				m.y+m.idx,
+				m.x,
+				m.buf.String(),
+			)
+			m.buf.Reset()
+			m.idx++
+			nn += n
+		} else {
+			m.buf.WriteRune(char)
+		}
+	}
+	if m.buf.Len() > 0 {
+		n, _ := fmt.Fprintf(m.w, "\x1b[%d;%dH%s\x1b[0K",
+			m.y+m.idx,
+			m.x,
+			m.buf.String(),
+		)
+		nn += n
+	}
+	return
 }
 
 // getXY gets relative or absolute coorditantes
