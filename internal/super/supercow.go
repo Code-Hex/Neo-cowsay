@@ -235,7 +235,7 @@ func (r *renderer) posX(i int) int {
 	return posx
 }
 
-// Writer is wrapper which is screen.MoveWriter and decoration.Writer.
+// Writer is wrapper which is both screen.MoveWriter and decoration.Writer.
 type Writer struct {
 	buf *strings.Builder
 	mw  *screen.MoveWriter
