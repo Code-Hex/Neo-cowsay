@@ -22,7 +22,6 @@ import (
 	"github.com/mattn/go-colorable"
 )
 
-// stolen from: https://github.com/docker/cli/blob/aaa7a7cb9567cb5ed2e82facc2bbdd8a85347512/vendor/github.com/docker/docker/pkg/stringid/stringid.go#L81-L93
 func init() {
 	// safely set the seed globally so we generate random ids. Tries to use a
 	// crypto seed before falling back to time.
