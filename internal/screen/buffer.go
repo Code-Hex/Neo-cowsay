@@ -25,6 +25,11 @@ type MoveWriter struct {
 	buf  bytes.Buffer
 }
 
+var _ interface {
+	io.Writer
+	io.StringWriter
+} = (*MoveWriter)(nil)
+
 func NewMoveWriter(w io.Writer, x, y int) *MoveWriter {
 	x, y = getXY(x, y)
 	return &MoveWriter{
@@ -75,6 +80,32 @@ func (m *MoveWriter) Write(bs []byte) (nn int, _ error) {
 			m.buf.WriteByte(b)
 		}
 	}
+}
+
+func (m *MoveWriter) WriteString(s string) (nn int, _ error) {
+	for _, char := range s {
+		if char == '\n' {
+			n, _ := fmt.Fprintf(m.w, "\x1b[%d;%dH%s\x1b[0K",
+				m.y+m.idx,
+				m.x,
+				m.buf.String(),
+			)
+			m.buf.Reset()
+			m.idx++
+			nn += n
+		} else {
+			m.buf.WriteRune(char)
+		}
+	}
+	if m.buf.Len() > 0 {
+		n, _ := fmt.Fprintf(m.w, "\x1b[%d;%dH%s\x1b[0K",
+			m.y+m.idx,
+			m.x,
+			m.buf.String(),
+		)
+		nn += n
+	}
+	return
 }
 
 // MoveTo moves string to position

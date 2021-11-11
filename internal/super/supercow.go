@@ -252,7 +252,7 @@ func (r *renderer) newWriter() *Writer {
 	}
 }
 
-func (w *Writer) WriteString(s string) (int, error) { return w.dw.Write([]byte(s)) }
+func (w *Writer) WriteString(s string) (int, error) { return w.dw.WriteString(s) }
 
 func (w *Writer) Write(p []byte) (int, error) { return w.dw.Write(p) }
 
