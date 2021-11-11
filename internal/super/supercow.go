@@ -235,6 +235,7 @@ func (r *renderer) posX(i int) int {
 	return posx
 }
 
+// Writer is wrapper which is screen.MoveWriter and decoration.Writer.
 type Writer struct {
 	buf *strings.Builder
 	mw  *screen.MoveWriter
@@ -258,14 +259,19 @@ func (r *renderer) newWriter(withBold bool) *Writer {
 	}
 }
 
+// WriteString writes string. which is implemented io.StringWriter.
 func (w *Writer) WriteString(s string) (int, error) { return w.dw.WriteString(s) }
 
+// Write writes bytes. which is implemented io.Writer.
 func (w *Writer) Write(p []byte) (int, error) { return w.dw.Write(p) }
 
+// SetPosx sets posx
 func (w *Writer) SetPosx(x int) { w.mw.SetPosx(x) }
 
+// SetColorSeq sets color sequence.
 func (w *Writer) SetColorSeq(colorSeq int) { w.dw.SetColorSeq(colorSeq) }
 
+// Reset resets calls some Reset methods.
 func (w *Writer) Reset() {
 	w.buf.Reset()
 	w.mw.Reset()

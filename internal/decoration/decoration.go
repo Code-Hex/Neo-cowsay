@@ -73,6 +73,10 @@ func (w *Writer) SetColorSeq(colorSeq int) {
 	w.options.colorSeq = colorSeq
 }
 
+// Write writes bytes. which is implemented io.Writer.
+//
+// If Bold is enabled in the options, the text will be written as Bold.
+// If both Aurora and Rainbow are enabled in the options, Aurora will take precedence.
 func (w *Writer) Write(b []byte) (nn int, err error) {
 	switch {
 	case w.options.withAurora:
@@ -86,6 +90,9 @@ func (w *Writer) Write(b []byte) (nn int, err error) {
 	}
 }
 
+// WriteString writes string. which is implemented io.StringWriter.
+//
+// See also Write.
 func (w *Writer) WriteString(s string) (n int, err error) {
 	switch {
 	case w.options.withAurora:
