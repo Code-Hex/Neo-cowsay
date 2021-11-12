@@ -36,6 +36,7 @@ This is also supported `COWPATH` env. Please read more details in [#33](https://
 - new some cowfiles is added
 - cowfiles in binary
 - random pickup cowfile option
+- provides command-line fuzzy finder to search any cows with `-f -`
 - coloring filter options
 - super mode
 

@@ -2,12 +2,12 @@
 .\"     Title: cowsay
 .\"    Author: [see the "AUTHOR(S)" section]
 .\" Generator: Asciidoctor 2.0.16
-.\"      Date: 2021-11-12
+.\"      Date: 2021-11-13
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "NEO COWSAY/COWTHINK" "1" "2021-11-12" "\ \&" "\ \&"
+.TH "NEO COWSAY/COWTHINK" "1" "2021-11-13" "\ \&" "\ \&"
 .ie \n(.g .ds Aq \(aq
 .el       .ds Aq '
 .ss \n[.ss] 0
@@ -81,11 +81,14 @@ done by \fB\-e\fP and \fB\-T\fP will be lost if one of the provided modes is use
 The \fB\-f\fP option specifies a particular cow picture file (\(lqcowfile\(rq) to
 use. If the cowfile spec contains \fI/\fP then it will be interpreted
 as a path relative to the current directory. Otherwise, cowsay
-will search the path specified in the \fBCOWPATH\fP environment variable. To list all cowfiles on the current \fBCOWPATH\fP, invoke \fBcowsay\fP with the \fB\-l\fP switch.
+will search the path specified in the \fBCOWPATH\fP environment variable. If \fB\-f \-\fP is specified, provides
+interactive Unix filter (command\-line fuzzy finder) to search the cowfile.
+.sp
+To list all cowfiles on the current \fBCOWPATH\fP, invoke \fBcowsay\fP with the \fB\-l\fP switch.
 .sp
 \fB\-\-random\fP pick randomly from available cowfiles
 .sp
-\fB\-\-bold\fP output as bold text
+\fB\-\-bold\fP outputs as bold text
 .sp
 \fB\-\-rainbow\fP and \fB\-\-aurora\fP filters with colors an ASCII picture of a cow saying something
 .sp

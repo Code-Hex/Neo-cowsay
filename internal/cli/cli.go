@@ -19,6 +19,7 @@ import (
 	"github.com/Code-Hex/Neo-cowsay/v2/internal/super"
 	"github.com/Code-Hex/go-wordwrap"
 	"github.com/jessevdk/go-flags"
+	"github.com/ktr0731/go-fuzzyfinder"
 	"github.com/mattn/go-colorable"
 )
 
@@ -154,6 +155,13 @@ Original Author: (c) 1999 Tony Monroe
 
 func (c *CLI) generateOptions(opts *options) []cowsay.Option {
 	o := make([]cowsay.Option, 0, 8)
+	if opts.File == "-" {
+		cows := cowList()
+		idx, _ := fuzzyfinder.Find(cows, func(i int) string {
+			return cows[i]
+		})
+		opts.File = cows[idx]
+	}
 	o = append(o, cowsay.Type(opts.File))
 	if c.Thinking {
 		o = append(o,
@@ -177,6 +185,18 @@ func (c *CLI) generateOptions(opts *options) []cowsay.Option {
 		o = append(o, cowsay.DisableWordWrap())
 	}
 	return selectFace(opts, o)
+}
+
+func cowList() []string {
+	cows, err := cowsay.Cows()
+	if err != nil {
+		return cowsay.CowsInBinary()
+	}
+	list := make([]string, 0)
+	for _, cow := range cows {
+		list = append(list, cow.CowFiles...)
+	}
+	return list
 }
 
 func (c *CLI) phrase(opts *options, args []string) string {

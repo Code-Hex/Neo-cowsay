@@ -58,7 +58,10 @@ done by *-e* and *-T* will be lost if one of the provided modes is used.
 The *-f* option specifies a particular cow picture file (``cowfile'') to
 use. If the cowfile spec contains '/' then it will be interpreted
 as a path relative to the current directory. Otherwise, cowsay
-will search the path specified in the *COWPATH* environment variable. To list all cowfiles on the current *COWPATH*, invoke *cowsay* with the *-l* switch.
+will search the path specified in the *COWPATH* environment variable. If *-f -* is specified, provides
+interactive Unix filter (command-line fuzzy finder) to search the cowfile.
+
+To list all cowfiles on the current *COWPATH*, invoke *cowsay* with the *-l* switch.
 
 *--random* pick randomly from available cowfiles
 
