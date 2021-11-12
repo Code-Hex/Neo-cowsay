@@ -8,7 +8,7 @@ Neo cowsay/cowthink - configurable speaking/thinking cow (and a bit more)
 SYNOPSIS
 --------
 cowsay [-e _eye_string_] [-f _cowfile_] [-h] [-l] [-n] [-T _tongue_string_] [-W _column_] [-bdgpstwy]
-       [--random] [--rainbow] [--aurora] [--super] [_message_]
+       [--random] [--bold] [--rainbow] [--aurora] [--super] [_message_]
 
 DESCRIPTION
 -----------
@@ -61,6 +61,8 @@ as a path relative to the current directory. Otherwise, cowsay
 will search the path specified in the *COWPATH* environment variable. To list all cowfiles on the current *COWPATH*, invoke *cowsay* with the *-l* switch.
 
 *--random* pick randomly from available cowfiles
+
+*--bold* outputs as bold text
 
 *--rainbow* and *--aurora* filters with colors an ASCII picture of a cow saying something
 

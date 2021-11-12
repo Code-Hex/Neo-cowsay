@@ -2,12 +2,12 @@
 .\"     Title: cowsay
 .\"    Author: [see the "AUTHOR(S)" section]
 .\" Generator: Asciidoctor 2.0.16
-.\"      Date: 2021-11-04
+.\"      Date: 2021-11-12
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "NEO COWSAY/COWTHINK" "1" "2021-11-04" "\ \&" "\ \&"
+.TH "NEO COWSAY/COWTHINK" "1" "2021-11-12" "\ \&" "\ \&"
 .ie \n(.g .ds Aq \(aq
 .el       .ds Aq '
 .ss \n[.ss] 0
@@ -32,7 +32,7 @@ Neo cowsay/cowthink \- configurable speaking/thinking cow (and a bit more)
 .SH "SYNOPSIS"
 .sp
 cowsay [\-e \fIeye_string\fP] [\-f \fIcowfile\fP] [\-h] [\-l] [\-n] [\-T \fItongue_string\fP] [\-W \fIcolumn\fP] [\-bdgpstwy]
-[\-\-random] [\-\-rainbow] [\-\-aurora] [\-\-super] [\fImessage\fP]
+[\-\-random] [\-\-bold] [\-\-rainbow] [\-\-aurora] [\-\-super] [\fImessage\fP]
 .SH "DESCRIPTION"
 .sp
 \fINeo\-cowsay\fP (cowsay) generates an ASCII picture of a cow saying something provided by the
@@ -84,6 +84,8 @@ as a path relative to the current directory. Otherwise, cowsay
 will search the path specified in the \fBCOWPATH\fP environment variable. To list all cowfiles on the current \fBCOWPATH\fP, invoke \fBcowsay\fP with the \fB\-l\fP switch.
 .sp
 \fB\-\-random\fP pick randomly from available cowfiles
+.sp
+\fB\-\-bold\fP output as bold text
 .sp
 \fB\-\-rainbow\fP and \fB\-\-aurora\fP filters with colors an ASCII picture of a cow saying something
 .sp
