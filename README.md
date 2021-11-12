@@ -102,7 +102,7 @@ package main
 import (
 	"fmt"
 
-	cowsay "github.com/Code-Hex/Neo-cowsay"
+	cowsay "github.com/Code-Hex/Neo-cowsay/v2"
 )
 
 func main() {
@@ -133,17 +133,17 @@ You can download from [here](https://github.com/Code-Hex/Neo-cowsay/releases)
 
 ### library
 
-    $ go get -u github.com/Code-Hex/Neo-cowsay
+    $ go get github.com/Code-Hex/Neo-cowsay/v2
 
 ### Go
 
 #### cowsay
 
-    $ go install github.com/Code-Hex/Neo-cowsay/cmd/cowsay@latest
+    $ go install github.com/Code-Hex/Neo-cowsay/v2/cmd/cowsay@latest
 
 #### cowthink
 
-    $ go install github.com/Code-Hex/Neo-cowsay/cmd/cowthink@latest
+    $ go install github.com/Code-Hex/Neo-cowsay/v2/cmd/cowthink@latest
 
 ## License
 [cowsay license](https://github.com/Code-Hex/Neo-cowsay/blob/master/LICENSE)  
