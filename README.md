@@ -22,7 +22,7 @@ for GitHub Actions users: [Code-Hex/neo-cowsay-action](https://github.com/market
 According to the [original](https://web.archive.org/web/20071026043648/http://www.nog.net/~tony/warez/cowsay.shtml) original manual.
 
 ```
-cowsay is a configurable talking cow, written in Perl.  It operates
+cowsay is a configurable talking cow, written in Perl. It operates
 much as the figlet program does, and it written in the same spirit
 of silliness.
 ```
@@ -39,15 +39,32 @@ This is also supported `COWPATH` env. Please read more details in [#33](https://
 - coloring filter options
 - super mode
 
+<details>
+<summary>Movies for new options 🐮</summary>
+
+### Random
+
+[![asciicast](https://asciinema.org/a/228210.svg)](https://asciinema.org/a/228210)
+
+### Rainbow and Aurora, Bold
+
+[![asciicast](https://asciinema.org/a/228213.svg)](https://asciinema.org/a/228213)
+
+## And, Super Cows mode
+
+https://user-images.githubusercontent.com/6500104/140379043-53e44994-b1b0-442e-bda7-4f7ab3aedf01.mov
+
+</details>
+
 ## Usage
 
 ### As command
 
 ```
-cow{say,think} version 1.0.0, (c) 2021 codehex
+cow{say,think} version 2.0.0, (c) 2021 codehex
 Usage: cowsay [-bdgpstwy] [-h] [-e eyes] [-f cowfile] [--random]
       [-l] [-n] [-T tongue] [-W wrapcolumn]
-      [--rainbow] [--aurora] [--super] [message]
+      [--bold] [--rainbow] [--aurora] [--super] [message]
 
 Original Author: (c) 1999 Tony Monroe
 Repository: https://github.com/Code-Hex/Neo-cowsay
@@ -102,18 +119,6 @@ func main() {
 ```
 
 [Example](https://github.com/Code-Hex/Neo-cowsay/blob/master/eg/main.go) or [GoDoc](https://godoc.org/github.com/Code-Hex/Neo-cowsay)
-
-## New options
-
-### Random
-[![asciicast](https://asciinema.org/a/228210.svg)](https://asciinema.org/a/228210)
-
-### Rainbow and Aurora, Bold
-[![asciicast](https://asciinema.org/a/228213.svg)](https://asciinema.org/a/228213)
-
-## And, Super Cows mode
-
-[![asciicast](https://asciinema.org/a/228215.svg)](https://asciinema.org/a/228215)
 
 ## Install
 
