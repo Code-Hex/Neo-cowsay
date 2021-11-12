@@ -146,7 +146,7 @@ func (c *CLI) usage() []byte {
 	return []byte(c.program() + ` version ` + c.Version + `, (c) ` + year + ` codehex
 Usage: ` + c.program() + ` [-bdgpstwy] [-h] [-e eyes] [-f cowfile] [--random]
           [-l] [-n] [-T tongue] [-W wrapcolumn]
-          [--rainbow] [--aurora] [--super] [message]
+          [--bold] [--rainbow] [--aurora] [--super] [message]
 
 Original Author: (c) 1999 Tony Monroe
 `)
