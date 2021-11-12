@@ -191,6 +191,8 @@ not find it here, because there is no such thing here.
 
 </details>
 
+(The Artistic License or The GNU General Public License)
+
 ## Author
 Neo Cowsay: [codehex](https://twitter.com/CodeHex)  
 Original: (c) 1999 Tony Monroe
