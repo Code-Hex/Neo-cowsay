@@ -4,7 +4,7 @@ Neo Cowsay is written in Go. This cowsay is extended the original cowsay. added 
 
 for GitHub Actions users: [Code-Hex/neo-cowsay-action](https://github.com/marketplace/actions/neo-cowsay)
 
-[![GoDoc](https://godoc.org/github.com/Code-Hex/Neo-cowsay?status.svg)](https://godoc.org/github.com/Code-Hex/Neo-cowsay) [![.github/workflows/main.yml](https://github.com/Code-Hex/Neo-cowsay/actions/workflows/main.yml/badge.svg)](https://github.com/Code-Hex/Neo-cowsay/actions/workflows/main.yml) [![Go Report Card](https://goreportcard.com/badge/github.com/Code-Hex/Neo-cowsay)](https://goreportcard.com/report/github.com/Code-Hex/Neo-cowsay)
+[![Go Reference](https://pkg.go.dev/badge/github.com/Code-Hex/Neo-cowsay/v2.svg)](https://pkg.go.dev/github.com/Code-Hex/Neo-cowsay/v2) [![.github/workflows/main.yml](https://github.com/Code-Hex/Neo-cowsay/actions/workflows/main.yml/badge.svg)](https://github.com/Code-Hex/Neo-cowsay/actions/workflows/main.yml) [![Go Report Card](https://goreportcard.com/badge/github.com/Code-Hex/Neo-cowsay)](https://goreportcard.com/report/github.com/Code-Hex/Neo-cowsay)
 
 ```
  ______________
@@ -118,7 +118,7 @@ func main() {
 }
 ```
 
-[Example](https://github.com/Code-Hex/Neo-cowsay/blob/master/eg/main.go) or [GoDoc](https://godoc.org/github.com/Code-Hex/Neo-cowsay)
+[Example](https://github.com/Code-Hex/Neo-cowsay/blob/master/eg/main.go) or [GoDoc](https://pkg.go.dev/github.com/Code-Hex/Neo-cowsay/v2)
 
 ## Install
 
