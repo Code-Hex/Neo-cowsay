@@ -36,7 +36,7 @@ This is also supported `COWPATH` env. Please read more details in [#33](https://
 - new some cowfiles is added
 - cowfiles in binary
 - random pickup cowfile option
-- provides command-line fuzzy finder to search any cows with `-f -`
+- provides command-line fuzzy finder to search any cows with `-f -` [#39](https://github.com/Code-Hex/Neo-cowsay/pull/39)
 - coloring filter options
 - super mode
 
