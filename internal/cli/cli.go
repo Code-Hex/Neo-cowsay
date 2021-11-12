@@ -14,9 +14,9 @@ import (
 	"strings"
 	"time"
 
-	cowsay "github.com/Code-Hex/Neo-cowsay"
-	"github.com/Code-Hex/Neo-cowsay/internal/decoration"
-	"github.com/Code-Hex/Neo-cowsay/internal/super"
+	cowsay "github.com/Code-Hex/Neo-cowsay/v2"
+	"github.com/Code-Hex/Neo-cowsay/v2/internal/decoration"
+	"github.com/Code-Hex/Neo-cowsay/v2/internal/super"
 	"github.com/Code-Hex/go-wordwrap"
 	"github.com/jessevdk/go-flags"
 	"github.com/mattn/go-colorable"

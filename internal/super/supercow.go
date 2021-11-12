@@ -9,9 +9,9 @@ import (
 	"syscall"
 	"time"
 
-	cowsay "github.com/Code-Hex/Neo-cowsay"
-	"github.com/Code-Hex/Neo-cowsay/internal/decoration"
-	"github.com/Code-Hex/Neo-cowsay/internal/screen"
+	cowsay "github.com/Code-Hex/Neo-cowsay/v2"
+	"github.com/Code-Hex/Neo-cowsay/v2/internal/decoration"
+	"github.com/Code-Hex/Neo-cowsay/v2/internal/screen"
 	runewidth "github.com/mattn/go-runewidth"
 	"github.com/rivo/uniseg"
 )
