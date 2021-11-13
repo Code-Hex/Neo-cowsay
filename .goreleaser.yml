@@ -78,13 +78,27 @@ brews:
     owner: Code-Hex
     name: homebrew-tap
     token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
-  homepage: "https://github.com/Code-Hex/Neo-cowsay"
+  homepage: https://github.com/Code-Hex/Neo-cowsay
   description: "Fast, funny, everyone wanted? new cowsay!!"
   folder: Formula
   install: |
     bin.install "cowsay"
     bin.install "cowthink"
     man1.install Dir["doc/cowsay.1"]
+
+nfpms:
+  - license: Artistic License 2.0
+    maintainer: Kei Kamikawa <x00.x7f.x86@gmail.com>
+    homepage: https://github.com/Code-Hex/Neo-cowsay
+    bindir: /usr/local/bin
+    description: "Fast, funny, everyone wanted? new cowsay!!"
+    formats:
+      - apk
+      - deb
+      - rpm
+    contents:
+      - src: "doc/cowsay.1"
+        dst: "/usr/share/man/man1"
 
 checksum:
   name_template: 'cowsay_checksums.txt'
