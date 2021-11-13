@@ -14,8 +14,6 @@ type Cow struct {
 	thoughts        rune
 	thinking        bool
 	bold            bool
-	isAurora        bool
-	isRainbow       bool
 	ballonWidth     int
 	disableWordWrap bool
 
@@ -191,22 +189,6 @@ func pickCow() (*CowFile, error) {
 func Bold() Option {
 	return func(c *Cow) error {
 		c.bold = true
-		return nil
-	}
-}
-
-// Aurora enables aurora mode
-func Aurora() Option {
-	return func(c *Cow) error {
-		c.isAurora = true
-		return nil
-	}
-}
-
-// Rainbow enables raibow mode
-func Rainbow() Option {
-	return func(c *Cow) error {
-		c.isRainbow = true
 		return nil
 	}
 }
