@@ -98,7 +98,7 @@ nfpms:
       - rpm
     contents:
       - src: "doc/cowsay.1"
-        dst: "/usr/share/man/man1"
+        dst: "/usr/share/man/man1/cowsay.1"
 
 checksum:
   name_template: 'cowsay_checksums.txt'
