@@ -4,7 +4,7 @@ Neo Cowsay is written in Go. This cowsay is extended the original cowsay. added 
 
 for GitHub Actions users: [Code-Hex/neo-cowsay-action](https://github.com/marketplace/actions/neo-cowsay)
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/Code-Hex/Neo-cowsay/v2.svg)](https://pkg.go.dev/github.com/Code-Hex/Neo-cowsay/v2) [![.github/workflows/main.yml](https://github.com/Code-Hex/Neo-cowsay/actions/workflows/main.yml/badge.svg)](https://github.com/Code-Hex/Neo-cowsay/actions/workflows/main.yml) [![Go Report Card](https://goreportcard.com/badge/github.com/Code-Hex/Neo-cowsay)](https://goreportcard.com/report/github.com/Code-Hex/Neo-cowsay)
+[![Go Reference](https://pkg.go.dev/badge/github.com/Code-Hex/Neo-cowsay/v2.svg)](https://pkg.go.dev/github.com/Code-Hex/Neo-cowsay/v2) [![.github/workflows/main.yml](https://github.com/Code-Hex/Neo-cowsay/actions/workflows/main.yml/badge.svg)](https://github.com/Code-Hex/Neo-cowsay/actions/workflows/main.yml) [![Go Report Card](https://goreportcard.com/badge/github.com/Code-Hex/Neo-cowsay)](https://goreportcard.com/report/github.com/Code-Hex/Neo-cowsay) [![codecov](https://codecov.io/gh/Code-Hex/Neo-cowsay/branch/master/graph/badge.svg?token=WwjmyHrOPv)](https://codecov.io/gh/Code-Hex/Neo-cowsay)
 
 ```
  ______________
