@@ -2,6 +2,7 @@ package cowsay
 
 import (
 	"bytes"
+	"errors"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -193,12 +194,27 @@ func TestSay(t *testing.T) {
 			wantFile: "nest.cow",
 			wantErr:  false,
 		},
+		{
+			name: "error",
+			args: args{
+				phrase: "error",
+				options: []Option{
+					func(*Cow) error {
+						return errors.New("error")
+					},
+				},
+			},
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := Say(tt.args.phrase, tt.args.options...)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Say() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if tt.wantErr {
 				return
 			}
 			filename := filepath.Join("testdata", tt.wantFile)
