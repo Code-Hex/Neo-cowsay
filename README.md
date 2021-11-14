@@ -119,7 +119,7 @@ func main() {
 }
 ```
 
-[Example](https://github.com/Code-Hex/Neo-cowsay/blob/master/eg/main.go) or [GoDoc](https://pkg.go.dev/github.com/Code-Hex/Neo-cowsay/v2)
+[Examples](https://github.com/Code-Hex/Neo-cowsay/blob/master/examples) or [GoDoc](https://pkg.go.dev/github.com/Code-Hex/Neo-cowsay/v2)
 
 ## Install
 
