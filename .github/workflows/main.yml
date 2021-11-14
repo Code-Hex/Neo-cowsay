@@ -28,6 +28,12 @@ jobs:
         make lint
       env:
         GO111MODULE: off
+    - name: Test Coverage (pkg)
+      run: go test ./... -coverprofile=coverage.txt
+    - name: Upload coverage
+      uses: codecov/codecov-action@v2
+      with:
+        files: coverage.txt
     - name: Run GoReleaser
       if: contains(github.ref, 'tags/v')
       uses: goreleaser/goreleaser-action@v2

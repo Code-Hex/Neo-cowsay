@@ -20,8 +20,14 @@ vet:
 	cd cmd && go vet ./...
 
 .PHONY: test
-test:
+test: test/pkg test/cli
+
+.PHONY: test/pkg
+test/pkg:
 	go test ./...
+
+.PHONY: test/cli
+test/cli:
 	cd cmd && go test ./...
 
 .PHONY: man
