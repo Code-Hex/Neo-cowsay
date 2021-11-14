@@ -15,8 +15,8 @@ import (
 	"time"
 
 	cowsay "github.com/Code-Hex/Neo-cowsay/v2"
-	"github.com/Code-Hex/Neo-cowsay/v2/internal/decoration"
-	"github.com/Code-Hex/Neo-cowsay/v2/internal/super"
+	"github.com/Code-Hex/Neo-cowsay/v2/cmd/internal/super"
+	"github.com/Code-Hex/Neo-cowsay/v2/decoration"
 	"github.com/Code-Hex/go-wordwrap"
 	"github.com/jessevdk/go-flags"
 	"github.com/ktr0731/go-fuzzyfinder"

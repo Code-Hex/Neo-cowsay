@@ -1,6 +1,7 @@
 builds:
   - id: cowsay
-    main: ./cmd/cowsay/main.go
+    dir: cmd
+    main: ./cowsay/main.go
     binary: cowsay
     env:
       - CGO_ENABLED=0
@@ -27,7 +28,8 @@ builds:
         goarch: arm
         goarm: 7
   - id: cowthink
-    main: ./cmd/cowthink/main.go
+    dir: cmd
+    main: ./cowthink/main.go
     binary: cowthink
     env:
       - CGO_ENABLED=0

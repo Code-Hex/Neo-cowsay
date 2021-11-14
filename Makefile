@@ -1,25 +1,28 @@
-PROJECT = github.com/Code-Hex/Neo-cowsay
-
 .PHONY: build
 build: build/cowsay build/cowthink
 
 .PHONY: build/cowsay
 build/cowsay:
-	CGO_ENABLED=0 go build -o bin/cowsay -ldflags "-w -s" \
-		$(PROJECT)/cmd/cowsay
+	CGO_ENABLED=0 cd cmd && go build -o ../bin/cowsay -ldflags "-w -s" ./cowsay
 
 .PHONY: build/cowthink
 build/cowthink:
-	CGO_ENABLED=0 go build -o bin/cowthink -ldflags "-w -s" \
-		$(PROJECT)/cmd/cowthink
+	CGO_ENABLED=0 cd cmd && go build -o ../bin/cowthink -ldflags "-w -s" ./cowthink
 
 .PHONY: lint
 lint:
 	golint ./...
+	cd cmd && golint ./...
+
+.PHONY: vet
+vet:
+	go vet ./...
+	cd cmd && go vet ./...
 
 .PHONY: test
 test:
 	go test ./...
+	cd cmd && go test ./...
 
 .PHONY: man
 man:
