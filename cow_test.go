@@ -1,6 +1,8 @@
 package cowsay
 
 import (
+	"errors"
+	"fmt"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -84,8 +86,11 @@ func TestCow_Clone(t *testing.T) {
 
 	t.Run("random", func(t *testing.T) {
 		cow, _ := New(
+			Type(""),
 			Thinking(),
 			Thoughts('o'),
+			Eyes("xx"),
+			Tongue("u"),
 			Random(),
 		)
 
@@ -95,6 +100,21 @@ func TestCow_Clone(t *testing.T) {
 			cmp.AllowUnexported(Cow{}),
 			cmpopts.IgnoreFields(Cow{}, "buf")); diff != "" {
 			t.Errorf("(-want, +got)\n%s", diff)
+		}
+	})
+
+	t.Run("error", func(t *testing.T) {
+		cow, err := New()
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		wantErr := errors.New("error")
+		_, err = cow.Clone(func(*Cow) error {
+			return wantErr
+		})
+		if wantErr != err {
+			t.Fatalf("want %v, but got %v", wantErr, err)
 		}
 	})
 }
@@ -132,5 +152,16 @@ func Test_adjustTo2Chars(t *testing.T) {
 				t.Errorf("adjustTo2Chars() = %v, want %v", got, tt.want)
 			}
 		})
+	}
+}
+
+func TestNotFound_Error(t *testing.T) {
+	file := "test"
+	n := &NotFound{
+		Cowfile: file,
+	}
+	want := fmt.Sprintf("not found %q cowfile", file)
+	if want != n.Error() {
+		t.Fatalf("want %q but got %q", want, n.Error())
 	}
 }

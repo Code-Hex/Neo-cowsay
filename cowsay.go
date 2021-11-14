@@ -132,14 +132,6 @@ func (cow *Cow) GetCow() (string, error) {
 		return "", err
 	}
 
-	if len(cow.eyes) > 2 {
-		cow.eyes = cow.eyes[0:2]
-	}
-
-	if len(cow.tongue) > 2 {
-		cow.tongue = cow.tongue[0:2]
-	}
-
 	r := strings.NewReplacer(
 		"\\\\", "\\",
 		"\\@", "@",
