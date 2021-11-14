@@ -2,6 +2,7 @@ package cowsay
 
 import (
 	"bytes"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
@@ -151,4 +152,64 @@ func TestCowFile_ReadAll(t *testing.T) {
 		t.Fatalf("testdata\n%s\n\nbinary%s\n", string(fromTestdataContent), string(fromBinaryContent))
 	}
 
+}
+
+const defaultSay = ` ________ 
+< cowsay >
+ -------- 
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||`
+
+func TestSay(t *testing.T) {
+	type args struct {
+		phrase  string
+		options []Option
+	}
+	tests := []struct {
+		name     string
+		args     args
+		wantFile string
+		wantErr  bool
+	}{
+		{
+			name: "default",
+			args: args{
+				phrase: "hello!",
+			},
+			wantFile: "default.cow",
+			wantErr:  false,
+		},
+		{
+			name: "nest",
+			args: args{
+				phrase: defaultSay,
+				options: []Option{
+					DisableWordWrap(),
+				},
+			},
+			wantFile: "nest.cow",
+			wantErr:  false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := Say(tt.args.phrase, tt.args.options...)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Say() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			filename := filepath.Join("testdata", tt.wantFile)
+			content, err := ioutil.ReadFile(filename)
+			if err != nil {
+				t.Fatal(err)
+			}
+			want := string(content)
+			if want != got {
+				t.Fatalf("want\n%s\n\ngot\n%s", want, got)
+			}
+		})
+	}
 }

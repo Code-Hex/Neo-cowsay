@@ -13,7 +13,6 @@ type Cow struct {
 	typ             *CowFile
 	thoughts        rune
 	thinking        bool
-	bold            bool
 	ballonWidth     int
 	disableWordWrap bool
 
@@ -183,14 +182,6 @@ func pickCow() (*CowFile, error) {
 		BasePath:     cowPath.Name,
 		LocationType: cowPath.LocationType,
 	}, nil
-}
-
-// Bold enables bold mode
-func Bold() Option {
-	return func(c *Cow) error {
-		c.bold = true
-		return nil
-	}
 }
 
 // BallonWidth specifies ballon size
