@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/Code-Hex/Neo-cowsay/v2/cmd/internal/cli"
+	"github.com/Code-Hex/Neo-cowsay/cmd/v2/internal/cli"
 )
 
 var version string

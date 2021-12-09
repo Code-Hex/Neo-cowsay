@@ -140,11 +140,11 @@ You can download from [here](https://github.com/Code-Hex/Neo-cowsay/releases)
 
 #### cowsay
 
-    $ go install github.com/Code-Hex/Neo-cowsay/v2/cmd/cowsay@latest
+    $ go install github.com/Code-Hex/Neo-cowsay/cmd/v2/cowsay@latest
 
 #### cowthink
 
-    $ go install github.com/Code-Hex/Neo-cowsay/v2/cmd/cowthink@latest
+    $ go install github.com/Code-Hex/Neo-cowsay/cmd/v2/cowthink@latest
 
 ## License
 

@@ -9,8 +9,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/Code-Hex/Neo-cowsay/cmd/v2/internal/screen"
 	cowsay "github.com/Code-Hex/Neo-cowsay/v2"
-	"github.com/Code-Hex/Neo-cowsay/v2/cmd/internal/screen"
 	"github.com/Code-Hex/Neo-cowsay/v2/decoration"
 	runewidth "github.com/mattn/go-runewidth"
 	"github.com/rivo/uniseg"
