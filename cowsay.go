@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"os"
+	"path"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -74,10 +75,12 @@ type CowFile struct {
 // If LocationType is InBinary, the file read from binary.
 // otherwise reads from file system.
 func (c *CowFile) ReadAll() ([]byte, error) {
-	joinedPath := filepath.Join(c.BasePath, c.Name+".cow")
 	if c.LocationType == InBinary {
+		// go embed is used "/" separator
+		joinedPath := path.Join(c.BasePath, c.Name+".cow")
 		return Asset(joinedPath)
 	}
+	joinedPath := filepath.Join(c.BasePath, c.Name+".cow")
 	return ioutil.ReadFile(joinedPath)
 }
 

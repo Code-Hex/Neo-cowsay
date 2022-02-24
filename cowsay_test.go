@@ -53,7 +53,7 @@ func TestCows(t *testing.T) {
 
 		wants := []*CowPath{
 			{
-				Name:         "testdata/testdir",
+				Name:         filepath.Join("testdata", "testdir"),
 				LocationType: InDirectory,
 			},
 			{
