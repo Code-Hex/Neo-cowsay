@@ -12,3 +12,5 @@ require (
 	github.com/rivo/uniseg v0.2.0
 	golang.org/x/crypto v0.0.0-20211108221036-ceb1ce70b4fa
 )
+
+replace github.com/Code-Hex/Neo-cowsay/v2 => ../
