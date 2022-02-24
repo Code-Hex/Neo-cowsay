@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestCLI_Run(t *testing.T) {
@@ -130,8 +132,10 @@ func TestCLI_Run(t *testing.T) {
 					if err != nil {
 						t.Fatal(err)
 					}
-					want := string(content)
-					if got := stdout.String(); want != got {
+					got := strings.Replace(stdout.String(), "\r", "", -1)  // for windows
+					want := strings.Replace(string(content), "\r", "", -1) // for windows
+					if want != got {
+						t.Log(cmp.Diff(want, got))
 						t.Errorf("want\n%s\n-----got\n%s\n", want, got)
 					}
 				})
