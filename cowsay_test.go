@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -222,8 +223,10 @@ func TestSay(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			want := string(content)
+			got = strings.Replace(got, "\r", "", -1)               // for windows
+			want := strings.Replace(string(content), "\r", "", -1) // for windows
 			if want != got {
+				t.Log(cmp.Diff([]byte(want), []byte(got)))
 				t.Fatalf("want\n%s\n\ngot\n%s", want, got)
 			}
 		})
