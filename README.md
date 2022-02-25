@@ -123,6 +123,10 @@ func main() {
 
 ## Install
 
+### Windows users via Scoop
+
+    $ scoop install neo-cowsay
+
 ### Mac and Linux users via Homebrew
 
     $ brew update
