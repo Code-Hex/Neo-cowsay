@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	wordwrap "github.com/Code-Hex/go-wordwrap"
-	runewidth "github.com/mattn/go-runewidth"
+	"github.com/Code-Hex/go-wordwrap"
+	"github.com/mattn/go-runewidth"
 )
 
 type border struct {

@@ -57,36 +57,36 @@ builds:
         goarm: 7
 
 archives:
-- builds:
-  - cowsay
-  - cowthink
-  name_template: 'cowsay_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
-  replacements:
-    darwin: macOS
-    linux: Linux
-    windows: Windows
-    386: i386
-    amd64: x86_64
-  format_overrides:
-  - goos: windows
-    format: zip
-  files:
-  - LICENSE
-  - doc/cowsay.1
+  - builds:
+      - cowsay
+      - cowthink
+    name_template: 'cowsay_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
+    replacements:
+      darwin: macOS
+      linux: Linux
+      windows: Windows
+      386: i386
+      amd64: x86_64
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - LICENSE
+      - doc/cowsay.1
 
 brews:
-- name: neo-cowsay
-  tap:
-    owner: Code-Hex
-    name: homebrew-tap
-    token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
-  homepage: https://github.com/Code-Hex/Neo-cowsay
-  description: "Fast, funny, everyone wanted? new cowsay!!"
-  folder: Formula
-  install: |
-    bin.install "cowsay"
-    bin.install "cowthink"
-    man1.install Dir["doc/cowsay.1"]
+  - name: neo-cowsay
+    tap:
+      owner: Code-Hex
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    homepage: https://github.com/Code-Hex/Neo-cowsay
+    description: "Fast, funny, everyone wanted? new cowsay!!"
+    folder: Formula
+    install: |
+      bin.install "cowsay"
+      bin.install "cowthink"
+      man1.install Dir["doc/cowsay.1"]
 
 nfpms:
   - license: Artistic License 2.0
@@ -109,7 +109,7 @@ changelog:
   sort: asc
   filters:
     exclude:
-    - '^docs:'
-    - '^test:'
-    - Merge pull request
-    - Merge branch
+      - '^docs:'
+      - '^test:'
+      - Merge pull request
+      - Merge branch

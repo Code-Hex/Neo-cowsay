@@ -1,6 +1,7 @@
 # Neo Cowsay
 
-Neo Cowsay is written in Go. This cowsay is extended the original cowsay. added fun more options, and you can be used as a library.
+Neo Cowsay is written in Go. This cowsay is extended the original cowsay. added fun more options, and you can be used as
+a library.
 
 for GitHub Actions users: [Code-Hex/neo-cowsay-action](https://github.com/marketplace/actions/neo-cowsay)
 
@@ -19,7 +20,7 @@ for GitHub Actions users: [Code-Hex/neo-cowsay-action](https://github.com/market
 
 ## About cowsay
 
-According to the [original](https://web.archive.org/web/20071026043648/http://www.nog.net/~tony/warez/cowsay.shtml) original manual.
+According to the [original](https://web.archive.org/web/20071026043648/http://www.nog.net/~tony/warez/cowsay.shtml) manual.
 
 ```
 cowsay is a configurable talking cow, written in Perl. It operates
@@ -27,7 +28,8 @@ much as the figlet program does, and it written in the same spirit
 of silliness.
 ```
 
-This is also supported `COWPATH` env. Please read more details in [#33](https://github.com/Code-Hex/Neo-cowsay/pull/33) if you want to use this.
+This is also supported `COWPATH` env. Please read more details in [#33](https://github.com/Code-Hex/Neo-cowsay/pull/33)
+if you want to use this.
 
 ## What makes it different from the original?
 
@@ -36,7 +38,8 @@ This is also supported `COWPATH` env. Please read more details in [#33](https://
 - new some cowfiles is added
 - cowfiles in binary
 - random pickup cowfile option
-- provides command-line fuzzy finder to search any cows with `-f -` [#39](https://github.com/Code-Hex/Neo-cowsay/pull/39)
+- provides command-line fuzzy finder to search any cows
+  with `-f -` [#39](https://github.com/Code-Hex/Neo-cowsay/pull/39)
 - coloring filter options
 - super mode
 
@@ -70,7 +73,9 @@ Usage: cowsay [-bdgpstwy] [-h] [-e eyes] [-f cowfile] [--random]
 Original Author: (c) 1999 Tony Monroe
 Repository: https://github.com/Code-Hex/Neo-cowsay
 ```
+
 Normal
+
 ```
 $ cowsay Hello
  _______
@@ -82,7 +87,9 @@ $ cowsay Hello
                ||----w |
                ||     ||
 ```
+
 Borg mode
+
 ```
 $ cowsay -b Hello
  _______
@@ -119,7 +126,8 @@ func main() {
 }
 ```
 
-[Examples](https://github.com/Code-Hex/Neo-cowsay/blob/master/examples) or [GoDoc](https://pkg.go.dev/github.com/Code-Hex/Neo-cowsay/v2)
+[Examples](https://github.com/Code-Hex/Neo-cowsay/blob/master/examples)
+or [GoDoc](https://pkg.go.dev/github.com/Code-Hex/Neo-cowsay/v2)
 
 ## Install
 
@@ -199,5 +207,6 @@ not find it here, because there is no such thing here.
 (The Artistic License or The GNU General Public License)
 
 ## Author
+
 Neo Cowsay: [codehex](https://twitter.com/CodeHex)  
 Original: (c) 1999 Tony Monroe

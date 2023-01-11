@@ -4,7 +4,7 @@ import (
 	"os"
 	"sync"
 
-	colorable "github.com/mattn/go-colorable"
+	"github.com/mattn/go-colorable"
 	"golang.org/x/crypto/ssh/terminal"
 )
 

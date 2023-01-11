@@ -6,7 +6,6 @@ $ ./echo-server
 2021/11/14 16:16:27 server addr => 127.0.0.1:54456
 ```
 
-
 ## client
 
 Use [netcat](https://en.wikipedia.org/wiki/Netcat)

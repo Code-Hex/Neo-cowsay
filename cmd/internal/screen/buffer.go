@@ -8,7 +8,7 @@ import (
 )
 
 // buffer is the global screen buffer
-// Its not recommended write to buffer dirrectly, use package Print,Printf,Println functions instead.
+// It's not recommended write to buffer directly, use package Print,Printf,Println functions instead.
 var buffer strings.Builder
 
 // Flush buffer and ensure that it will not overflow screen
@@ -114,27 +114,26 @@ func (m *MoveWriter) WriteString(s string) (nn int, _ error) {
 // getXY gets relative or absolute coorditantes
 // To get relative, set PCT flag to number:
 //
-//      // Get 10% of total width to `x` and 20 to y
-//      x, y = tm.GetXY(10|tm.PCT, 20)
-//
+//	// Get 10% of total width to `x` and 20 to y
+//	x, y = tm.GetXY(10|tm.PCT, 20)
 func getXY(x int, y int) (int, int) {
 	// Set percent flag: num | PCT
 	//
 	// Check percent flag: num & PCT
 	//
 	// Reset percent flag: num & 0xFF
-	const shift = uint(^uint(0)>>63) << 4
+	const shift = ^uint(0) >> 63 << 4
 	const PCT = 0x8000 << shift
 	if y == -1 {
 		y = currentHeight() + 1
 	}
 
 	if x&PCT != 0 {
-		x = int((x & 0xFF) * Width() / 100)
+		x = (x & 0xFF) * Width() / 100
 	}
 
 	if y&PCT != 0 {
-		y = int((y & 0xFF) * Height() / 100)
+		y = (y & 0xFF) * Height() / 100
 	}
 
 	return x, y
