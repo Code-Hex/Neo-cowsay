@@ -20,7 +20,10 @@ func (w *Writer) writeAsDefaultBold(b []byte) (nn int, err error) {
 		if unicode.IsSpace(char) {
 			w.buf.WriteRune(char)
 		} else {
-			fmt.Fprintf(&w.buf, "\x1b[1m%c\x1b[0m", char)
+			_, err := fmt.Fprintf(&w.buf, "\x1b[1m%c\x1b[0m", char)
+			if err != nil {
+				return 0, err
+			}
 		}
 		b = b[size:]
 	}
@@ -38,7 +41,10 @@ func (w *Writer) writeStringAsDefaultBold(s string) (nn int, err error) {
 		if unicode.IsSpace(char) {
 			w.buf.WriteRune(char)
 		} else {
-			fmt.Fprintf(&w.buf, "\x1b[1m%c\x1b[0m", char)
+			_, err := fmt.Fprintf(&w.buf, "\x1b[1m%c\x1b[0m", char)
+			if err != nil {
+				return 0, err
+			}
 		}
 	}
 	if sw, ok := w.writer.(io.StringWriter); ok {

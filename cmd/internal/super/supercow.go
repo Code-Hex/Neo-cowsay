@@ -3,6 +3,7 @@ package super
 import (
 	"errors"
 	"io"
+	"log"
 	"os"
 	"os/signal"
 	"strings"
@@ -176,7 +177,11 @@ func (r *renderer) createFrames(cow *cowsay.Cow, withBold bool) {
 				base := x * 70
 				// draw colored cow
 				w.SetColorSeq(base)
-				w.WriteString(r.saidCow)
+				_, err := w.WriteString(r.saidCow)
+				if err != nil {
+					log.Println(err)
+					return
+				}
 				r.frames <- w.String()
 				if k%magic == 0 {
 					x++
@@ -192,15 +197,31 @@ func (r *renderer) createFrames(cow *cowsay.Cow, withBold bool) {
 					// Left side animations
 					n := i - r.screenWidth
 					if n < line.Len() {
-						w.WriteString(line.Slice(n, line.Len()))
+						_, err := w.WriteString(line.Slice(n, line.Len()))
+						if err != nil {
+							log.Println(err)
+							return
+						}
 					}
 				} else if i <= line.Len() {
 					// Right side animations
-					w.WriteString(line.Slice(0, i-1))
+					_, err := w.WriteString(line.Slice(0, i-1))
+					if err != nil {
+						log.Println(err)
+						return
+					}
 				} else {
-					w.WriteString(line.raw)
+					_, err := w.WriteString(line.raw)
+					if err != nil {
+						log.Println(err)
+						return
+					}
 				}
-				w.Write([]byte{'\n'})
+				_, err := w.Write([]byte{'\n'})
+				if err != nil {
+					log.Println(err)
+					return
+				}
 			}
 			r.frames <- w.String()
 		}
@@ -223,7 +244,11 @@ func (r *renderer) render() {
 		case <-initCh:
 		case <-time.After(span):
 		}
-		io.Copy(screen.Stdout, strings.NewReader(view))
+		_, err := io.Copy(screen.Stdout, strings.NewReader(view))
+		if err != nil {
+			log.Println(err)
+			return
+		}
 	}
 }
 

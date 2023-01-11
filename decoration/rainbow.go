@@ -32,11 +32,14 @@ func (w *Writer) writeAsRainbow(b []byte) (nn int, err error) {
 		if unicode.IsSpace(char) {
 			w.buf.WriteRune(char)
 		} else {
-			fmt.Fprintf(&w.buf, "\x1b[%d%sm%c\x1b[0m",
+			_, err := fmt.Fprintf(&w.buf, "\x1b[%d%sm%c\x1b[0m",
 				rainbow[w.options.colorSeq%len(rainbow)],
 				w.options.maybeBold(),
 				char,
 			)
+			if err != nil {
+				return 0, err
+			}
 		}
 		w.options.colorSeq++
 		b = b[size:]
@@ -57,11 +60,14 @@ func (w *Writer) writeStringAsRainbow(s string) (nn int, err error) {
 		if unicode.IsSpace(char) {
 			w.buf.WriteRune(char)
 		} else {
-			fmt.Fprintf(&w.buf, "\x1b[%d%sm%c\x1b[0m",
+			_, err := fmt.Fprintf(&w.buf, "\x1b[%d%sm%c\x1b[0m",
 				rainbow[w.options.colorSeq%len(rainbow)],
 				w.options.maybeBold(),
 				char,
 			)
+			if err != nil {
+				return 0, err
+			}
 		}
 		w.options.colorSeq++
 	}

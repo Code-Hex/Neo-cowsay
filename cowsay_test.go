@@ -40,8 +40,16 @@ func TestCows(t *testing.T) {
 	t.Run("set COWPATH env", func(t *testing.T) {
 		cowpath := filepath.Join("testdata", "testdir")
 
-		os.Setenv("COWPATH", cowpath)
-		defer os.Unsetenv("COWPATH")
+		err := os.Setenv("COWPATH", cowpath)
+		if err != nil {
+			return
+		}
+		defer func() {
+			err := os.Unsetenv("COWPATH")
+			if err != nil {
+				t.Fatalf("Error Unsetenv(): " + err.Error())
+			}
+		}()
 
 		cowPaths, err := Cows()
 		if err != nil {
@@ -79,12 +87,20 @@ func TestCows(t *testing.T) {
 	})
 
 	t.Run("set COWPATH env", func(t *testing.T) {
-		os.Setenv("COWPATH", "notfound")
-		defer os.Unsetenv("COWPATH")
+		err := os.Setenv("COWPATH", "notfound")
+		if err != nil {
+			return
+		}
 
-		_, err := Cows()
+		defer func() {
+			err := os.Unsetenv("COWPATH")
+			if err != nil {
+				t.Fatal("Error Unsetenv(): " + err.Error())
+			}
+		}()
+		_, err = Cows()
 		if err == nil {
-			t.Fatal("want error")
+			t.Fatalf("Error Unsetenv(): " + err.Error())
 		}
 	})
 

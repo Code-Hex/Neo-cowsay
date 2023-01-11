@@ -89,7 +89,10 @@ func (c *CLI) Run(argv []string) int {
 		c.stdin = os.Stdin
 	}
 	if err := c.mow(argv); err != nil {
-		fmt.Fprintf(c.stderr, "%s: %s\n", c.program(), err.Error())
+		_, err := fmt.Fprintf(c.stderr, "%s: %s\n", c.program(), err.Error())
+		if err != nil {
+			return 0
+		}
 		return 1
 	}
 	return 0
@@ -110,12 +113,24 @@ func (c *CLI) mow(argv []string) error {
 		}
 		for _, cowPath := range cowPaths {
 			if cowPath.LocationType == cowsay.InBinary {
-				fmt.Fprintf(c.stdout, "Cow files in binary:\n")
+				_, err := fmt.Fprintf(c.stdout, "Cow files in binary:\n")
+				if err != nil {
+					return err
+				}
 			} else {
-				fmt.Fprintf(c.stdout, "Cow files in %s:\n", cowPath.Name)
+				_, err := fmt.Fprintf(c.stdout, "Cow files in %s:\n", cowPath.Name)
+				if err != nil {
+					return err
+				}
 			}
-			fmt.Fprintln(c.stdout, wordwrap.WrapString(strings.Join(cowPath.CowFiles, " "), 80))
-			fmt.Fprintln(c.stdout)
+			_, err := fmt.Fprintln(c.stdout, wordwrap.WrapString(strings.Join(cowPath.CowFiles, " "), 80))
+			if err != nil {
+				return err
+			}
+			_, err = fmt.Fprintln(c.stdout)
+			if err != nil {
+				return err
+			}
 		}
 		return nil
 	}
@@ -135,7 +150,10 @@ func (c *CLI) parseOptions(opts *options, argv []string) ([]string, error) {
 	}
 
 	if opts.Help {
-		c.stdout.Write(c.usage())
+		_, err := c.stdout.Write(c.usage())
+		if err != nil {
+			return nil, err
+		}
 		os.Exit(0)
 	}
 
@@ -240,7 +258,10 @@ func (c *CLI) mowmow(opts *options, args []string) error {
 	}
 
 	w := decoration.NewWriter(c.stdout, options...)
-	fmt.Fprintln(w, say)
+	_, err = fmt.Fprintln(w, say)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

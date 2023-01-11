@@ -1,6 +1,7 @@
 package screen
 
 import (
+	"log"
 	"os"
 	"sync"
 
@@ -12,19 +13,49 @@ import (
 var Stdout = colorable.NewColorableStdout()
 
 // SaveState saves cursor state.
-func SaveState() { Stdout.Write([]byte("\0337")) }
+func SaveState() {
+	_, err := Stdout.Write([]byte("\0337"))
+	if err != nil {
+		log.Println(err)
+		return
+	}
+}
 
 // RestoreState restores cursor state.
-func RestoreState() { Stdout.Write([]byte("\0338")) }
+func RestoreState() {
+	_, err := Stdout.Write([]byte("\0338"))
+	if err != nil {
+		log.Println(err)
+		return
+	}
+}
 
 // Clear clears terminal screen.
-func Clear() { Stdout.Write([]byte("\033[2J")) }
+func Clear() {
+	_, err := Stdout.Write([]byte("\033[2J"))
+	if err != nil {
+		log.Println(err)
+		return
+	}
+}
 
 // HideCursor hide the cursor
-func HideCursor() { Stdout.Write([]byte("\033[?25l")) }
+func HideCursor() {
+	_, err := Stdout.Write([]byte("\033[?25l"))
+	if err != nil {
+		log.Println(err)
+		return
+	}
+}
 
 // UnHideCursor unhide the cursor
-func UnHideCursor() { Stdout.Write([]byte("\033[?25h")) }
+func UnHideCursor() {
+	_, err := Stdout.Write([]byte("\033[?25h"))
+	if err != nil {
+		log.Println(err)
+		return
+	}
+}
 
 var size struct {
 	once   sync.Once

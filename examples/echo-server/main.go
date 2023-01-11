@@ -32,14 +32,27 @@ func main() {
 				log.Println(err)
 				return
 			}
-			conn.SetDeadline(time.Now().Add(5 * time.Second))
+			err = conn.SetDeadline(time.Now().Add(5 * time.Second))
+			if err != nil {
+				log.Println(err)
+				return
+			}
 
 			go func() {
-				defer conn.Close()
+				defer func(conn net.Conn) {
+					err := conn.Close()
+					if err != nil {
+						log.Println(err)
+					}
+				}(conn)
 				go func() {
 					<-ctx.Done()
 					// cancel
-					conn.SetDeadline(time.Now())
+					err := conn.SetDeadline(time.Now())
+					if err != nil {
+						log.Println(err)
+						return
+					}
 				}()
 
 				var buf strings.Builder
@@ -52,7 +65,11 @@ func main() {
 				phrase := strings.TrimSpace(buf.String())
 				log.Println(phrase)
 				say, _ := cowsay.Say(phrase)
-				conn.Write([]byte(say))
+				_, err := conn.Write([]byte(say))
+				if err != nil {
+					log.Println(err)
+					return
+				}
 			}()
 		}
 	}()

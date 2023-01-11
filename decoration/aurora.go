@@ -21,11 +21,14 @@ func (w *Writer) writeAsAurora(b []byte) (nn int, err error) {
 		if unicode.IsSpace(char) {
 			w.buf.WriteRune(char)
 		} else {
-			fmt.Fprintf(&w.buf, "\033[38;5;%d%sm%c\033[0m",
+			_, err := fmt.Fprintf(&w.buf, "\033[38;5;%d%sm%c\033[0m",
 				rgb(float64(w.options.colorSeq)),
 				w.options.maybeBold(),
 				char,
 			)
+			if err != nil {
+				return 0, err
+			}
 		}
 		w.options.colorSeq++
 		b = b[size:]
@@ -45,11 +48,14 @@ func (w *Writer) writeStringAsAurora(s string) (nn int, err error) {
 		if unicode.IsSpace(char) {
 			w.buf.WriteRune(char)
 		} else {
-			fmt.Fprintf(&w.buf, "\033[38;5;%d%sm%c\033[0m",
+			_, err := fmt.Fprintf(&w.buf, "\033[38;5;%d%sm%c\033[0m",
 				rgb(float64(w.options.colorSeq)),
 				w.options.maybeBold(),
 				char,
 			)
+			if err != nil {
+				return 0, err
+			}
 		}
 		w.options.colorSeq++
 	}
