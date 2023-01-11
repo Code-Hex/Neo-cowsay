@@ -3,7 +3,7 @@ package cli
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -128,7 +128,7 @@ func TestCLI_Run(t *testing.T) {
 						t.Fatalf("unexpected exit code: %d", exit)
 					}
 					testpath := filepath.Join("..", "..", "testdata", cli.name, tt.testfile)
-					content, err := ioutil.ReadFile(testpath)
+					content, err := os.ReadFile(testpath)
 					if err != nil {
 						t.Fatal(err)
 					}

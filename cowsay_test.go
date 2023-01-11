@@ -3,7 +3,6 @@ package cowsay
 import (
 	"bytes"
 	"errors"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -219,7 +218,7 @@ func TestSay(t *testing.T) {
 				return
 			}
 			filename := filepath.Join("testdata", tt.wantFile)
-			content, err := ioutil.ReadFile(filename)
+			content, err := os.ReadFile(filename)
 			if err != nil {
 				t.Fatal(err)
 			}

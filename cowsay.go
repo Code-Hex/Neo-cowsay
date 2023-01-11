@@ -1,7 +1,6 @@
 package cowsay
 
 import (
-	"io/ioutil"
 	"math/rand"
 	"os"
 	"path"
@@ -81,7 +80,7 @@ func (c *CowFile) ReadAll() ([]byte, error) {
 		return Asset(joinedPath)
 	}
 	joinedPath := filepath.Join(c.BasePath, c.Name+".cow")
-	return ioutil.ReadFile(joinedPath)
+	return os.ReadFile(joinedPath)
 }
 
 // Cows to get list of cows
@@ -106,7 +105,7 @@ func cowsFromCowPath() ([]*CowPath, error) {
 	}
 	paths := splitPath(cowPath)
 	for _, path := range paths {
-		dirEntries, err := ioutil.ReadDir(path)
+		dirEntries, err := os.ReadDir(path)
 		if err != nil {
 			return nil, err
 		}
