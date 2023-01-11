@@ -5,6 +5,8 @@ import (
 	cryptorand "crypto/rand"
 	"errors"
 	"fmt"
+	"github.com/Code-Hex/go-wordwrap"
+	"github.com/ktr0731/go-fuzzyfinder"
 	"io"
 	"math"
 	"math/big"
@@ -17,9 +19,7 @@ import (
 	"github.com/Code-Hex/Neo-cowsay/cmd/v2/internal/super"
 	cowsay "github.com/Code-Hex/Neo-cowsay/v2"
 	"github.com/Code-Hex/Neo-cowsay/v2/decoration"
-	"github.com/Code-Hex/go-wordwrap"
 	"github.com/jessevdk/go-flags"
-	"github.com/ktr0731/go-fuzzyfinder"
 	"github.com/mattn/go-colorable"
 )
 
