@@ -48,7 +48,7 @@ func TestCLI_Run(t *testing.T) {
 					testfile: "t_option.txt",
 				},
 				{
-					name:     "specifies width of the ballon is 3",
+					name:     "specifies width of the balloon is 3",
 					phrase:   "foobarbaz",
 					argv:     []string{"-W", "3"},
 					testfile: "W_option.txt",

@@ -111,7 +111,7 @@ func (m *MoveWriter) WriteString(s string) (nn int, _ error) {
 	return
 }
 
-// getXY gets relative or absolute coorditantes
+// getXY gets relative or absolute coordinates
 // To get relative, set PCT flag to number:
 //
 //	// Get 10% of total width to `x` and 20 to y

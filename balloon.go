@@ -84,12 +84,12 @@ func (cow *Cow) Balloon(phrase string) string {
 	lines := cow.getLines(phrase)
 	maxWidth := cow.maxLineWidth(lines)
 
-	cow.writeBallon(lines, maxWidth)
+	cow.writeBalloon(lines, maxWidth)
 
 	return cow.buf.String()
 }
 
-func (cow *Cow) writeBallon(lines []*line, maxWidth int) {
+func (cow *Cow) writeBalloon(lines []*line, maxWidth int) {
 	top := make([]byte, 0, maxWidth+2)
 	bottom := make([]byte, 0, maxWidth+2)
 

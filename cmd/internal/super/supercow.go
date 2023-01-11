@@ -25,7 +25,7 @@ func getNoSaidCow(cow *cowsay.Cow, opts ...cowsay.Option) (string, error) {
 	return cow.GetCow()
 }
 
-// RunSuperCow runs super cow mode animation on the your terminal
+// RunSuperCow runs super cow mode animation on the terminal
 func RunSuperCow(phrase string, withBold bool, opts ...cowsay.Option) error {
 	cow, err := cowsay.New(opts...)
 	if err != nil {

@@ -146,7 +146,7 @@ func Thinking() Option {
 	}
 }
 
-// Thoughts Thoughts allows you to specify
+// Thoughts allows you to specify
 // the rune that will be drawn between
 // the speech bubbles and the cow
 func Thoughts(thoughts rune) Option {
@@ -184,8 +184,8 @@ func pickCow() (*CowFile, error) {
 	}, nil
 }
 
-// BallonWidth specifies ballon size
-func BallonWidth(size uint) Option {
+// BalloonWidth specifies balloon size
+func BalloonWidth(size uint) Option {
 	return func(c *Cow) error {
 		c.ballonWidth = int(size)
 		return nil
@@ -193,7 +193,7 @@ func BallonWidth(size uint) Option {
 }
 
 // DisableWordWrap disables word wrap.
-// Ignoring width of the ballon.
+// Ignoring width of the balloon.
 func DisableWordWrap() Option {
 	return func(c *Cow) error {
 		c.disableWordWrap = true

@@ -34,14 +34,14 @@ func TestCow_Clone(t *testing.T) {
 			from: func() *Cow {
 				cow, _ := New(
 					Type("docker"),
-					BallonWidth(60),
+					BalloonWidth(60),
 				)
 				return cow
 			}(),
 			want: func() *Cow {
 				cow, _ := New(
 					Type("docker"),
-					BallonWidth(60),
+					BalloonWidth(60),
 				)
 				return cow
 			}(),
@@ -55,14 +55,14 @@ func TestCow_Clone(t *testing.T) {
 			from: func() *Cow {
 				cow, _ := New(
 					Type("docker"),
-					BallonWidth(60),
+					BalloonWidth(60),
 				)
 				return cow
 			}(),
 			want: func() *Cow {
 				cow, _ := New(
 					Type("docker"),
-					BallonWidth(60),
+					BalloonWidth(60),
 					Thinking(),
 					Thoughts('o'),
 				)

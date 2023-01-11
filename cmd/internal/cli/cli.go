@@ -24,7 +24,7 @@ import (
 )
 
 func init() {
-	// safely set the seed globally so we generate random ids. Tries to use a
+	// safely set the seed globally, so we generate random ids. Tries to use a
 	// crypto seed before falling back to time.
 	var seed int64
 	cryptoseed, err := cryptorand.Int(cryptorand.Reader, big.NewInt(math.MaxInt64))
@@ -95,7 +95,7 @@ func (c *CLI) Run(argv []string) int {
 	return 0
 }
 
-// mow will parsing for cowsay command line arguments and invoke cowsay.
+// mow will parse for cowsay command line arguments and invoke cowsay.
 func (c *CLI) mow(argv []string) error {
 	var opts options
 	args, err := c.parseOptions(&opts, argv)
@@ -179,7 +179,7 @@ func (c *CLI) generateOptions(opts *options) []cowsay.Option {
 		o = append(o, cowsay.Tongue(opts.Tongue))
 	}
 	if opts.Width > 0 {
-		o = append(o, cowsay.BallonWidth(uint(opts.Width)))
+		o = append(o, cowsay.BalloonWidth(uint(opts.Width)))
 	}
 	if opts.NewLine {
 		o = append(o, cowsay.DisableWordWrap())
