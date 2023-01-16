@@ -91,7 +91,8 @@ func (c *CLI) Run(argv []string) int {
 	if err := c.mow(argv); err != nil {
 		_, err := fmt.Fprintf(c.stderr, "%s: %s\n", c.program(), err.Error())
 		if err != nil {
-			return 0
+			fmt.Println(err)
+			return 1
 		}
 		return 1
 	}
