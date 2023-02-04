@@ -127,6 +127,10 @@ func main() {
 
     $ scoop install neo-cowsay
 
+### Windows users via Winget
+
+    $ winget install neo-cowsay
+
 ### Mac and Linux users via Homebrew
 
     $ brew update
