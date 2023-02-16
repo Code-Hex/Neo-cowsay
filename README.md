@@ -135,6 +135,10 @@ or [GoDoc](https://pkg.go.dev/github.com/Code-Hex/Neo-cowsay/v2)
 
     $ scoop install neo-cowsay
 
+### Windows users via Winget
+
+    $ winget install neo-cowsay
+
 ### Mac and Linux users via Homebrew
 
     $ brew update
