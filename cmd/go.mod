@@ -11,7 +11,7 @@ require (
 	github.com/mattn/go-colorable v0.1.11
 	github.com/mattn/go-runewidth v0.0.13
 	github.com/rivo/uniseg v0.2.0
-	golang.org/x/crypto v0.0.0-20211108221036-ceb1ce70b4fa
+	golang.org/x/crypto v0.1.0
 )
 
 replace github.com/Code-Hex/Neo-cowsay/v2 => ../
