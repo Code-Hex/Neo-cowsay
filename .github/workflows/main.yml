@@ -40,6 +40,6 @@ jobs:
       run: go test ./... -coverprofile=${{ steps.vars.outputs.coverage_txt }}
     - name: Upload coverage
       if: matrix.os == 'ubuntu-latest'
-      uses: codecov/codecov-action@v2
+      uses: codecov/codecov-action@v3
       with:
         files: ${{ steps.vars.outputs.coverage_txt }}
