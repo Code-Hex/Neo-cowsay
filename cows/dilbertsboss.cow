@@ -1,0 +1,19 @@
+##
+## Dilbert's pointy haired boss. 
+## Dilbert comics: https://dilbert.com/
+## ASCII art: https://ascii.co.uk/art/dilbert
+##
+$the_cow = <<EOC;
+          $thoughts   
+           $thoughts
+              @         @
+             @@  ..-..  @@
+             @@@' _ _ '@@@
+              @(  $eyes   )@
+               |  (_)  |
+               |   _   |
+               |_     _|
+              /|_'---'_|\
+             / | '\_/' | \
+            /  |  | |  |  \    
+EOC
