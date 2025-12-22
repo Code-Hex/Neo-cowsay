@@ -1,6 +1,6 @@
 # Neo Cowsay
 
-Neo Cowsay is written in Go. This cowsay is extended the original cowsay. added fun more options, and you can be used as a library.
+Neo Cowsay is written in Go. This cowsay extends the original cowsay and adds more fun options. It can also be used as a library.
 
 for GitHub Actions users: [Code-Hex/neo-cowsay-action](https://github.com/marketplace/actions/neo-cowsay)
 
@@ -19,7 +19,7 @@ for GitHub Actions users: [Code-Hex/neo-cowsay-action](https://github.com/market
 
 ## About cowsay
 
-According to the [original](https://web.archive.org/web/20071026043648/http://www.nog.net/~tony/warez/cowsay.shtml) original manual.
+According to the [original](https://web.archive.org/web/20071026043648/http://www.nog.net/~tony/warez/cowsay.shtml) manual.
 
 ```
 cowsay is a configurable talking cow, written in Perl. It operates
@@ -27,18 +27,18 @@ much as the figlet program does, and it written in the same spirit
 of silliness.
 ```
 
-This is also supported `COWPATH` env. Please read more details in [#33](https://github.com/Code-Hex/Neo-cowsay/pull/33) if you want to use this.
-
 ## What makes it different from the original?
 
 - fast
 - utf8 is supported
-- new some cowfiles is added
+- added new cowfiles
 - cowfiles in binary
-- random pickup cowfile option
+- cowfile randomization flag
 - provides command-line fuzzy finder to search any cows with `-f -` [#39](https://github.com/Code-Hex/Neo-cowsay/pull/39)
-- coloring filter options
-- super mode
+- coloring filter options (rainbow, aurora and bold)
+- super mode (animated)
+
+`COWPATH` is also supported env. Please read more details in [#33](https://github.com/Code-Hex/Neo-cowsay/pull/33) if you want to use this.
 
 <details>
 <summary>Movies for new options 🐮</summary>
